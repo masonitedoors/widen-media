@@ -7,6 +7,7 @@ import filterItemObject from './filterItemObject';
   const formSubmitButton = $('#widen-search-submit')
   const formSpinner = $('#widen-search-spinner')
   const formResults = $('#widen-search-results')
+  const totalItems = $('#widen-total-items')
 
   /**
    * Search media form submission.
@@ -28,11 +29,18 @@ import filterItemObject from './filterItemObject';
         query,
       },
     }).done(response => {
+      console.table(response)
+
       const { items } = response.data
+      const itemCount = response.data.total_count
 
       if (items.length < 1) {
-        formResults.find('.tiles').append(`<p class="no-results">No results for ${query}</p>`)
+        formResults
+          .find('.tiles')
+          .append(`<p class="no-results">No results for <strong>${query}</strong></p>`)
       } else {
+        totalItems.html(`<strong>${itemCount}</strong> results for <strong>${query}</strong>`)
+
         items.forEach(itemObj => {
           const item = filterItemObject(itemObj)
           const itemStr = JSON.stringify(item)
@@ -102,7 +110,6 @@ import filterItemObject from './filterItemObject';
           },
         }).done(response => {
           $('.fancybox-close-small').trigger('click')
-          console.log(response)
         })
       })
     })

@@ -97,6 +97,12 @@ $gutter: 18px;
     margin: 0;
     padding-left: $gutter;
   }
+
+  .search-results-info {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    min-height: 40px;
+  }
 }
 
 .fancybox-container {

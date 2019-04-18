@@ -77,6 +77,10 @@
   #widen-search-results .no-results {
     margin: 0;
     padding-left: 18px; }
+  #widen-search-results .search-results-info {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    min-height: 40px; }
 
 .fancybox-container {
   z-index: 100000; }
