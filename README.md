@@ -1,5 +1,7 @@
 # Widen Media
 
+[![Widen Media on Packagist](https://img.shields.io/packagist/v/masonitedoors/widen-media.svg?style=flat-square)](https://packagist.org/packages/masonitedoors/widen-media)
+
 > Search & add Widen digital assets to your WordPress media library.
 
 This WordPress plugin lets users search for images in [Widen](https://www.widen.com/) and add them to their site's media library. This plugin does not download media from Widen but rather creates a new WordPress media attachment that refers to the Widen asset URL.
