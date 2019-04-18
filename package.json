@@ -1,0 +1,54 @@
+{
+  "scripts": {
+    "test": "npm run --silent lint",
+    "lint": "npm run lint:styles && npm run lint:scripts && npm run lint:php",
+    "lint:scripts": "npx eslint ./src/scripts/**/*.js",
+    "lint:styles": "npx stylelint ./src/styles/**/*.scss --syntax scss",
+    "lint:php": "./vendor/bin/phpcs",
+    "start": "npm run --silent watch",
+    "watch": "webpack -w",
+    "i18n": "npm run i18n:textdomain && npm run i18n:pot",
+    "i18n:textdomain": "npx wpi18n addtextdomain --exclude=vendor,node_modules",
+    "i18n:pot": "npx wpi18n makepot",
+    "app:build": "npm run build --prefix app",
+    "app:start": "npm run start --prefix app"
+  },
+  "devDependencies": {
+    "@masonite/eslint-config-base": "0.0.11",
+    "@masonite/stylelint-config": "^1.4.0",
+    "autoprefixer": "^8.6.2",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-preset-env": "^1.7.0",
+    "copy-webpack-plugin": "^4.5.4",
+    "css-loader": "^0.28.11",
+    "eslint": "^5.16.0",
+    "eslint-config-wordpress": "^2.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.11",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "husky": "^1.1.4",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.9.0",
+    "node-wp-i18n": "^1.2.1",
+    "postcss-loader": "^2.1.5",
+    "postcss-preset-env": "^5.3.0",
+    "sass-loader": "^7.0.3",
+    "style-loader": "^0.21.0",
+    "stylelint": "^9.10.1",
+    "stylelint-config-wordpress": "^13.1.0",
+    "stylelint-scss": "^3.5.4",
+    "stylelint-webpack-plugin": "^0.10.5",
+    "webpack": "^4.12.0",
+    "webpack-cli": "^3.0.4",
+    "webpack-livereload-plugin": "^2.1.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
+  }
+}
