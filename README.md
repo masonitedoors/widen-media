@@ -1,14 +1,14 @@
 # Widen Media
 
-[![Widen Media on Packagist](https://img.shields.io/packagist/v/masonitedoors/widen-media.svg?style=flat-square)](https://packagist.org/packages/masonitedoors/widen-media)
+[![Build Status](https://travis-ci.org/masonitedoors/widen-media.svg?branch=master)](https://travis-ci.org/masonitedoors/widen-media) [![Widen Media on Packagist](https://img.shields.io/packagist/v/masonitedoors/widen-media.svg?style=flat)](https://packagist.org/packages/masonitedoors/widen-media)
 
-> Search & add Widen digital assets to your WordPress media library.
+> Search and add Widen digital assets to your WordPress media library.
 
 This WordPress plugin lets users search for images in [Widen](https://www.widen.com/) and add them to their site's media library. This plugin does not download media from Widen but rather creates a new WordPress media attachment that refers to the Widen asset URL.
 
 ## Installation
 
-You can either [download the zip](https://github.com/masonitedoors/widen-media/archive/master.zip) and install via the WordPress plugin installer or via composer.
+You can either [download a release zip](https://github.com/masonitedoors/widen-media/releases) and install via the WordPress plugin installer or via composer.
 
 ### Composer
 
@@ -18,7 +18,7 @@ composer require masonitedoors/widen-media
 
 ## Configuration
 
-This plugin uses [V2 of the Widen API](https://widenv2.docs.apiary.io/). Define your Widen API access token in `wp-config.php`.
+This plugin uses [V2 of the Widen API](https://widenv2.docs.apiary.io/). You will need to define your Widen API access token in `wp-config.php`.
 
 ```php
 define( 'WIDEN_MEDIA_ACCESS_TOKEN', 'my-widen-api-token' );
