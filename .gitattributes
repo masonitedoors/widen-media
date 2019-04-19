@@ -10,3 +10,4 @@ package*.json     export-ignore
 *.config.js       export-ignore
 .git*             export-ignore
 src/              export-ignore
+.vscode/          export-ignore
