@@ -1,13 +1,11 @@
 # Files to exclude when creating archive.
 
-.browserslistrc   export-ignore
-.editorconfig     export-ignore
-.eslint*          export-ignore
-.stylelint*       export-ignore
+.*                export-ignore
+.*/               export-ignore
+src/              export-ignore
+tests/            export-ignore
+bin/              export-ignore
 composer*         export-ignore
 package*.json     export-ignore
 *.xml             export-ignore
 *.config.js       export-ignore
-.git*             export-ignore
-src/              export-ignore
-.vscode/          export-ignore
