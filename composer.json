@@ -1,9 +1,17 @@
 {
   "name": "masonitedoors/widen-media",
-  "description": "",
+  "description": "Search and add Widen digital assets to your WordPress media library.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
   "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Joseph Fusco",
+      "email": "jfusco@masonite.com",
+      "homepage": "https://github.com/josephfusco",
+      "role": "Developer"
+    }
+  ],
   "require": {
     "php": ">=7",
     "composer/installers": "^1.0"
