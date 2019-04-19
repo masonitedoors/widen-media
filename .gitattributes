@@ -1,6 +1,6 @@
 # Files to exclude when creating archive.
 
-.browserlistrc    export-ignore
+.browserslistrc   export-ignore
 .editorconfig     export-ignore
 .eslint*          export-ignore
 .stylelint*       export-ignore
@@ -8,3 +8,5 @@ composer*         export-ignore
 package*.json     export-ignore
 *.xml             export-ignore
 *.config.js       export-ignore
+.git*             export-ignore
+src/              export-ignore
