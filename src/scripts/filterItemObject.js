@@ -11,22 +11,36 @@ function getFileSize(kb) {
 }
 
 function filterItemObject(rawObj) {
+  const {
+    id,
+    metadata,
+    external_id: externalId,
+    filename,
+    file_upload_date: uploadDate,
+    file_properties: fileProperties,
+  } = rawObj
+
   const item = {}
   const baseImageUrl = 'https://embed.widencdn.net/img/masonite'
-  const kb = rawObj.file_properties.size_in_kbytes
-  const fileroot = rawObj.filename.split('.').slice(0, 1)
+  const kb = fileProperties.size_in_kbytes
+  const fileroot = filename.split('.').slice(0, 1)
 
-  item.id = rawObj.id
-  item.description = rawObj.metadata.fields.description.toString()
-  item.externalId = rawObj.external_id
-  item.filename = rawObj.filename
-  item.uploadDate = rawObj.file_upload_date
+  item.id = id
+  item.description = typeof metadata.fields.description === 'undefined' ? '' : metadata.fields.description.toString()
+  item.externalId = externalId
+  item.filename = filename
+  item.uploadDate = uploadDate
   item.fileSize = getFileSize(kb)
-  item.fileFormat = rawObj.file_properties.format
-  item.imageUrl = {
-    thumbnail: `${baseImageUrl}/${rawObj.external_id}/500x500px/${fileroot}.png?crop=no`,
-    exact: `${baseImageUrl}/${rawObj.external_id}/exact/${fileroot}.png`,
-  }
+  item.fileFormat = fileProperties.format
+  item.fileFormatType = fileProperties.format.type
+  item.imageUrl = item.fileFormatType === 'image'
+    ? null
+    : (item.imageUrl = {
+      thumbnail: `${baseImageUrl}/${externalId}/500x500px/${fileroot}.png?crop=no`,
+      exact: `${baseImageUrl}/${externalId}/exact/${fileroot}.png`,
+    })
+
+  console.log(rawObj, item)
 
   return item
 }
