@@ -45,7 +45,7 @@ class Plugin {
 	 *
 	 * @var      string    $version    The current version of the plugin.
 	 */
-	protected $version = '0.0.1';
+	protected $version = '0.0.2';
 
 	/**
 	 * Defines the path to the plugin's root directory.
