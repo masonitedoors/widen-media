@@ -9,9 +9,7 @@
     "watch": "webpack -w",
     "i18n": "npm run i18n:textdomain && npm run i18n:pot",
     "i18n:textdomain": "npx wpi18n addtextdomain --exclude=vendor,node_modules",
-    "i18n:pot": "npx wpi18n makepot",
-    "app:build": "npm run build --prefix app",
-    "app:start": "npm run start --prefix app"
+    "i18n:pot": "npx wpi18n makepot"
   },
   "devDependencies": {
     "@masonite/eslint-config-base": "0.0.11",
