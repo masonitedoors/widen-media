@@ -81,6 +81,9 @@ class Admin {
 			return;
 		}
 
+		wp_enqueue_script( 'lazysizes', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/lazysizes.min.js', [], '4.1.5', true );
+		wp_enqueue_script( 'lazysizes-blur-up', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/plugins/blur-up/ls.blur-up.min.js', [], '4.1.5', true );
+
 		wp_register_script(
 			'jquery-3.4.0',
 			'https://code.jquery.com/jquery-3.4.0.min.js',

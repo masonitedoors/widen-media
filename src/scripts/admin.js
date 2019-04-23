@@ -54,7 +54,9 @@ import filterItemObject from './filterItemObject';
                 data-options='{"toolbar": false, "arrows": true, "autoFocus": false,"touch": false}'
               >
                 <div class="tile__header" aria-hidden="true">
-                  <img class="tile__image" src="${item.imageUrl.thumbnail}" alt="" />
+                  <img class="tile__image lazyload blur-up" src="${
+  item.imageUrl.skeleton
+  }" data-src="${item.imageUrl.thumbnail}" alt="" />
                 </div>
                 <div class="tile__content">
                   <p class="tile__title">${item.filename}</p>
@@ -68,7 +70,7 @@ import filterItemObject from './filterItemObject';
 
                 <div class="modal__grid">
                   <div class="modal__image-wrapper">
-                    <img class="modal__image" src="${item.imageUrl.exact}" alt="" />
+                    <img class="modal__image lazyload" data-src="${item.imageUrl.exact}" alt="" />
                   </div>
 
                   <div class="modal__meta">
@@ -78,7 +80,7 @@ import filterItemObject from './filterItemObject';
                       <div class="uploaded"><strong>Uploaded on:</strong> ${item.uploadDate}</div>
                       <div class="file-size"><strong>File size:</strong> ${item.fileSize}</div>
                       <br>
-                      <p>${item.description}</p>
+                      <p class="description">${item.description}</p>
                     </div>
                     <input class="item__data" type="hidden" value='${itemStr}'>
                     <button class="button button-primary add-to-media-library">Add To Media Library</button>

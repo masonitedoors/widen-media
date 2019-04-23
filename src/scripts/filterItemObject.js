@@ -36,7 +36,8 @@ function filterItemObject(rawObj) {
   item.imageUrl = item.fileFormatType === 'image'
     ? null
     : (item.imageUrl = {
-      thumbnail: `${baseImageUrl}/${externalId}/500x500px/${fileroot}.png?crop=no`,
+      skeleton: `${baseImageUrl}/${externalId}/50x50px/${fileroot}.png?crop=no`,
+      thumbnail: `${baseImageUrl}/${externalId}/500x500px@2x/${fileroot}.png?crop=no`,
       exact: `${baseImageUrl}/${externalId}/exact/${fileroot}.png`,
     })
 
