@@ -21,10 +21,11 @@
     "squizlabs/php_codesniffer": "dev-master",
     "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
     "phpcompatibility/php-compatibility": "dev-master",
-    "wp-coding-standards/wpcs": "dev-master"
+    "wp-coding-standards/wpcs": "dev-master",
+    "phpunit/phpunit": "^7@dev"
   },
   "scripts": {
-    "test": "./vendor/bin/phpcs",
+    "test": "./vendor/bin/phpcs && ./vendor/bin/phpunit --colors=always",
     "fix": "./vendor/bin/phpcbf"
   }
 }
