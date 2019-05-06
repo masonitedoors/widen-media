@@ -2,7 +2,7 @@
 <ruleset name="Widen_Media">
 
   <config name="installed_paths" value="../../wp-coding-standards/wpcs,../../phpcompatibility/php-compatibility,../../automattic/phpcs-neutron-standard" />
-  <config name="testVersion" value="7.0-"/>
+  <config name="testVersion" value="7.2-"/>
 
   <file>.</file>
   <exclude-pattern>*/bin/*</exclude-pattern>

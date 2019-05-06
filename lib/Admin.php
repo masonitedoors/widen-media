@@ -48,7 +48,7 @@ class Admin {
 	 *
 	 * @param String $hook The page hook.
 	 */
-	public function enqueue_styles( $hook ) {
+	public function enqueue_styles( $hook ) : void {
 		if ( $this->media_page_hook !== $hook ) {
 			return;
 		}
@@ -76,7 +76,7 @@ class Admin {
 	 *
 	 * @param String $hook The page hook.
 	 */
-	public function enqueue_scripts( $hook ) {
+	public function enqueue_scripts( $hook ) : void {
 		if ( $this->media_page_hook !== $hook ) {
 			return;
 		}
@@ -126,7 +126,7 @@ class Admin {
 	/**
 	 * Register the options page for the plugin.
 	 */
-	public function register_media_page() {
+	public function register_media_page() : void {
 		add_media_page(
 			__( 'Widen Media Library', 'widen-media' ),
 			__( 'Widen Media', 'widen-media' ),
@@ -148,14 +148,14 @@ class Admin {
 	/**
 	 * Callback for the media page.
 	 */
-	public function media_page_cb() {
+	public function media_page_cb() : void {
 		include_once 'Admin/media-page.php';
 	}
 
 	/**
 	 * Callback for the options page.
 	 */
-	public function options_page_cb() {
+	public function options_page_cb() : void {
 		include_once 'Admin/options-page.php';
 	}
 
@@ -165,13 +165,10 @@ class Admin {
 	 * @param array  $links       The plugin action links.
 	 * @param string $plugin_file The plugin's main file.
 	 * @param array  $plugin_data The plugin data.
-	 * @param string $context     The context.
-	 *
-	 * @return array
 	 */
-	public function settings_link( $links, $plugin_file, $plugin_data, $context ) {
+	public function settings_link( $links, $plugin_file, $plugin_data ) : array {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			return null;
 		}
 
 		array_unshift(
@@ -184,10 +181,8 @@ class Admin {
 
 	/**
 	 * Return the plugin's settings page URL.
-	 *
-	 * @return string
 	 */
-	protected function get_settings_page_url() {
+	protected function get_settings_page_url() : string {
 		$base = admin_url( 'options-general.php' );
 
 		return add_query_arg( 'page', 'widen-media', $base );
@@ -195,10 +190,8 @@ class Admin {
 
 	/**
 	 * Check if access token is defined.
-	 *
-	 * @return Boolean
 	 */
-	public static function is_access_token_defined() {
+	public static function is_access_token_defined() : bool {
 		if ( ! defined( 'WIDEN_MEDIA_ACCESS_TOKEN' ) ) {
 			return false;
 		}
@@ -207,10 +200,8 @@ class Admin {
 
 	/**
 	 * Return the widen access token.
-	 *
-	 * @return string|null
 	 */
-	public static function get_access_token() {
+	public static function get_access_token() : ?string {
 		if ( self::is_access_token_defined() ) {
 			return WIDEN_MEDIA_ACCESS_TOKEN;
 		}

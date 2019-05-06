@@ -32,8 +32,8 @@ class I18n {
 	/**
 	 * Load the plugin text domain for translation.
 	 */
-	public function load_plugin_textdomain() {
-		\load_plugin_textdomain(
+	public function load_plugin_textdomain() : void {
+		load_plugin_textdomain(
 			$this->domain,
 			false,
 			dirname( dirname( \plugin_basename( __FILE__ ) ) ) . '/languages/'
@@ -45,7 +45,7 @@ class I18n {
 	 *
 	 * @param string $domain The domain that represents the locale of this plugin.
 	 */
-	public function set_domain( $domain ) {
+	public function set_domain( $domain ) : void {
 		$this->domain = $domain;
 	}
 
