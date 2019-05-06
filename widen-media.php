@@ -27,6 +27,17 @@ defined( 'WPINC' ) || die();
 require_once __DIR__ . '/inc/autoload.php';
 
 /**
+ * Requires running PHP 7.2 or above.
+ */
+function version_check() {
+	if ( version_compare( PHP_VERSION, '7.2', '<' ) ) {
+		deactivate_plugins( plugin_basename( __FILE__ ) );
+		wp_die( esc_html__( 'The Widen Media plugin requires PHP Version 7.2 or above.', 'widen-media' ) );
+	}
+}
+add_action( 'admin_init', __NAMESPACE__ . '\version_check' );
+
+/**
  * Begins execution of the plugin.
  */
 function load_widen_media() {
