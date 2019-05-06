@@ -18,6 +18,8 @@
 
 declare( strict_types = 1 );
 
+namespace Masonite\Widen_Media;
+
 // If this file is called directly, abort.
 defined( 'WPINC' ) || die();
 
@@ -25,24 +27,10 @@ defined( 'WPINC' ) || die();
 require_once __DIR__ . '/inc/autoload.php';
 
 /**
- * The code that runs during plugin activation.
- * This action is documented in lib/class-activator.php
- */
-\register_activation_hook( __FILE__, '\Masonite\Widen_Media\Activator::activate' );
-
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in lib/class-deactivator.php
- */
-\register_deactivation_hook( __FILE__, '\Masonite\Widen_Media\Deactivator::deactivate' );
-
-/**
  * Begins execution of the plugin.
  */
-\add_action(
-	'plugins_loaded',
-	function () {
-		$plugin = new \Masonite\Widen_Media\Plugin();
-		$plugin->run();
-	}
-);
+function load_widen_media() {
+	$plugin = new Plugin();
+	$plugin->run();
+}
+add_action( 'plugins_loaded', __NAMESPACE__ . '\load_widen_media' );
