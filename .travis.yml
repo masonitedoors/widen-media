@@ -6,10 +6,6 @@ language: php
 php:
   - 7.2
 
-env:
-  global:
-    - REPO=widen-media
-
 notifications:
   email:
     on_success: never
@@ -46,9 +42,8 @@ before_script:
   - npm install
 
 before_deploy:
-  - cd ..
   - ls -a
-  - tar -zcf ${TRAVIS_BUILD_DIR}${REPO}.tar.gz ${REPO}
+  - git archive -o ${TRAVIS_BUILD_DIR}-${TRAVIS_TAG}.zip HEAD
   - ls -a
 
 jobs:
@@ -71,6 +66,6 @@ jobs:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         skip_cleanup: true
-        file: ${TRAVIS_BUILD_DIR}${REPO}.tar.gz
+        file: ${TRAVIS_BUILD_DIR}-${TRAVIS_TAG}.zip
         on:
           branch: master
