@@ -46,10 +46,7 @@ before_script:
   - npm install
 
 before_deploy:
-  - git config --local user.name "$GIT_USER_NAME"
-  - git config --local user.email "$GIT_USER_EMAIL"
-  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-  - git tag $TRAVIS_TAG
+  - ls -a
   - cd ..
   - ls -a
   - tar -zcf ${TRAVIS_BUILD_DIR}${REPO}.tar.gz ${REPO}
