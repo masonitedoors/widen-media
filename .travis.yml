@@ -68,4 +68,4 @@ jobs:
         skip_cleanup: true
         file: ${TRAVIS_BUILD_DIR}-${TRAVIS_TAG}.zip
         on:
-          branch: master
+          tags: true
