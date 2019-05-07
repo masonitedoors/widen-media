@@ -52,7 +52,7 @@ jobs:
           if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
             phpcs
           fi
-    - script: echo "Running unit tests (2)"
+    - script: npm run build
     - stage: GitHub Release
       script: echo "Deploying to GitHub releases ..."
       deploy:
