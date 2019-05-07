@@ -3,6 +3,9 @@ dist: trusty
 
 language: php
 
+php:
+  - 7.2
+
 env:
   global:
     - REPO=widen-media
@@ -67,12 +70,11 @@ jobs:
     - stage: Build
       script: ls && npm run build && ls
     - stage: GitHub Release
-      script: ls"
+      script: ls
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         skip_cleanup: true
         file: ${TRAVIS_BUILD_DIR}${REPO}.tar.gz
-        file_glob: true
         on:
           tags: true
