@@ -49,7 +49,7 @@ before_script:
 before_deploy:
   - cd ..
   - ls -a
-  - tar -zcf ${TRAVIS_BUILD_DIR}.tar.gz ${REPO}
+  - tar -zcf ${TRAVIS_BUILD_DIR}${REPO}.tar.gz ${REPO}
   - ls -a
 
 jobs:
@@ -72,7 +72,7 @@ jobs:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         skip_cleanup: true
-        file: ./
+        file: ${TRAVIS_BUILD_DIR}${REPO}.tar.gz
         file_glob: true
         on:
           tags: true
