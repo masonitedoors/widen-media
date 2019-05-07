@@ -46,7 +46,6 @@ before_script:
   - npm install
 
 before_deploy:
-  - ls -a
   - cd ..
   - ls -a
   - tar -zcf ${TRAVIS_BUILD_DIR}${REPO}.tar.gz ${REPO}
@@ -67,11 +66,11 @@ jobs:
     - stage: Build
       script: ls && npm run build && ls
     - stage: GitHub Release
-      script: ls
+      script: env
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         skip_cleanup: true
         file: ${TRAVIS_BUILD_DIR}${REPO}.tar.gz
         on:
-          tags: true
+          branch: master
