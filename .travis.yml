@@ -40,13 +40,24 @@ before_script:
       phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
     fi
 
-script:
-  - |
-    if [[ ! -z "$WP_VERSION" ]] ; then
-      phpunit
-      WP_MULTISITE=1 phpunit
-    fi
-  - |
-    if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-      phpcs
-    fi
+jobs:
+  include:
+    - script:
+      - |
+      if [[ ! -z "$WP_VERSION" ]] ; then
+        phpunit
+        WP_MULTISITE=1 phpunit
+      fi
+      - |
+      if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
+        phpcs
+      fi
+    - script: echo "Running unit tests (2)"
+    - stage: GitHub Release
+      script: echo "Deploying to GitHub releases ..."
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        skip_cleanup: true
+        on:
+          tags: true
