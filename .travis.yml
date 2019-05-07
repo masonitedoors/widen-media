@@ -43,15 +43,15 @@ before_script:
 jobs:
   include:
     - script:
-      - |
-      if [[ ! -z "$WP_VERSION" ]] ; then
-        phpunit
-        WP_MULTISITE=1 phpunit
-      fi
-      - |
-      if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
-        phpcs
-      fi
+        - |
+          if [[ ! -z "$WP_VERSION" ]] ; then
+            phpunit
+            WP_MULTISITE=1 phpunit
+          fi
+        - |
+          if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
+            phpcs
+          fi
     - script: echo "Running unit tests (2)"
     - stage: GitHub Release
       script: echo "Deploying to GitHub releases ..."
