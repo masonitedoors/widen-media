@@ -23,5 +23,3 @@ This plugin uses [V2 of the Widen API](https://widenv2.docs.apiary.io/). You wil
 ```php
 define( 'WIDEN_MEDIA_ACCESS_TOKEN', 'my-widen-api-token' );
 ```
-
-test
