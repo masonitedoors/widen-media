@@ -3,6 +3,10 @@ dist: trusty
 
 language: php
 
+env:
+  global:
+    - REPO=widen-media
+
 notifications:
   email:
     on_success: never
@@ -42,6 +46,12 @@ before_script:
     fi
   - npm install
 
+before_deploy:
+  - cd ..
+  - ls -a
+  - tar -zcf ${TRAVIS_BUILD_DIR}.tar.gz ${REPO}
+  - ls -a
+
 jobs:
   include:
     - script:
@@ -62,5 +72,7 @@ jobs:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         skip_cleanup: true
+        file: ./
+        file_glob: true
         on:
           tags: true
