@@ -1,9 +1,4 @@
 <?php
-/**
- * Provide the admin area view for the plugin
- *
- * @package    Widen_Media
- */
 
 declare( strict_types = 1 );
 

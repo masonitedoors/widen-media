@@ -1,25 +1,20 @@
 <?php
-/**
- * The dashboard-specific functionality of the plugin.
- *
- * @package    Widen_Media
- */
 
 declare( strict_types = 1 );
 
-namespace Masonite\Widen_Media;
+namespace Masonite\WP\Widen_Media;
 
 /**
  * The Widen API-specific functionality of the plugin.
  *
- * @package    Widen_Media
+ * @package Widen_Media
  */
 class Widen {
 
 	/**
 	 * The access token for Widen.
 	 *
-	 * @var    String $access_token The access token for Widen.
+	 * @var String $access_token The access token for Widen.
 	 */
 	private $access_token;
 
@@ -35,18 +30,21 @@ class Widen {
 	/**
 	 * Register the stylesheets for the Dashboard.
 	 *
-	 * @param String $query The search query.
+	 * @param String $query  The search query.
+	 * @param Int    $offset The offset for the search.
+	 * @param Int    $limit  The response item limit.
 	 *
 	 * @link https://widenv2.docs.apiary.io/
 	 */
-	public function search( $query ) {
+	public function search( $query, $offset = 0, $limit = 10 ) {
 		$base_url = 'https://api.widencollective.com/v2/assets/search';
 
 		$url = add_query_arg(
 			[
-				'query'  => "$query",
-				'limit'  => '100',
-				'expand' => 'file_properties,metadata',
+				'query'  => $query,
+				'offset' => $offset,
+				'limit'  => $limit,
+				'expand' => 'file_properties,metadata,embeds',
 			],
 			$base_url
 		);
@@ -58,6 +56,7 @@ class Widen {
 			],
 		];
 
+		// Make our request to Widen.
 		$response = wp_remote_get( esc_url_raw( $url ), $args );
 
 		// Check the response code.
@@ -65,17 +64,21 @@ class Widen {
 		$response_message = wp_remote_retrieve_response_message( $response );
 
 		if ( 200 !== $response_code && ! empty( $response_message ) ) {
+
 			$error = new WP_Error( $response_code, $response_message );
 			wp_send_json_error( $error );
+
 		} elseif ( 200 !== $response_code ) {
-			$error = new WP_Error( $response_code, 'An unknown error occurred', 'Some information' );
+
+			$error = new WP_Error( $response_code, 'An unknown error occurred' );
 			wp_send_json_error( $error );
+
 		} else {
+
 			$body = wp_remote_retrieve_body( $response );
 			$data = json_decode( $body, true );
 
-			wp_send_json_success( $data, $response_code );
+			return $data;
 		}
 	}
-
 }

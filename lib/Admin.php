@@ -1,46 +1,43 @@
 <?php
-/**
- * The dashboard-specific functionality of the plugin.
- *
- * @package    Widen_Media
- */
 
 declare( strict_types = 1 );
 
-namespace Masonite\Widen_Media;
+namespace Masonite\WP\Widen_Media;
 
 /**
  * The dashboard-specific functionality of the plugin.
  *
- * Defines the plugin name, version, and two examples hooks for how to
+ * Defines the Widen Media, version, and two examples hooks for how to
  * enqueue the dashboard-specific stylesheet and JavaScript.
- *
- * @package    Widen_Media
  */
-class Admin {
+class Admin extends Plugin {
 
 	/**
-	 * The plugin's instance.
+	 * The plugin's API for Widen.
 	 *
-	 * @var Plugin $plugin This plugin's instance.
+	 * @var Widen
 	 */
-	private $plugin;
+	private $widen;
 
 	/**
 	 * The media page hook.
 	 * To be used when enqueueing scripts/styles.
 	 *
-	 * @var String $media_page_hook The Widen media admin page hook.
+	 * @var String
 	 */
-	private $media_page_hook = 'media_page_widen-media';
+	private $media_page_hook;
 
 	/**
 	 * Initialize the class and set its properties.
-	 *
-	 * @param Plugin $plugin This plugin's instance.
 	 */
-	public function __construct( Plugin $plugin ) {
-		$this->plugin = $plugin;
+	public function __construct() {
+		// Exit if not in wp-admin.
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		$this->widen           = new Widen( self::get_access_token() );
+		$this->media_page_hook = 'media_page_widen-media';
 	}
 
 	/**
@@ -54,21 +51,12 @@ class Admin {
 		}
 
 		wp_enqueue_style(
-			'fancybox',
-			'https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css',
-			[],
-			'3.5.7',
-			'all'
-		);
-
-		wp_enqueue_style(
-			$this->plugin->get_plugin_name(),
+			self::get_plugin_name(),
 			plugin_dir_url( dirname( __FILE__ ) ) . 'dist/styles/admin.css',
 			[],
-			$this->plugin->get_version(),
+			self::get_plugin_version(),
 			'all'
 		);
-
 	}
 
 	/**
@@ -81,45 +69,28 @@ class Admin {
 			return;
 		}
 
-		wp_enqueue_script( 'lazysizes', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/lazysizes.min.js', [], '4.1.5', true );
-		wp_enqueue_script( 'lazysizes-blur-up', 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/plugins/blur-up/ls.blur-up.min.js', [], '4.1.5', true );
-
-		wp_register_script(
-			'jquery-3.4.0',
-			'https://code.jquery.com/jquery-3.4.0.min.js',
-			[],
-			'3.4.0',
-			true
-		);
-
-		wp_add_inline_script(
-			'jquery-3.4.0',
-			'var jQuery_3_4_0 = $.noConflict(true);'
-		);
-
 		wp_enqueue_script(
-			'fancybox',
-			'https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js',
-			[ 'jquery-3.4.0' ],
-			'3.5.7',
-			true
-		);
-
-		wp_enqueue_script(
-			$this->plugin->get_plugin_name(),
+			self::get_plugin_name(),
 			plugin_dir_url( dirname( __FILE__ ) ) . 'dist/scripts/admin.js',
-			[ 'jquery-3.4.0', 'fancybox' ],
-			$this->plugin->get_version(),
+			[],
+			self::get_plugin_version(),
+			'all'
+		);
+
+		wp_enqueue_script(
+			'lazysizes',
+			'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/lazysizes.min.js',
+			[],
+			'4.1.5',
 			true
 		);
 
-		wp_localize_script(
-			$this->plugin->get_plugin_name(),
-			'WIDEN_MEDIA_OBJ',
-			[
-				'ajax_url'   => admin_url( 'admin-ajax.php' ),
-				'ajax_nonce' => wp_create_nonce( 'widen_media_nonce' ),
-			]
+		wp_enqueue_script(
+			'lazysizes-blur-up',
+			'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/plugins/blur-up/ls.blur-up.min.js',
+			[],
+			'4.1.5',
+			true
 		);
 	}
 
@@ -149,14 +120,13 @@ class Admin {
 	 * Callback for the media page.
 	 */
 	public function media_page_cb() : void {
-		include_once 'Admin/media-page.php';
+		include_once 'Admin/page-media.php';
 	}
-
 	/**
 	 * Callback for the options page.
 	 */
 	public function options_page_cb() : void {
-		include_once 'Admin/options-page.php';
+		include_once 'Admin/page-options.php';
 	}
 
 	/**
@@ -165,12 +135,14 @@ class Admin {
 	 * @param array  $links       The plugin action links.
 	 * @param string $plugin_file The plugin's main file.
 	 * @param array  $plugin_data The plugin data.
+	 * @param string $context     The context.
 	 */
-	public function settings_link( $links, $plugin_file, $plugin_data ) : array {
+	public function settings_link( $links, $plugin_file, $plugin_data, $context ) : array {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return null;
+			return $links;
 		}
 
+		// Add new item to the links array.
 		array_unshift(
 			$links,
 			sprintf( '<a href="%s">%s</a>', esc_attr( self::get_settings_page_url() ), __( 'Settings', 'widen-media' ) )
@@ -182,8 +154,17 @@ class Admin {
 	/**
 	 * Return the plugin's settings page URL.
 	 */
-	protected function get_settings_page_url() : string {
+	protected static function get_settings_page_url() : string {
 		$base = admin_url( 'options-general.php' );
+
+		return add_query_arg( 'page', 'widen-media', $base );
+	}
+
+	/**
+	 * Return the plugin's media page URL.
+	 */
+	protected static function get_media_page_url() : string {
+		$base = admin_url( 'upload.php' );
 
 		return add_query_arg( 'page', 'widen-media', $base );
 	}
@@ -206,27 +187,6 @@ class Admin {
 			return WIDEN_MEDIA_ACCESS_TOKEN;
 		}
 		return null;
-	}
-
-	/**
-	 * Process search form data.
-	 *
-	 * @uses $_POST['query'] directly
-	 */
-	public function form_submit() {
-		check_ajax_referer( 'widen_media_nonce', 'nonce' );
-
-		if ( isset( $_POST['query'] ) ) {
-			$query = sanitize_text_field( wp_unslash( $_POST['query'] ) );
-		}
-
-		$widen = new Widen( self::get_access_token() );
-		$widen->search( $query );
-
-		$data['message'] = 'Success!';
-		$data['query']   = $query;
-
-		wp_send_json_success( $data );
 	}
 
 	/**
@@ -258,12 +218,13 @@ class Admin {
 			return $input;
 		}
 
-		$attachment          = [
+		$attachment = [
 			'guid'           => $url,
 			'post_mime_type' => $mime_type,
 			'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
 			'post_content'   => $item->description,
 		];
+
 		$attachment_metadata = [
 			'width'  => $width,
 			'height' => $height,
@@ -279,4 +240,50 @@ class Admin {
 
 		wp_send_json_success( $json );
 	}
+
+	/**
+	 * Handles the displaying of admin notices.
+	 */
+	public function admin_notices() : void {
+		$screen = get_current_screen();
+
+		if ( $this->media_page_hook !== $screen->id ) {
+			return;
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['reset-options'] ) ) {
+			if ( 'true' === $_GET['reset-options'] ) {
+				self::display_notice( 'error', 'This is a test' );
+			}
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+	}
+
+	/**
+	 * Provides an easy eay to display an administration notice based on the incoming
+	 * class and message.
+	 *
+	 * @param string $class   the class to add to the notice (warning, error, success).
+	 * @param string $message the message to display in the administration notice area.
+	 */
+	public static function display_notice( $class, $message ) {
+		printf(
+			'<div class="notice notice-%1$s"><p>%2$s</p></div>',
+			esc_attr( $class ),
+			esc_html( $message )
+		);
+	}
+
+	/**
+	 * Get the appropriate tile template based on the item's format type (image, pdf, etc).
+	 *
+	 * @param Array $item A single item from the responses items array.
+	 */
+	public static function get_tile( $item ) : void {
+		$format_type = $item['file_properties']['format_type'] ?? 'unknown';
+
+		include "Admin/tile-$format_type.php";
+	}
+
 }
