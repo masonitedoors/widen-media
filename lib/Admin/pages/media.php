@@ -2,6 +2,8 @@
 
 declare( strict_types = 1 );
 
+namespace Masonite\WP\Widen_Media;
+
 // If this file is called directly, abort.
 defined( 'WPINC' ) || die();
 

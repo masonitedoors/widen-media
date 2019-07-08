@@ -86,29 +86,29 @@ class Paginator extends Admin {
 		// Get the pagination links.
 		$first_page_url = add_query_arg(
 			[
-				's'     => $query,
+				's'     => $this->query,
 				'paged' => 1,
 			],
 			$this->base_url
 		);
 		$prev_page_url  = add_query_arg(
 			[
-				's'     => $query,
-				'paged' => ( $current_page - 1 ),
+				's'     => $this->query,
+				'paged' => ( $this->current_page - 1 ),
 			],
 			$this->base_url
 		);
 		$next_page_url  = add_query_arg(
 			[
-				's'     => $query,
-				'paged' => ( $current_page + 1 ),
+				's'     => $this->query,
+				'paged' => ( $this->current_page + 1 ),
 			],
 			$this->base_url
 		);
 		$last_page_url  = add_query_arg(
 			[
-				's'     => $query,
-				'paged' => $total_page_count,
+				's'     => $this->query,
+				'paged' => $this->total_page_count,
 			],
 			$this->base_url
 		);
@@ -121,7 +121,7 @@ class Paginator extends Admin {
 
 			<div class="tablenav-pages">
 
-				<span class="displaying-num"><?php echo esc_html( number_format( $this->total_count ) ); ?> items</span>
+				<span class="displaying-num"><?php echo esc_html( number_format( $this->total_item_count ) ); ?> items</span>
 
 				<span class="pagination-links">
 
@@ -153,7 +153,7 @@ class Paginator extends Admin {
 
 					<span class="paging-input">
 						<label for="current-page-selector" class="screen-reader-text"><?php esc_html_e( 'Current page', 'widen-media' ); ?></label>
-						<input class="current-page" id="current-page-selector" type="text" name="paged" value="<?php echo esc_attr( $current_page ); ?>" size="4">
+						<input class="current-page" id="current-page-selector" type="text" name="paged" value="<?php echo esc_attr( $this->current_page ); ?>" size="4">
 						<span class="tablenav-paging-text"> <?php esc_html_e( 'of', 'widen-media' ); ?>
 							<span class="total-pages"><?php echo esc_html( number_format( $this->total_page_count ) ); ?></span>
 						</span>
