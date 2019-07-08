@@ -60,6 +60,11 @@ $gutter: 18px;
   box-sizing: border-box;
   justify-content: space-between;
 
+  figure {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   > a {
     text-decoration: none;
     backface-visibility: hidden;

@@ -120,13 +120,13 @@ class Admin extends Plugin {
 	 * Callback for the media page.
 	 */
 	public function media_page_cb() : void {
-		include_once 'Admin/page-media.php';
+		include_once 'Admin/pages/media.php';
 	}
 	/**
 	 * Callback for the options page.
 	 */
 	public function options_page_cb() : void {
-		include_once 'Admin/page-options.php';
+		include_once 'Admin/pageas/options.php';
 	}
 
 	/**
@@ -283,7 +283,55 @@ class Admin extends Plugin {
 	public static function get_tile( $item ) : void {
 		$format_type = $item['file_properties']['format_type'] ?? 'unknown';
 
-		include "Admin/tile-$format_type.php";
+		include "Admin/tiles/$format_type.php";
+	}
+
+	/**
+	 * Handles the form submission to search widen.
+	 */
+	public function handle_search_submit() : void {
+
+		if ( ! empty( $_POST ) && check_admin_referer( 'search_submit', 'widen_media_nonce' ) ) {
+
+			// Get the previous search query.
+			if ( isset( $_POST['prev_s'] ) ) {
+				$prev_query = rawurlencode( sanitize_text_field( wp_unslash( $_POST['prev_s'] ) ) );
+			} else {
+				$prev_query = null;
+			}
+
+			// Get the search query.
+			if ( isset( $_POST['s'] ) ) {
+				$query = rawurlencode( sanitize_text_field( wp_unslash( $_POST['s'] ) ) );
+			} else {
+				$query = '';
+			}
+
+			// Get the pagination.
+			// Reset the pagination if new search.
+			if ( isset( $_POST['paged'] ) && $prev_query === $query ) {
+				$paged = sanitize_text_field( wp_unslash( $_POST['paged'] ) );
+			} else {
+				$paged = 1;
+			}
+
+			$base_url = self::get_media_page_url();
+
+			// Build our search url.
+			$url = add_query_arg(
+				[
+					's'     => $query,
+					'paged' => $paged,
+				],
+				$base_url
+			);
+
+			wp_safe_redirect( $url );
+
+			exit;
+
+		}
+
 	}
 
 }

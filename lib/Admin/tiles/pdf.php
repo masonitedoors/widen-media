@@ -1,6 +1,6 @@
 <?php
 /**
- * Results tile for an image
+ * Results tile for a pdf
  */
 
 declare( strict_types = 1 );
@@ -10,18 +10,18 @@ defined( 'WPINC' ) || die();
 
 $filename      = $item['filename'];
 $original_url  = $item['embeds']['original']['url'];
-$thumbnail_url = $item['embeds']['ThumbnailPNG']['url'];
-$skeleton_url  = $item['embeds']['SkeletonPNG']['url'];
+$thumbnail_url = $item['embeds']['document_thumbnail']['url'];
+$skeleton_url  = $item['embeds']['document_thumbnail']['url'];
 $description   = implode( ' ', $item['metadata']['fields']['description'] );
 
 ?>
-<div class="tile">
+<div class="tile pdf">
 	<a href="#" title="<?php echo esc_attr( $filename ); ?>">
 		<div class="tile__header" aria-hidden="true">
 			<img
 				class="tile__image blur-up lazyload"
-				src="<?php echo esc_attr( $skeleton_url ); ?>"
-				data-src="<?php echo esc_attr( $thumbnail_url ); ?>"
+				src="<?php echo esc_url( $skeleton_url ); ?>"
+				data-src="<?php echo esc_url( $thumbnail_url ); ?>"
 				alt="<?php echo esc_attr( $description ); ?>"
 			/>
 		</div>

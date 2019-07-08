@@ -57,6 +57,9 @@
   box-sizing: border-box;
   -webkit-justify-content: space-between;
           justify-content: space-between; }
+  .tile figure {
+    margin-left: 0;
+    margin-right: 0; }
   .tile > a {
     text-decoration: none;
     -webkit-backface-visibility: hidden;
