@@ -112,6 +112,16 @@ $gutter: 18px;
   padding: $gutter 0;
   display: flex;
   justify-content: flex-end;
+
+  .tablenav-pages {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .displaying-num {
+    margin-right: auto;
+  }
 }
 
 .modal {

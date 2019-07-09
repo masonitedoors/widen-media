@@ -45,6 +45,7 @@ $offset       = ( $current_page - 1 ) * $limit;
 			$pagination = new Paginator(
 				$current_page,
 				$limit,
+				count( $response['items'] ),
 				$response['total_count'],
 				$query
 			);
@@ -67,9 +68,7 @@ $offset       = ( $current_page - 1 ) * $limit;
 
 				</ul>
 
-				<?php $pagination->display(); ?>
-
-				<pre><?php print_r( $response['items'] ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r ?></pre>
+				<pre><?php // print_r( $response['items'] ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r ?></pre>
 
 			<?php else : ?>
 

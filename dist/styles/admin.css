@@ -100,6 +100,14 @@
   display: flex;
   -webkit-justify-content: flex-end;
           justify-content: flex-end; }
+  .toolbar .tablenav-pages {
+    width: 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+            align-items: center; }
+  .toolbar .displaying-num {
+    margin-right: auto; }
 
 .modal__image {
   max-height: 70vh;

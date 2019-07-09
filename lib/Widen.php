@@ -63,15 +63,18 @@ class Widen {
 		$response_code    = wp_remote_retrieve_response_code( $response );
 		$response_message = wp_remote_retrieve_response_message( $response );
 
+
+
 		if ( 200 !== $response_code && ! empty( $response_message ) ) {
 
-			$error = new WP_Error( $response_code, $response_message );
-			wp_send_json_error( $error );
+			wp_die( print_r( $response) );
+			$error = new \WP_Error( $response_code, $response_message );
+
 
 		} elseif ( 200 !== $response_code ) {
 
-			$error = new WP_Error( $response_code, 'An unknown error occurred' );
-			wp_send_json_error( $error );
+			wp_die( print_r( $response) );
+			$error = new \WP_Error( $response_code, 'An unknown error occurred' );
 
 		} else {
 

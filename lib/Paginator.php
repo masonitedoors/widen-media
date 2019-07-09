@@ -27,11 +27,18 @@ class Paginator extends Admin {
 	private $limit;
 
 	/**
+	 * The total number of items shown on the currnent page.
+	 *
+	 * @var Int
+	 */
+	private $current_page_items_count;
+
+	/**
 	 * The total item count.
 	 *
 	 * @var Int
 	 */
-	private $total_item_count;
+	private $total_items_count;
 
 	/**
 	 * The page count.
@@ -53,6 +60,13 @@ class Paginator extends Admin {
 	 * @var String
 	 */
 	private $base_url;
+
+	/**
+	 * If the query has results.
+	 *
+	 * @var Boolean
+	 */
+	private $has_results;
 
 	/**
 	 * If we are on the first page.
@@ -85,26 +99,26 @@ class Paginator extends Admin {
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param Int    $current_page      The current paged value.
-	 * @param Int    $limit             The max amount of items displayed per page.
-	 * @param Int    $total_item_count  The total item count.
-	 * @param String $query             The search query.
+	 * @param Int    $current_page             The current paged value.
+	 * @param Int    $limit                    The max amount of items displayed per page.
+	 * @param Int    $current_page_items_count The number of items shown for the current page.
+	 * @param Int    $total_items_count        The total item count.
+	 * @param String $query                    The search query.
 	 */
-	public function __construct( $current_page, $limit, $total_item_count, $query ) {
+	public function __construct( $current_page, $limit, $current_page_items_count, $total_items_count, $query ) {
 
-		$this->current_page     = intval( $current_page );
-		$this->limit            = intval( $limit );
-		$this->total_item_count = intval( $total_item_count );
-		$this->total_page_count = intval( ceil( $this->total_item_count / $this->limit ) );
-
-		$this->query = $query;
-
-		$this->is_first_page       = $this->is_first_page();
-		$this->is_second_page      = $this->is_second_page();
-		$this->is_second_last_page = $this->is_second_last_page();
-		$this->is_last_page        = $this->is_last_page();
-
-		$this->base_url = self::get_media_page_url();
+		$this->current_page             = intval( $current_page );
+		$this->limit                    = intval( $limit );
+		$this->current_page_items_count = intval( $current_page_items_count );
+		$this->total_items_count        = intval( $total_items_count );
+		$this->total_page_count         = intval( ceil( $this->total_items_count / $this->limit ) );
+		$this->query                    = $query;
+		$this->has_results              = $this->has_results();
+		$this->is_first_page            = $this->is_first_page();
+		$this->is_second_page           = $this->is_second_page();
+		$this->is_second_last_page      = $this->is_second_last_page();
+		$this->is_last_page             = $this->is_last_page();
+		$this->base_url                 = self::get_media_page_url();
 
 	}
 
@@ -134,6 +148,13 @@ class Paginator extends Admin {
 	 */
 	public function is_last_page() : bool {
 		return ( $this->total_page_count === $this->current_page );
+	}
+
+	/**
+	 * If the query has results.
+	 */
+	public function has_results() : bool {
+		return ( 0 !== $this->total_items_count );
 	}
 
 	/**
@@ -207,6 +228,20 @@ class Paginator extends Admin {
 		$next_page_url  = $this->get_next_page_url();
 		$last_page_url  = $this->get_last_page_url();
 
+		$results_meta = sprintf(
+			/* translators: %1$s: Total item count for current page, %2$s: Total item count, %3$s: Search query */
+			__( 'Displaying %1$s of %2$s items for %3$s', 'widen-media' ),
+			'<strong>' . number_format( $this->current_page_items_count ) . '</strong>',
+			'<strong>' . number_format( $this->total_items_count ) . '</strong>',
+			'<strong>"' . $this->query . '"</strong>',
+		);
+
+		$no_results_meta = sprintf(
+			/* translators: %1$s: Search query */
+			__( 'No results were found for %1$s', 'widen-media' ),
+			'<strong>"' . $this->query . '"</strong>',
+		);
+
 		?>
 
 		<div class="toolbar">
@@ -215,8 +250,9 @@ class Paginator extends Admin {
 
 			<div class="tablenav-pages">
 
-				<span class="displaying-num"><?php echo esc_html( number_format( $this->total_item_count ) ); ?> items</span>
+			<?php if ( $this->has_results ) : ?>
 
+				<span class="displaying-num"><?php echo $results_meta; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 				<span class="pagination-links">
 
 				<?php if ( $this->is_first_page || $this->is_second_page ) : ?>
@@ -280,6 +316,12 @@ class Paginator extends Admin {
 				<?php endif; ?>
 
 				</span><!-- .pagination-links -->
+
+			<?php else : ?>
+
+				<span class="displaying-num"><?php echo $no_results_meta; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+
+			<?php endif; // If results. ?>
 
 			</div><!-- .tablenav-pages -->
 
