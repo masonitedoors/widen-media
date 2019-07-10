@@ -190,58 +190,6 @@ class Admin extends Plugin {
 	}
 
 	/**
-	 * Add widen asset to WordPress media library.
-	 */
-	public function add_to_library() {
-		check_ajax_referer( 'widen_media_nonce', 'nonce' );
-
-		if ( isset( $_POST['item'] ) ) {
-			$item_str = sanitize_text_field( wp_unslash( $_POST['item'] ) );
-			$item     = json_decode( $item_str );
-		}
-
-		$filename   = $item->filename;
-		$url        = $item->imageUrl->exact; // phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		$image_size = getimagesize( $url );
-		$width      = $image_size[0];
-		$height     = $image_size[1];
-		$mime_type  = $image_size['mime'];
-
-		if ( empty( $image_size ) ) {
-			if ( empty( $mime_type ) ) {
-				$response = wp_remote_head( $url );
-				if ( is_array( $response ) && isset( $response['headers']['content-type'] ) ) {
-					$input['mime-type'] = $response['headers']['content-type'];
-				}
-			}
-			$input['error'] = __( 'Unable to get the image size.', 'widen-media' );
-			return $input;
-		}
-
-		$attachment = [
-			'guid'           => $url,
-			'post_mime_type' => $mime_type,
-			'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-			'post_content'   => $item->description,
-		];
-
-		$attachment_metadata = [
-			'width'  => $width,
-			'height' => $height,
-			'file'   => $url,
-		];
-
-		$attachment_metadata['sizes'] = [ 'full' => $attachment_metadata ];
-		$attachment_id                = wp_insert_attachment( $attachment );
-
-		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
-
-		$json['message'] = __( 'Added to library!', 'widen-media' );
-
-		wp_send_json_success( $json );
-	}
-
-	/**
 	 * Provides an easy eay to display an administration notice based on the incoming
 	 * class and message.
 	 *
@@ -313,6 +261,58 @@ class Admin extends Plugin {
 
 		}
 
+	}
+
+	/**
+	 * Add widen asset to WordPress media library.
+	 */
+	public function add_to_library() {
+		check_ajax_referer( 'widen_media_nonce', 'nonce' );
+
+		if ( isset( $_POST['item'] ) ) {
+			$item_str = sanitize_text_field( wp_unslash( $_POST['item'] ) );
+			$item     = json_decode( $item_str );
+		}
+
+		$filename   = $item->filename;
+		$url        = $item->imageUrl->exact; // phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$image_size = getimagesize( $url );
+		$width      = $image_size[0];
+		$height     = $image_size[1];
+		$mime_type  = $image_size['mime'];
+
+		if ( empty( $image_size ) ) {
+			if ( empty( $mime_type ) ) {
+				$response = wp_remote_head( $url );
+				if ( is_array( $response ) && isset( $response['headers']['content-type'] ) ) {
+					$input['mime-type'] = $response['headers']['content-type'];
+				}
+			}
+			$input['error'] = __( 'Unable to get the image size.', 'widen-media' );
+			return $input;
+		}
+
+		$attachment = [
+			'guid'           => $url,
+			'post_mime_type' => $mime_type,
+			'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+			'post_content'   => $item->description,
+		];
+
+		$attachment_metadata = [
+			'width'  => $width,
+			'height' => $height,
+			'file'   => $url,
+		];
+
+		$attachment_metadata['sizes'] = [ 'full' => $attachment_metadata ];
+		$attachment_id                = wp_insert_attachment( $attachment );
+
+		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+
+		$json['message'] = __( 'Added to library!', 'widen-media' );
+
+		wp_send_json_success( $json );
 	}
 
 }
