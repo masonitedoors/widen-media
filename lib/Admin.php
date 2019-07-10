@@ -242,25 +242,6 @@ class Admin extends Plugin {
 	}
 
 	/**
-	 * Handles the displaying of admin notices.
-	 */
-	public function admin_notices() : void {
-		$screen = get_current_screen();
-
-		if ( $this->media_page_hook !== $screen->id ) {
-			return;
-		}
-
-		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-		if ( isset( $_GET['reset-options'] ) ) {
-			if ( 'true' === $_GET['reset-options'] ) {
-				self::display_notice( 'error', 'This is a test' );
-			}
-		}
-		// phpcs:enable WordPress.Security.NonceVerification.Recommended
-	}
-
-	/**
 	 * Provides an easy eay to display an administration notice based on the incoming
 	 * class and message.
 	 *

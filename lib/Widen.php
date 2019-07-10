@@ -30,18 +30,20 @@ class Widen {
 	/**
 	 * Register the stylesheets for the Dashboard.
 	 *
-	 * @param String $query  The search query.
-	 * @param Int    $offset The offset for the search.
-	 * @param Int    $limit  The response item limit.
+	 * @param String  $query      The search query.
+	 * @param Int     $offset     The offset for the search.
+	 * @param Int     $limit      The response item limit.
+	 * @param Boolean $collection Search for a collection.
 	 *
 	 * @link https://widenv2.docs.apiary.io/
 	 */
-	public function search( $query, $offset = 0, $limit = 10 ) {
+	public function search( $query, $offset = 0, $limit = 10, $collection = false ) {
 		$base_url = 'https://api.widencollective.com/v2/assets/search';
+		$before   = $collection ? 'acn:' : '';
 
 		$url = add_query_arg(
 			[
-				'query'  => $query,
+				'query'  => $before . $query,
 				'offset' => $offset,
 				'limit'  => $limit,
 				'expand' => 'file_properties,metadata,embeds',
@@ -63,18 +65,11 @@ class Widen {
 		$response_code    = wp_remote_retrieve_response_code( $response );
 		$response_message = wp_remote_retrieve_response_message( $response );
 
-
-
 		if ( 200 !== $response_code && ! empty( $response_message ) ) {
-
-			wp_die( print_r( $response) );
-			$error = new \WP_Error( $response_code, $response_message );
-
+			return new \WP_Error( $response_code, $response_message );
 
 		} elseif ( 200 !== $response_code ) {
-
-			wp_die( print_r( $response) );
-			$error = new \WP_Error( $response_code, 'An unknown error occurred' );
+			return new \WP_Error( $response_code, __( 'An unknown error occurred', 'widen-media' ) );
 
 		} else {
 

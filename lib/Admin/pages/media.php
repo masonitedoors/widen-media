@@ -41,20 +41,26 @@ $offset       = ( $current_page - 1 ) * $limit;
 			// Make our API request to Widen.
 			$response = $this->widen->search( $query, $offset, $limit );
 
-			// Setup our pagination.
-			$pagination = new Paginator(
-				$current_page,
-				$limit,
-				count( $response['items'] ),
-				$response['total_count'],
-				$query
-			);
+			if ( ! is_wp_error( $response ) ) {
+				$pagination = new Paginator(
+					$current_page,
+					$limit,
+					count( $response['items'] ),
+					$response['total_count'],
+					$query
+				);
+			} else {
+				Admin::display_notice(
+					'error',
+					$response->get_error_message()
+				);
+			}
 
 			?>
 
 			<div id="search-results">
 
-			<?php if ( $response ) : ?>
+			<?php if ( ! is_wp_error( $response ) ) : ?>
 
 				<?php $pagination->display(); ?>
 
@@ -68,11 +74,8 @@ $offset       = ( $current_page - 1 ) * $limit;
 
 				</ul>
 
-				<pre><?php // print_r( $response['items'] ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r ?></pre>
-
-			<?php else : ?>
-
-				<p><?php esc_html_e( 'No results found.', 'widen-media' ); ?></p>
+				<?php Util::print( 'response', $response ); ?>
+				<?php Util::print( 'items', $response['items'] ); ?>
 
 			<?php endif; ?>
 
