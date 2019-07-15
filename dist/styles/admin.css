@@ -24,6 +24,10 @@
   .toolbar .displaying-num {
     margin-right: auto; }
 
+.button.add-to-library {
+  margin: 18px auto 9px;
+  display: block; }
+
 .tiles {
   display: -webkit-flex;
   display: flex;
@@ -44,7 +48,7 @@
   .tile figure {
     margin-left: 0;
     margin-right: 0; }
-  .tile > a {
+  .tile__wrapper {
     text-decoration: none;
     -webkit-backface-visibility: hidden;
             backface-visibility: hidden;

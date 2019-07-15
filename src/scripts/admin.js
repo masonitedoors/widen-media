@@ -6,6 +6,7 @@ import '../styles/admin.scss';
   const formSpinner = $('#widen-search-spinner')
   const searchResults = $('#widen-search-results')
   const paginationButton = $('.pagination-links .button')
+  const addToLibrary = $('.add-to-library')
 
   form.submit(e => {
     startSpinner()
@@ -13,6 +14,24 @@ import '../styles/admin.scss';
 
   paginationButton.click(e => {
     startSpinner()
+  })
+
+  addToLibrary.click(function (e) {
+    e.preventDefault()
+
+    const item = $(this).attr('data-item')
+
+    $.ajax({
+      url: widen_media.ajax_url,
+      type: 'POST',
+      data: {
+        action: 'widen_media_add_to_library',
+        nonce: widen_media.ajax_nonce,
+        item,
+      },
+    }).done(response => {
+      console.log(response)
+    })
   })
 
   function startSpinner() {

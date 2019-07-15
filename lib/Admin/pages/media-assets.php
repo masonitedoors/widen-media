@@ -87,3 +87,6 @@ $offset       = ( $current_page - 1 ) * $limit;
 
 	</form>
 </div><!-- .wrap -->
+
+<?php
+Util::print( '$_GET', $_GET );

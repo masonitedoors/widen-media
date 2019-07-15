@@ -39,7 +39,6 @@ class Admin extends Plugin {
 	private static function can_load_scripts( $hook ) : bool {
 		switch ( $hook ) {
 			case 'settings_page_widen-media':
-			case 'media_page_widen-media-asset':
 			case 'media_page_widen-media-assets':
 				return true;
 			default:
@@ -77,11 +76,11 @@ class Admin extends Plugin {
 		}
 
 		wp_enqueue_script(
-			self::get_plugin_name(),
-			plugin_dir_url( dirname( __FILE__ ) ) . 'dist/scripts/admin.js',
-			[],
-			self::get_plugin_version(),
-			'all'
+			'fancybox',
+			'https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js',
+			[ 'jquery' ],
+			'3.5.7',
+			true
 		);
 
 		wp_enqueue_script(
@@ -99,6 +98,23 @@ class Admin extends Plugin {
 			'4.1.5',
 			true
 		);
+
+		wp_enqueue_script(
+			self::get_plugin_name(),
+			plugin_dir_url( dirname( __FILE__ ) ) . 'dist/scripts/admin.js',
+			[],
+			self::get_plugin_version(),
+			'all'
+		);
+
+		wp_localize_script(
+			self::get_plugin_name(),
+			'widen_media',
+			[
+				'ajax_url'   => admin_url( 'admin-ajax.php' ),
+				'ajax_nonce' => wp_create_nonce( 'widen_media_add_to_library_nonce' ),
+			]
+		);
 	}
 
 	/**
@@ -111,14 +127,6 @@ class Admin extends Plugin {
 			'manage_options',
 			'widen-media-assets',
 			[ $this, 'media_assets_page_cb' ]
-		);
-
-		add_media_page(
-			null,
-			null,
-			'manage_options',
-			'widen-media-asset',
-			[ $this, 'media_asset_page_cb' ]
 		);
 
 		add_submenu_page(
@@ -138,13 +146,6 @@ class Admin extends Plugin {
 	 */
 	public function media_assets_page_cb() : void {
 		include_once 'Admin/pages/media-assets.php';
-	}
-
-	/**
-	 * Callback for the media asset page.
-	 */
-	public function media_asset_page_cb() : void {
-		include_once 'Admin/pages/media-asset.php';
 	}
 
 	/**
@@ -192,15 +193,6 @@ class Admin extends Plugin {
 		$base = admin_url( 'upload.php' );
 
 		return add_query_arg( 'page', 'widen-media-assets', $base );
-	}
-
-	/**
-	 * Return the base URL to a single media asset page.
-	 */
-	protected static function get_media_asset_page() : string {
-		$base = admin_url( 'upload.php' );
-
-		return add_query_arg( 'page', 'widen-media-asset', $base );
 	}
 
 	/**
@@ -300,53 +292,53 @@ class Admin extends Plugin {
 	/**
 	 * Add widen asset to WordPress media library.
 	 */
-	public function add_to_library() {
-		check_ajax_referer( 'widen_media_nonce', 'nonce' );
+	public function add_to_library() : void {
+		check_ajax_referer( 'widen_media_add_to_library_nonce', 'nonce' );
 
 		if ( isset( $_POST['item'] ) ) {
 			$item_str = sanitize_text_field( wp_unslash( $_POST['item'] ) );
 			$item     = json_decode( $item_str );
 		}
 
-		$filename   = $item->filename;
-		$url        = $item->imageUrl->exact; // phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		$image_size = getimagesize( $url );
-		$width      = $image_size[0];
-		$height     = $image_size[1];
-		$mime_type  = $image_size['mime'];
+		print_r( $item );
 
-		if ( empty( $image_size ) ) {
-			if ( empty( $mime_type ) ) {
-				$response = wp_remote_head( $url );
-				if ( is_array( $response ) && isset( $response['headers']['content-type'] ) ) {
-					$input['mime-type'] = $response['headers']['content-type'];
-				}
-			}
-			$input['error'] = __( 'Unable to get the image size.', 'widen-media' );
-			return $input;
-		}
+		// $filename   = $item->filename;
+		// $url        = $item->imageUrl->exact; // phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		// $image_size = getimagesize( $url );
+		// $width      = $image_size[0];
+		// $height     = $image_size[1];
+		// $mime_type  = $image_size['mime'];
 
-		$attachment = [
-			'guid'           => $url,
-			'post_mime_type' => $mime_type,
-			'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-			'post_content'   => $item->description,
-		];
+		// if ( empty( $image_size ) ) {
+		// 	if ( empty( $mime_type ) ) {
+		// 		$response = wp_remote_head( $url );
+		// 		if ( is_array( $response ) && isset( $response['headers']['content-type'] ) ) {
+		// 			$input['mime-type'] = $response['headers']['content-type'];
+		// 		}
+		// 	}
+		// }
 
-		$attachment_metadata = [
-			'width'  => $width,
-			'height' => $height,
-			'file'   => $url,
-		];
+		// $attachment = [
+		// 	'guid'           => $url,
+		// 	'post_mime_type' => $mime_type,
+		// 	'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+		// 	'post_content'   => $item->description,
+		// ];
 
-		$attachment_metadata['sizes'] = [ 'full' => $attachment_metadata ];
-		$attachment_id                = wp_insert_attachment( $attachment );
+		// $attachment_metadata = [
+		// 	'width'  => $width,
+		// 	'height' => $height,
+		// 	'file'   => $url,
+		// ];
 
-		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+		// $attachment_metadata['sizes'] = [
+		// 	'full' => $attachment_metadata,
+		// ];
 
-		$json['message'] = __( 'Added to library!', 'widen-media' );
+		// $attachment_id = wp_insert_attachment( $attachment );
 
-		wp_send_json_success( $json );
+		// wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+		exit();
 	}
 
 }

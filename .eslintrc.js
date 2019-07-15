@@ -7,4 +7,8 @@ module.exports = {
   rules: {
     'func-names': 0,
   },
+  globals: {
+    widen_media: 'readonly',
+    jQuery: 'readonly',
+  },
 }

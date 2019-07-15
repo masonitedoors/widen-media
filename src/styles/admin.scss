@@ -29,6 +29,11 @@ $gutter: 18px;
   }
 }
 
+.button.add-to-library {
+  margin: $gutter auto ($gutter / 2);
+  display: block;
+}
+
 .tiles {
   display: flex;
   flex-direction: row;
@@ -49,7 +54,7 @@ $gutter: 18px;
     margin-right: 0;
   }
 
-  > a {
+  &__wrapper {
     text-decoration: none;
     backface-visibility: hidden;
     padding-top: $gutter;

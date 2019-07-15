@@ -16,7 +16,7 @@ $description   = implode( ' ', $item['metadata']['fields']['description'] );
 
 ?>
 <div class="tile pdf">
-	<a href="#" title="<?php echo esc_attr( $filename ); ?>">
+	<div class="tile__wrapper">
 		<div class="tile__header" aria-hidden="true">
 			<img
 				class="tile__image blur-up lazyload"
@@ -28,5 +28,5 @@ $description   = implode( ' ', $item['metadata']['fields']['description'] );
 		<div class="tile__content">
 			<p class="tile__title"><?php echo esc_attr( $filename ); ?></p>
 		</div>
-	</a>
+	</div>
 </div>
