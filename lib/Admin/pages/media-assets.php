@@ -39,9 +39,10 @@ $offset       = ( $current_page - 1 ) * $limit;
 			<?php
 
 			// Make our API request to Widen.
-			$response = $this->widen->search( $query, $offset, $limit );
+			$response = $this->widen->search_assets( $query, $offset, $limit );
 
 			if ( ! is_wp_error( $response ) ) {
+				// Setup pagination.
 				$pagination = new Paginator(
 					$current_page,
 					$limit,
@@ -50,6 +51,7 @@ $offset       = ( $current_page - 1 ) * $limit;
 					$query
 				);
 			} else {
+				// Display error message.
 				Admin::display_notice(
 					'error',
 					$response->get_error_message()
@@ -74,8 +76,8 @@ $offset       = ( $current_page - 1 ) * $limit;
 
 				</ul>
 
-				<?php Util::print( 'response', $response ); ?>
-				<?php Util::print( 'items', $response['items'] ); ?>
+				<?php // Util::print( 'response', $response ); ?>
+				<?php // Util::print( 'items', $response['items'] ); ?>
 
 			<?php endif; ?>
 

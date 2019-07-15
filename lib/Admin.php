@@ -20,14 +20,6 @@ class Admin extends Plugin {
 	private $widen;
 
 	/**
-	 * The media page hook.
-	 * To be used when enqueueing scripts/styles.
-	 *
-	 * @var String
-	 */
-	private $media_page_hook;
-
-	/**
 	 * Initialize the class and set its properties.
 	 */
 	public function __construct() {
@@ -36,8 +28,23 @@ class Admin extends Plugin {
 			return;
 		}
 
-		$this->widen           = new Widen( self::get_access_token() );
-		$this->media_page_hook = 'media_page_widen-media';
+		$this->widen = new Widen( self::get_access_token() );
+	}
+
+	/**
+	 * Check to see if we are able to load our plugin's admin scripts & styles.
+	 *
+	 * @param String $hook The page hook.
+	 */
+	private static function can_load_scripts( $hook ) : bool {
+		switch ( $hook ) {
+			case 'settings_page_widen-media':
+			case 'media_page_widen-media-asset':
+			case 'media_page_widen-media-assets':
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	/**
@@ -46,7 +53,7 @@ class Admin extends Plugin {
 	 * @param String $hook The page hook.
 	 */
 	public function enqueue_styles( $hook ) : void {
-		if ( $this->media_page_hook !== $hook ) {
+		if ( ! self::can_load_scripts( $hook ) ) {
 			return;
 		}
 
@@ -65,7 +72,7 @@ class Admin extends Plugin {
 	 * @param String $hook The page hook.
 	 */
 	public function enqueue_scripts( $hook ) : void {
-		if ( $this->media_page_hook !== $hook ) {
+		if ( ! self::can_load_scripts( $hook ) ) {
 			return;
 		}
 
@@ -102,8 +109,16 @@ class Admin extends Plugin {
 			__( 'Widen Media Library', 'widen-media' ),
 			__( 'Widen Media', 'widen-media' ),
 			'manage_options',
-			'widen-media',
-			[ $this, 'media_page_cb' ]
+			'widen-media-assets',
+			[ $this, 'media_assets_page_cb' ]
+		);
+
+		add_media_page(
+			null,
+			null,
+			'manage_options',
+			'widen-media-asset',
+			[ $this, 'media_asset_page_cb' ]
 		);
 
 		add_submenu_page(
@@ -114,19 +129,29 @@ class Admin extends Plugin {
 			'widen-media',
 			[ $this, 'options_page_cb' ]
 		);
+
+		remove_submenu_page( 'upload.php', 'widen-media-asset' );
 	}
 
 	/**
-	 * Callback for the media page.
+	 * Callback for the media assets page.
 	 */
-	public function media_page_cb() : void {
-		include_once 'Admin/pages/media.php';
+	public function media_assets_page_cb() : void {
+		include_once 'Admin/pages/media-assets.php';
 	}
+
+	/**
+	 * Callback for the media asset page.
+	 */
+	public function media_asset_page_cb() : void {
+		include_once 'Admin/pages/media-asset.php';
+	}
+
 	/**
 	 * Callback for the options page.
 	 */
 	public function options_page_cb() : void {
-		include_once 'Admin/pageas/options.php';
+		include_once 'Admin/pages/options.php';
 	}
 
 	/**
@@ -161,12 +186,21 @@ class Admin extends Plugin {
 	}
 
 	/**
-	 * Return the plugin's media page URL.
+	 * Return the base url to the media assets page (search results).
 	 */
-	protected static function get_media_page_url() : string {
+	protected static function get_media_assets_page() : string {
 		$base = admin_url( 'upload.php' );
 
-		return add_query_arg( 'page', 'widen-media', $base );
+		return add_query_arg( 'page', 'widen-media-assets', $base );
+	}
+
+	/**
+	 * Return the base URL to a single media asset page.
+	 */
+	protected static function get_media_asset_page() : string {
+		$base = admin_url( 'upload.php' );
+
+		return add_query_arg( 'page', 'widen-media-asset', $base );
 	}
 
 	/**
@@ -244,7 +278,7 @@ class Admin extends Plugin {
 				$paged = 1;
 			}
 
-			$base_url = self::get_media_page_url();
+			$base_url = self::get_media_assets_page();
 
 			// Build our search url.
 			$url = add_query_arg(

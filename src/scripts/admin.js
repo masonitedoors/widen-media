@@ -5,8 +5,13 @@ import '../styles/admin.scss';
   const formSubmitButton = $('#widen-search-submit')
   const formSpinner = $('#widen-search-spinner')
   const searchResults = $('#widen-search-results')
+  const paginationButton = $('.pagination-links .button')
 
   form.submit(e => {
+    startSpinner()
+  })
+
+  paginationButton.click(e => {
     startSpinner()
   })
 

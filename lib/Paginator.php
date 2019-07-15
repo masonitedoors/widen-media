@@ -118,7 +118,7 @@ class Paginator extends Admin {
 		$this->is_second_page           = $this->is_second_page();
 		$this->is_second_last_page      = $this->is_second_last_page();
 		$this->is_last_page             = $this->is_last_page();
-		$this->base_url                 = self::get_media_page_url();
+		$this->base_url                 = self::get_media_assets_page();
 
 	}
 

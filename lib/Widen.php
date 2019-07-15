@@ -28,7 +28,7 @@ class Widen {
 	}
 
 	/**
-	 * Register the stylesheets for the Dashboard.
+	 * Search Widen assets.
 	 *
 	 * @param String  $query      The search query.
 	 * @param Int     $offset     The offset for the search.
@@ -37,7 +37,7 @@ class Widen {
 	 *
 	 * @link https://widenv2.docs.apiary.io/
 	 */
-	public function search( $query, $offset = 0, $limit = 10, $collection = false ) {
+	public function search_assets( $query, $offset = 0, $limit = 10, $collection = false ) {
 		$base_url = 'https://api.widencollective.com/v2/assets/search';
 		$before   = $collection ? 'acn:' : '';
 
@@ -46,6 +46,52 @@ class Widen {
 				'query'  => $before . $query,
 				'offset' => $offset,
 				'limit'  => $limit,
+				'expand' => 'file_properties,metadata,embeds',
+			],
+			$base_url
+		);
+
+		$args = [
+			'timeout' => 10,
+			'headers' => [
+				'Authorization' => "Bearer $this->access_token",
+			],
+		];
+
+		// Make our request to Widen.
+		$response = wp_remote_get( esc_url_raw( $url ), $args );
+
+		// Check the response code.
+		$response_code    = wp_remote_retrieve_response_code( $response );
+		$response_message = wp_remote_retrieve_response_message( $response );
+
+		if ( 200 !== $response_code && ! empty( $response_message ) ) {
+			return new \WP_Error( $response_code, $response_message );
+
+		} elseif ( 200 !== $response_code ) {
+			return new \WP_Error( $response_code, __( 'An unknown error occurred', 'widen-media' ) );
+
+		} else {
+
+			$body = wp_remote_retrieve_body( $response );
+			$data = json_decode( $body, true );
+
+			return $data;
+		}
+	}
+
+	/**
+	 * Get an individual asset from Widen.
+	 *
+	 * @param String $id The asset ID.
+	 *
+	 * @link https://widenv2.docs.apiary.io/
+	 */
+	public function get_asset( $id ) {
+		$base_url = "https://api.widencollective.com/v2/assets/$id";
+
+		$url = add_query_arg(
+			[
 				'expand' => 'file_properties,metadata,embeds',
 			],
 			$base_url
