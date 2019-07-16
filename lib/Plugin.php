@@ -101,10 +101,12 @@ class Plugin {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'register_media_page' );
 		$this->loader->add_filter( 'plugin_action_links_' . $plugin_basename, $plugin_admin, 'settings_link', 10, 4 );
+		$this->loader->add_filter( 'wp_get_attachment_image_src', $plugin_admin, 'fix_widen_attachment_urls', 10, 4 );
 		$this->loader->add_action( 'admin_post_handle_search_submit', $plugin_admin, 'handle_search_submit' );
 		$this->loader->add_action( 'wp_ajax_widen_media_add_image_to_library', $plugin_admin, 'add_image_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_add_audio_to_library', $plugin_admin, 'add_audio_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_add_pdf_to_library', $plugin_admin, 'add_pdf_to_library' );
+
 	}
 
 	/**

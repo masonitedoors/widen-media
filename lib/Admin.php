@@ -282,6 +282,27 @@ class Admin extends Plugin {
 	}
 
 	/**
+	 * Filters the widen image src result.
+	 * This is needed to fix the doubling of the URLs.
+	 *
+	 * @param array|false  $image         Either array with src, width & height, icon src, or false.
+	 * @param int          $attachment_id Image attachment ID.
+	 * @param string|array $size          Size of image. Image size or array of width and height values
+	 *                                    (in that order). Default 'thumbnail'.
+	 * @param bool         $icon          Whether the image should be treated as an icon. Default false.
+	 */
+	public function fix_widen_attachment_urls( $image, $attachment_id, $size, $icon ) {
+		$widen_media_id = get_post_meta( $attachment_id, '_widen_media_id', true );
+
+		// Check if this is an image from Widen.
+		if ( ! empty( $widen_media_id ) ) {
+			$image[0] = wp_get_attachment_url( $attachment_id );
+		}
+
+		return $image;
+	}
+
+	/**
 	 * Add widen asset to WordPress media library.
 	 * This is called via ajax.
 	 *
@@ -356,12 +377,12 @@ class Admin extends Plugin {
 			'width'  => $asset_data['width'],
 			'height' => $asset_data['height'],
 			'sizes'  => [
-				'full' => [
+				'full'           => [
 					'file'      => $asset_data['url'],
 					'width'     => $asset_data['width'],
 					'height'    => $asset_data['height'],
 					'mime-type' => $asset_data['mime_type'],
-				],
+				]
 			],
 		];
 		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
@@ -386,6 +407,9 @@ class Admin extends Plugin {
 		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
 		 */
 		update_post_meta( $attachment_id, '_widen_media_id', $asset_data['id'] );
+
+		$test_url = wp_get_attachment_image_src( $attachment_id );
+		print_r( $test_url );
 
 		// Exit since this is executed via Ajax.
 		exit();
