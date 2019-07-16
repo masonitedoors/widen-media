@@ -10,7 +10,7 @@
   float: none; }
 
 .toolbar {
-  padding: 18px 0;
+  padding: 1em 0;
   display: -webkit-flex;
   display: flex;
   -webkit-justify-content: flex-end;

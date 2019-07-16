@@ -18,14 +18,14 @@ $offset       = ( $current_page - 1 ) * $limit;
 
 	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
-	<br>
+	<p><?php esc_html_e( 'Unsupported image filetypes (anything other than JPG, PNG, & GIF) will be automatically added to the WordPress Media Library as a PNG.', 'widen-media' ); ?></p>
 
 	<form id="widen-media" method="POST" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 
+		<?php wp_nonce_field( 'search_submit', 'widen_media_nonce' ); ?>
+
 		<input type="hidden" name="action" value="handle_search_submit" />
 		<input type="hidden" name="prev_s" value="<?php echo esc_attr( $query ); ?>" />
-
-		<?php wp_nonce_field( 'search_submit', 'widen_media_nonce' ); ?>
 
 		<div class="search-box">
 			<label class="screen-reader-text" for="widen-search-input">Search Widen:</label>

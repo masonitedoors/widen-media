@@ -8,13 +8,19 @@ declare( strict_types = 1 );
 // If this file is called directly, abort.
 defined( 'WPINC' ) || die();
 
-$item_id       = $item['id'];
-$filename      = $item['filename'];
-$original_url  = $item['embeds']['original']['url'];
-$thumbnail_url = $item['embeds']['ThumbnailPNG']['url'];
-$skeleton_url  = $item['embeds']['SkeletonPNG']['url'];
-$description   = implode( ' ', $item['metadata']['fields']['description'] );
-$url           = $original_url;
+$image_id       = $item['id'];
+$image_filename = $item['filename'];
+$original_url   = $item['embeds']['original']['url'];
+$thumbnail_url  = $item['embeds']['ThumbnailPNG']['url'];
+$skeleton_url   = $item['embeds']['SkeletonPNG']['url'];
+$description    = implode( ' ', $item['metadata']['fields']['description'] );
+
+if ( strpos( $original_url, '.tif' ) !== false ) {
+	$original_url = $item['embeds']['OriginalPNG']['url'];
+}
+
+// Remove query string from url.
+$original_url = preg_replace( '/\?.*/', '', $original_url );
 
 ?>
 <div class="tile image">
@@ -28,15 +34,15 @@ $url           = $original_url;
 			/>
 		</div>
 		<div class="tile__content">
-			<p class="tile__title"><?php echo esc_attr( $filename ); ?></p>
+			<p class="tile__title"><?php echo esc_attr( $image_filename ); ?></p>
 			<div class="tile__button-wrapper">
 				<button
 					class="button add-to-library"
 					data-type="image"
-					data-id="<?php echo esc_attr( $item_id ); ?>"
-					data-filename="<?php echo esc_attr( $filename ); ?>"
+					data-id="<?php echo esc_attr( $image_id ); ?>"
+					data-filename="<?php echo esc_attr( $image_filename ); ?>"
 					data-description="<?php echo esc_attr( $description ); ?>"
-					data-url="<?php echo esc_attr( $url ); ?>"
+					data-url="<?php echo esc_attr( $original_url ); ?>"
 				><?php esc_html_e( 'Add To Media Library', 'widen-media' ); ?></button>
 				<span class="spinner"></span>
 			</div>

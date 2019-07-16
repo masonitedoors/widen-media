@@ -76,14 +76,6 @@ class Admin extends Plugin {
 		}
 
 		wp_enqueue_script(
-			'fancybox',
-			'https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js',
-			[ 'jquery' ],
-			'3.5.7',
-			true
-		);
-
-		wp_enqueue_script(
 			'lazysizes',
 			'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/lazysizes.min.js',
 			[],
@@ -334,7 +326,7 @@ class Admin extends Plugin {
 
 		// Get asset size & mime type.
 		if ( 'image' === $asset_data['type'] ) {
-			$image_size              = getimagesize( $asset_data['url'] );
+			$image_size              = @getimagesize( $asset_data['url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			$asset_data['width']     = $image_size[0];
 			$asset_data['height']    = $image_size[1];
 			$asset_data['mime_type'] = $image_size['mime'];
@@ -348,26 +340,52 @@ class Admin extends Plugin {
 		$attachment    = [
 			'guid'           => $asset_data['url'],
 			'post_mime_type' => $asset_data['mime_type'],
-			'post_title'     => sanitize_title( $asset_data['filename'] ),
-			'post_content'   => $asset_data['description'],
+			'post_title'     => pathinfo( $asset_data['filename'], PATHINFO_FILENAME ),
+			'post_content'   => $asset_data['description'], // Attachment Description.
+			'post_excerpt'   => $asset_data['description'], // Attachment Caption.
 		];
 		$attachment_id = wp_insert_attachment( $attachment );
 
 		/**
-		 * Add the metadata for our recently inserted attachment.
+		 * Update the attachment's metadata.
 		 * This can only happen after the attachment exists within WordPress.
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/wp_update_attachment_metadata/
 		 */
-		$attachment_metadata['sizes'] = [
-			'full' => [
-				'width'                    => $asset_data['width'],
-				'height'                   => $asset_data['height'],
-				'file'                     => $asset_data['url'],
-				'_wp_attachment_image_alt' => $asset_data['description'],
+		$attachment_metadata = [
+			'width'  => $asset_data['width'],
+			'height' => $asset_data['height'],
+			'sizes'  => [
+				'full' => [
+					'file'      => $asset_data['url'],
+					'width'     => $asset_data['width'],
+					'height'    => $asset_data['height'],
+					'mime-type' => $asset_data['mime_type'],
+				],
 			],
 		];
 		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+
+		/**
+		 * Update the attachment's Alternative Text.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
+		 */
+		update_post_meta( $attachment_id, '_wp_attachment_image_alt', $asset_data['description'] );
+
+		/**
+		 * Store the asset's ID from Widen as post_meta.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
+		 */
+		update_post_meta( $attachment_id, '_widen_media_id', $asset_data['id'] );
+
+		/**
+		 * Store the asset's ID from Widen as post_meta.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
+		 */
+		update_post_meta( $attachment_id, '_widen_media_id', $asset_data['id'] );
 
 		// Exit since this is executed via Ajax.
 		exit();

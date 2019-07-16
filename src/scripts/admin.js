@@ -77,7 +77,7 @@ import '../styles/admin.scss';
       data,
     }).done(response => {
       console.log(response)
-      window.location.reload()
+      // window.location.reload()
     })
   })
 
