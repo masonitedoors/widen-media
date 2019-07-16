@@ -29,14 +29,17 @@ $url           = $original_url;
 		</div>
 		<div class="tile__content">
 			<p class="tile__title"><?php echo esc_attr( $filename ); ?></p>
-			<button
-				class="button add-to-library"
-				data-id="<?php echo esc_attr( $item_id ); ?>"
-				data-type="image"
-				data-filename="<?php echo esc_attr( $filename ); ?>"
-				data-description="<?php echo esc_attr( $description ); ?>"
-				data-url="<?php echo esc_attr( $url ); ?>"
-			><?php esc_html_e( 'Add To Media Library', 'widen-media' ); ?></button>
+			<div class="tile__button-wrapper">
+				<button
+					class="button add-to-library"
+					data-type="image"
+					data-id="<?php echo esc_attr( $item_id ); ?>"
+					data-filename="<?php echo esc_attr( $filename ); ?>"
+					data-description="<?php echo esc_attr( $description ); ?>"
+					data-url="<?php echo esc_attr( $url ); ?>"
+				><?php esc_html_e( 'Add To Media Library', 'widen-media' ); ?></button>
+				<span class="spinner"></span>
+			</div>
 		</div>
 	</div>
 </div>

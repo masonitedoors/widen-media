@@ -30,7 +30,7 @@ $gutter: 18px;
 }
 
 .button.add-to-library {
-  margin: $gutter auto ($gutter / 2);
+  margin: 0;
   display: block;
 }
 
@@ -95,6 +95,36 @@ $gutter: 18px;
     margin: 0;
     text-align: center;
     -webkit-font-smoothing: antialiased;
+  }
+
+  &__button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: $gutter auto ($gutter / 2);
+  }
+
+  .spinner:not(.is-active) {
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+    position: absolute;
+    white-space: nowrap;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+  }
+
+  .spinner.is-active {
+    position: relative;
+    clip: auto;
+    clip-path: auto;
+    display: inline-block;
+    vertical-align: middle;
+    opacity: 0.7;
+    width: 20px;
+    height: 20px;
+    margin: 0 8px;
   }
 }
 

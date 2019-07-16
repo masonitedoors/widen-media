@@ -25,7 +25,7 @@
     margin-right: auto; }
 
 .button.add-to-library {
-  margin: 18px auto 9px;
+  margin: 0;
   display: block; }
 
 .tiles {
@@ -82,6 +82,35 @@
     margin: 0;
     text-align: center;
     -webkit-font-smoothing: antialiased; }
+  .tile__button-wrapper {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+            align-items: center;
+    -webkit-justify-content: center;
+            justify-content: center;
+    position: relative;
+    margin: 18px auto 9px; }
+  .tile .spinner:not(.is-active) {
+    clip: rect(1px, 1px, 1px, 1px);
+    -webkit-clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+            clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+    position: absolute;
+    white-space: nowrap;
+    height: 1px;
+    width: 1px;
+    overflow: hidden; }
+  .tile .spinner.is-active {
+    position: relative;
+    clip: auto;
+    -webkit-clip-path: auto;
+            clip-path: auto;
+    display: inline-block;
+    vertical-align: middle;
+    opacity: 0.7;
+    width: 20px;
+    height: 20px;
+    margin: 0 8px; }
 
 .blur-up:not(.lazyloaded) {
   opacity: 0.2;

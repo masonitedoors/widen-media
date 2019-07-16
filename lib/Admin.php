@@ -361,9 +361,10 @@ class Admin extends Plugin {
 		 */
 		$attachment_metadata['sizes'] = [
 			'full' => [
-				'width'  => $asset_data['width'],
-				'height' => $asset_data['height'],
-				'file'   => $asset_data['url'],
+				'width'                    => $asset_data['width'],
+				'height'                   => $asset_data['height'],
+				'file'                     => $asset_data['url'],
+				'_wp_attachment_image_alt' => $asset_data['description'],
 			],
 		];
 		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
