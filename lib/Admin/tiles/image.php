@@ -8,12 +8,13 @@ declare( strict_types = 1 );
 // If this file is called directly, abort.
 defined( 'WPINC' ) || die();
 
+$item_id       = $item['id'];
 $filename      = $item['filename'];
 $original_url  = $item['embeds']['original']['url'];
 $thumbnail_url = $item['embeds']['ThumbnailPNG']['url'];
 $skeleton_url  = $item['embeds']['SkeletonPNG']['url'];
 $description   = implode( ' ', $item['metadata']['fields']['description'] );
-$item_json     = wp_json_encode( $item );
+$url           = $original_url;
 
 ?>
 <div class="tile image">
@@ -28,9 +29,14 @@ $item_json     = wp_json_encode( $item );
 		</div>
 		<div class="tile__content">
 			<p class="tile__title"><?php echo esc_attr( $filename ); ?></p>
-			<button class="button add-to-library" data-item="<?php echo esc_attr( $item_json ); ?>">
-				<?php esc_html_e( 'Add To Media Library', 'widen-media' ); ?>
-			</button>
+			<button
+				class="button add-to-library"
+				data-id="<?php echo esc_attr( $item_id ); ?>"
+				data-type="image"
+				data-filename="<?php echo esc_attr( $filename ); ?>"
+				data-description="<?php echo esc_attr( $description ); ?>"
+				data-url="<?php echo esc_attr( $url ); ?>"
+			><?php esc_html_e( 'Add To Media Library', 'widen-media' ); ?></button>
 		</div>
 	</div>
 </div>

@@ -76,8 +76,7 @@ $offset       = ( $current_page - 1 ) * $limit;
 
 				</ul>
 
-				<?php // Util::print( 'response', $response ); ?>
-				<?php // Util::print( 'items', $response['items'] ); ?>
+				<?php Util::print( 'items', $response['items'] ); ?>
 
 			<?php endif; ?>
 

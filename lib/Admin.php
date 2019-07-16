@@ -291,53 +291,84 @@ class Admin extends Plugin {
 
 	/**
 	 * Add widen asset to WordPress media library.
+	 * This is called via ajax.
+	 *
+	 * @see src/scripts/admin.js
+	 *
+	 * $_POST['id']
+	 * $_POST['filename]
+	 * $_POST['description']
+	 * $_POST['url']
 	 */
-	public function add_to_library() : void {
+	public function add_image_to_library() : void {
+		// Kill this process if this method wasn't called from our form.
 		check_ajax_referer( 'widen_media_add_to_library_nonce', 'nonce' );
 
-		if ( isset( $_POST['item'] ) ) {
-			$item_str = sanitize_text_field( wp_unslash( $_POST['item'] ) );
-			$item     = json_decode( $item_str );
+		// Set our default/fallback values.
+		$asset_data = [
+			'type'        => '',
+			'id'          => '',
+			'filename'    => '',
+			'description' => '',
+			'url'         => '',
+			'width'       => '',
+			'height'      => '',
+			'mime_type'   => '',
+		];
+
+		if ( isset( $_POST['type'] ) ) {
+			$asset_data['type'] = sanitize_text_field( wp_unslash( $_POST['type'] ) );
+		}
+		if ( isset( $_POST['id'] ) ) {
+			$asset_data['id'] = sanitize_text_field( wp_unslash( $_POST['id'] ) );
+		}
+		if ( isset( $_POST['filename'] ) ) {
+			$asset_data['filename'] = sanitize_text_field( wp_unslash( $_POST['filename'] ) );
+		}
+		if ( isset( $_POST['description'] ) ) {
+			$asset_data['description'] = sanitize_text_field( wp_unslash( $_POST['description'] ) );
+		}
+		if ( isset( $_POST['url'] ) ) {
+			$asset_data['url'] = sanitize_text_field( wp_unslash( $_POST['url'] ) );
 		}
 
-		print_r( $item );
+		// Get asset size & mime type.
+		if ( 'image' === $asset_data['type'] ) {
+			$image_size              = getimagesize( $asset_data['url'] );
+			$asset_data['width']     = $image_size[0];
+			$asset_data['height']    = $image_size[1];
+			$asset_data['mime_type'] = $image_size['mime'];
+		}
 
-		// $filename   = $item->filename;
-		// $url        = $item->imageUrl->exact; // phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		// $image_size = getimagesize( $url );
-		// $width      = $image_size[0];
-		// $height     = $image_size[1];
-		// $mime_type  = $image_size['mime'];
+		/**
+		 * Prepare attachment & insert into WordPress Media Library.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/wp_insert_attachment/
+		 */
+		$attachment    = [
+			'guid'           => $asset_data['url'],
+			'post_mime_type' => $asset_data['mime_type'],
+			'post_title'     => sanitize_title( $asset_data['filename'] ),
+			'post_content'   => $asset_data['description'],
+		];
+		$attachment_id = wp_insert_attachment( $attachment );
 
-		// if ( empty( $image_size ) ) {
-		// 	if ( empty( $mime_type ) ) {
-		// 		$response = wp_remote_head( $url );
-		// 		if ( is_array( $response ) && isset( $response['headers']['content-type'] ) ) {
-		// 			$input['mime-type'] = $response['headers']['content-type'];
-		// 		}
-		// 	}
-		// }
+		/**
+		 * Add the metadata for our recently inserted attachment.
+		 * This can only happen after the attachment exists within WordPress.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/wp_update_attachment_metadata/
+		 */
+		$attachment_metadata['sizes'] = [
+			'full' => [
+				'width'  => $asset_data['width'],
+				'height' => $asset_data['height'],
+				'file'   => $asset_data['url'],
+			],
+		];
+		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
 
-		// $attachment = [
-		// 	'guid'           => $url,
-		// 	'post_mime_type' => $mime_type,
-		// 	'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
-		// 	'post_content'   => $item->description,
-		// ];
-
-		// $attachment_metadata = [
-		// 	'width'  => $width,
-		// 	'height' => $height,
-		// 	'file'   => $url,
-		// ];
-
-		// $attachment_metadata['sizes'] = [
-		// 	'full' => $attachment_metadata,
-		// ];
-
-		// $attachment_id = wp_insert_attachment( $attachment );
-
-		// wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+		// Exit since this is executed via Ajax.
 		exit();
 	}
 
