@@ -408,11 +408,27 @@ class Admin extends Plugin {
 		 */
 		update_post_meta( $attachment_id, '_widen_media_id', $asset_data['id'] );
 
-		$test_url = wp_get_attachment_image_src( $attachment_id );
-		print_r( $test_url );
-
 		// Exit since this is executed via Ajax.
 		exit();
+	}
+
+	/**
+	 * Retrieves the attachment ID from the file URL.
+	 *
+	 * @param String $image_url The image URL.
+	 *
+	 * @link https://pippinsplugins.com/retrieve-attachment-id-from-image-url/
+	 */
+	public static function attachment_exists( $image_url ) : bool {
+		global $wpdb;
+
+		$attachment = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid='%s';", $image_url ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
+
+		if ( $attachment ) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

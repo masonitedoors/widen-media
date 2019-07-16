@@ -111,6 +111,10 @@
     width: 20px;
     height: 20px;
     margin: 0 8px; }
+  .tile.added .tile__image {
+    opacity: 0.18; }
+  .tile.added .tile__title {
+    opacity: 0.4; }
 
 .blur-up:not(.lazyloaded) {
   opacity: 0.2;
