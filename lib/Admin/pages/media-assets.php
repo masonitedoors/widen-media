@@ -76,8 +76,6 @@ $offset       = ( $current_page - 1 ) * $limit;
 
 				</ul>
 
-				<?php Util::print( 'items', $response['items'] ); ?>
-
 			<?php endif; ?>
 
 			</div><!-- #search-results -->
@@ -88,4 +86,3 @@ $offset       = ( $current_page - 1 ) * $limit;
 </div><!-- .wrap -->
 
 <?php
-Util::print( '$_GET', $_GET );
