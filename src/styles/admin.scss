@@ -1,4 +1,9 @@
 $gutter: 18px;
+$green: #99c220;
+$breakpoint-lg: 1500px;
+$breakpoint-md: 1300px;
+$breakpoint-sm: 1000px;
+$breakpoint-xs: 500px;
 
 #widen-search-input {
   width: 330px;
@@ -36,18 +41,34 @@ $gutter: 18px;
 
 .tiles {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   margin: 0;
   margin-left: ($gutter * -1);
+  justify-content: space-between;
 }
 
 .tile {
-  width: percentage(1 / 5);
   padding-left: $gutter;
-  margin-bottom: $gutter;
+  margin: 0 auto $gutter;
   box-sizing: border-box;
   justify-content: space-between;
+  width: percentage(1 / 5);
+
+  @media (max-width: $breakpoint-lg) {
+    width: percentage(1 / 4);
+  }
+
+  @media (max-width: $breakpoint-md) {
+    width: percentage(1 / 3);
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    width: percentage(1 / 2);
+  }
+
+  @media (max-width: $breakpoint-xs) {
+    width: 100%;
+  }
 
   figure {
     margin-left: 0;
@@ -64,6 +85,24 @@ $gutter: 18px;
     background-color: #fff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
     border: 1px solid #e5e5e5;
+    position: relative;
+    overflow: hidden;
+
+    .added &::before {
+      position: absolute;
+      top: 25px;
+      left: -35px;
+      content: "Added";
+      background-color: $green;
+      color: #fff;
+      width: 150px;
+      transform: rotate(-45deg);
+      text-align: center;
+      z-index: 1;
+      padding: 0.5em 0;
+      letter-spacing: 0.02em;
+      backface-visibility: hidden;
+    }
   }
 
   &__image {
@@ -129,15 +168,12 @@ $gutter: 18px;
 
   &.added {
     .tile__wrapper {
-      border-color: transparent;
+      border-color: $green;
     }
 
-    .tile__image {
-      opacity: 0.2;
-    }
-
+    .tile__image,
     .tile__title {
-      color: #777;
+      opacity: 0.25;
     }
   }
 }

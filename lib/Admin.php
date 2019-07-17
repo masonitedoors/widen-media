@@ -419,12 +419,29 @@ class Admin extends Plugin {
 	 *
 	 * @link https://pippinsplugins.com/retrieve-attachment-id-from-image-url/
 	 */
-	public static function attachment_exists( $image_url ) : bool {
+	public static function get_attachment_id( $image_url ) : ?string {
 		global $wpdb;
 
 		$attachment = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid='%s';", $image_url ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
 
-		if ( $attachment ) {
+		if ( isset( $attachment[0] ) ) {
+			$attachment_id = $attachment[0];
+
+			return $attachment_id;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Check if attachment exists within the database.
+	 *
+	 * @param String $image_url The image URL.
+	 */
+	public static function attachment_exists( $image_url ) : bool {
+		$attachment_id = self::get_attachment_id( $image_url );
+
+		if ( $attachment_id ) {
 			return true;
 		}
 
@@ -434,8 +451,24 @@ class Admin extends Plugin {
 	/**
 	 * Hide the add new media menu item.
 	 */
-	public function hide_add_new_media() : void {
+	public function hide_add_new_media_menu() : void {
 		remove_submenu_page( 'upload.php', 'media-new.php' );
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public function hide_core_media_buttons() : void {
+		$screen = get_current_screen();
+
+		// Only inject custom styles for uploads page.
+		if ( 'upload' !== $screen->id ) {
+			return;
+		}
+
+		echo '<style>[href$="/media-new.php"],.button.edit-attachment{display:none;}</style>';
 	}
 
 	/**

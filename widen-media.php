@@ -43,12 +43,3 @@ add_action(
 		$plugin->run();
 	}
 );
-
-function wpse107783_remove_media_icon_link( $url, $post_id )
-{
-    if ( 'upload' !== get_current_screen()->id )
-        return $url;
-
-    return sprintf( '#post-%s', $post_id );
-}
-add_filter( 'get_edit_post_link', 'wpse107783_remove_media_icon_link', 20, 2 );

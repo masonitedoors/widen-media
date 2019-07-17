@@ -24,6 +24,7 @@ $original_url = preg_replace( '/\?.*/', '', $original_url );
 
 // Check if the image has already been added.
 $already_added = self::attachment_exists( $original_url );
+$attachment_id = $already_added ? self::get_attachment_id( $original_url ) : '';
 
 ?>
 <div class="tile image <?php echo $already_added ? 'added' : ''; ?>">
@@ -42,7 +43,7 @@ $already_added = self::attachment_exists( $original_url );
 			<?php if ( $already_added ) : ?>
 
 				<div class="tile__button-wrapper">
-					<button disabled class="button already-added"><?php esc_html_e( '✓ Added', 'widen-media' ); ?></button>
+					<a class="button" href="<?php echo esc_url( admin_url( "upload.php?item=$attachment_id" ) ); ?>"><?php esc_html_e( 'View In Media Library', 'widen-media' ); ?></a>
 				</div>
 
 			<?php else : ?>
