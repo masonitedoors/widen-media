@@ -1,13 +1,8 @@
 <?php
 /**
- * Widen Media plugin for WordPress
- *
- * @package           Widen_Media
- *
- * @wordpress-plugin
  * Plugin Name:       Widen Media
  * Description:       Search and add Widen digital assets to your WordPress media library.
- * Version:           0.0.2
+ * Version:           1.0.0
  * Author:            Masonite
  * Author URI:        https://www.masonite.com/
  * License:           GPL-2.0+
@@ -16,32 +11,35 @@
  * Domain Path:       /languages
  */
 
-declare( strict_types = 1 );
-
-namespace Masonite\Widen_Media;
+namespace Masonite\WP\Widen_Media;
 
 // If this file is called directly, abort.
 defined( 'WPINC' ) || die();
 
-// Autoload the plugin classes.
+/**
+ * Autoload the plugin's classes.
+ */
 require_once __DIR__ . '/inc/autoload.php';
 
 /**
- * Requires running PHP 7.2 or above.
+ * The code that runs during plugin activation.
+ * This action is documented in lib/Activator.php
  */
-function version_check() {
-	if ( version_compare( PHP_VERSION, '7.2', '<' ) ) {
-		deactivate_plugins( plugin_basename( __FILE__ ) );
-		wp_die( esc_html__( 'The Widen Media plugin requires PHP Version 7.2 or above.', 'widen-media' ) );
-	}
-}
-add_action( 'admin_init', __NAMESPACE__ . '\version_check' );
+register_activation_hook( __FILE__, __NAMESPACE__ . '\Activator::activate' );
+
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented in lib/Deactivator.php
+ */
+register_deactivation_hook( __FILE__, __NAMESPACE__ . '\Deactivator::deactivate' );
 
 /**
  * Begins execution of the plugin.
  */
-function load_widen_media() {
-	$plugin = new Plugin();
-	$plugin->run();
-}
-add_action( 'plugins_loaded', __NAMESPACE__ . '\load_widen_media' );
+add_action(
+	'plugins_loaded',
+	function () {
+		$plugin = new Plugin();
+		$plugin->run();
+	}
+);

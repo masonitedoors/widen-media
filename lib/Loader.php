@@ -1,13 +1,8 @@
 <?php
-/**
- * Register all actions and filters for the plugin
- *
- * @package    Widen_Media
- */
 
 declare( strict_types = 1 );
 
-namespace Masonite\Widen_Media;
+namespace Masonite\WP\Widen_Media;
 
 /**
  * Register all actions and filters for the plugin.
@@ -15,29 +10,27 @@ namespace Masonite\Widen_Media;
  * Maintain a list of all hooks that are registered throughout
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
- *
- * @package    Widen_Media
  */
 class Loader {
 
 	/**
 	 * The array of actions registered with WordPress.
 	 *
-	 * @var      array    $actions    The actions registered with WordPress to fire when the plugin loads.
+	 * @var array
 	 */
 	protected $actions;
 
 	/**
 	 * The array of filters registered with WordPress.
 	 *
-	 * @var      array    $filters    The filters registered with WordPress to fire when the plugin loads.
+	 * @var array
 	 */
 	protected $filters;
 
 	/**
 	 * The array of shortcodes registered with WordPress.
 	 *
-	 * @var      array    $shortcodes    The shortcodes registered with WordPress to fire when used.
+	 * @var array
 	 */
 	protected $shortcodes;
 

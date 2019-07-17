@@ -1,31 +1,21 @@
 <?php
-/**
- * Define the internationalization functionality
- *
- * Loads and defines the internationalization files for this plugin
- * so that it is ready for translation.
- *
- * @package    Widen_Media
- */
 
 declare( strict_types = 1 );
 
-namespace Masonite\Widen_Media;
+namespace Masonite\WP\Widen_Media;
 
 /**
  * Define the internationalization functionality.
  *
  * Loads and defines the internationalization files for this plugin
  * so that it is ready for translation.
- *
- * @package    Widen_Media
  */
 class I18n {
 
 	/**
 	 * The domain specified for this plugin.
 	 *
-	 * @var      string    $domain    The domain identifier for this plugin.
+	 * @var string
 	 */
 	private $domain;
 
@@ -36,7 +26,7 @@ class I18n {
 		load_plugin_textdomain(
 			$this->domain,
 			false,
-			dirname( dirname( \plugin_basename( __FILE__ ) ) ) . '/languages/'
+			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 		);
 	}
 
