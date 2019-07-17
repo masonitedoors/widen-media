@@ -115,7 +115,7 @@ class Admin extends Plugin {
 	public function register_media_page() : void {
 		add_media_page(
 			__( 'Widen Media Library', 'widen-media' ),
-			__( 'Widen Media', 'widen-media' ),
+			__( 'Add New', 'widen-media' ),
 			'manage_options',
 			'widen-media-assets',
 			[ $this, 'media_assets_page_cb' ]
@@ -377,12 +377,12 @@ class Admin extends Plugin {
 			'width'  => $asset_data['width'],
 			'height' => $asset_data['height'],
 			'sizes'  => [
-				'full'           => [
+				'full' => [
 					'file'      => $asset_data['url'],
 					'width'     => $asset_data['width'],
 					'height'    => $asset_data['height'],
 					'mime-type' => $asset_data['mime_type'],
-				]
+				],
 			],
 		];
 		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
@@ -429,6 +429,26 @@ class Admin extends Plugin {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Hide the add new media menu item.
+	 */
+	public function hide_add_new_media() : void {
+		remove_submenu_page( 'upload.php', 'media-new.php' );
+	}
+
+	/**
+	 * Modify the new media link within WP Admin Bar to point at our Widen Library page.
+	 *
+	 * @param WP_Admin_Bar $wp_admin_bar Toolbar instance.
+	 */
+	public function edit_new_media_link( $wp_admin_bar ) : void {
+		$new_content_node = $wp_admin_bar->get_node( 'new-media' );
+
+		$new_content_node->href = '?page=widen-media-assets';
+
+		$wp_admin_bar->add_node( $new_content_node );
 	}
 
 }

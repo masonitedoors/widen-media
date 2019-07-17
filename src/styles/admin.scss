@@ -128,12 +128,16 @@ $gutter: 18px;
   }
 
   &.added {
+    .tile__wrapper {
+      border-color: transparent;
+    }
+
     .tile__image {
-      opacity: 0.18;
+      opacity: 0.2;
     }
 
     .tile__title {
-      opacity: 0.4;
+      color: #777;
     }
   }
 }
