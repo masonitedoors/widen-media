@@ -13,25 +13,6 @@
   "phpcbf.executablePath": "./vendor/bin/phpcbf",
   "files.exclude": {
     "**/.git*": true,
-    "**/.DS_Store": true,
-    "**/.idea": true,
-    ".npmrc": true,
-    ".vscode": true,
-    ".editorconfig": true,
-    "LICENSE": true,
-    "phpcs.xml": true,
-    ".stylelintignore": true,
-    ".stylelintrc.js": true,
-    ".eslintignore": true,
-    ".eslintrc.js": true,
-    "postcss.config.js": true,
-    "webpack.config.js": true,
-    "composer.lock": true,
-    "package-lock.json": true,
-    "vendor/": true,
-    "node_modules/": true,
-    "dist/": true,
-    "bin/": true,
-    "languages/": true
+    "**/.DS_Store": true
   }
 }
