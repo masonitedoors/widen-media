@@ -506,4 +506,16 @@ class Admin extends Plugin {
 		$wp_admin_bar->add_node( $new_content_node );
 	}
 
+	/**
+	 * Only allow new media to be added from Widen.
+	 * This blocks files from being uploaded directly to the site.
+	 *
+	 * @param Array $file The file array.
+	 */
+	public function disable_new_uploads( $file ) : array {
+		$file['error'] = __( 'Direct file uploads are not allowed. Please add media via Widen.', 'widen-media' );
+
+		return $file;
+	}
+
 }

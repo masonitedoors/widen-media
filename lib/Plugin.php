@@ -112,6 +112,7 @@ class Plugin {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'hide_add_new_media_menu' );
 		$this->loader->add_action( 'admin_head', $plugin_admin, 'hide_core_media_buttons' );
 		$this->loader->add_action( 'admin_bar_menu', $plugin_admin, 'edit_new_media_link', 90 );
+		$this->loader->add_filter( 'wp_handle_upload_prefilter', $plugin_admin, 'disable_new_uploads' );
 	}
 
 	/**
