@@ -43,7 +43,7 @@ $attachment_id = $already_added ? self::get_attachment_id( $original_url ) : '';
 			<?php if ( $already_added ) : ?>
 
 				<div class="tile__button-wrapper">
-					<a class="button" href="<?php echo esc_url( admin_url( "upload.php?item=$attachment_id" ) ); ?>"><?php esc_html_e( 'View In Media Library', 'widen-media' ); ?></a>
+					<a class="button-link" href="<?php echo esc_url( admin_url( "upload.php?item=$attachment_id" ) ); ?>"><?php esc_html_e( 'View In Media Library', 'widen-media' ); ?></a>
 				</div>
 
 			<?php else : ?>

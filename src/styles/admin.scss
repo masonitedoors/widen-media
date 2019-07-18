@@ -1,5 +1,7 @@
 $gutter: 18px;
-$green: #99c220;
+$color-added: #99c220;
+$color-text: #344053;
+
 $breakpoint-lg: 1500px;
 $breakpoint-md: 1300px;
 $breakpoint-sm: 1000px;
@@ -19,6 +21,7 @@ $breakpoint-xs: 500px;
 }
 
 .toolbar {
+  min-height: 28px;
   padding: 1em 0;
   display: flex;
   justify-content: flex-end;
@@ -93,7 +96,7 @@ $breakpoint-xs: 500px;
       top: 25px;
       left: -35px;
       content: "Added";
-      background-color: $green;
+      background-color: $color-added;
       color: #fff;
       width: 150px;
       transform: rotate(-45deg);
@@ -129,7 +132,7 @@ $breakpoint-xs: 500px;
     font-family: "HelveticaNeueLTStd-Bd", Helvetica, Arial, sans-serif;
     font-style: normal;
     font-weight: 700;
-    color: #344053;
+    color: $color-text;
     font-size: 12px;
     margin: 0;
     text-align: center;
@@ -166,14 +169,25 @@ $breakpoint-xs: 500px;
     margin: 0 8px;
   }
 
+  .button-link {
+    line-height: 28px;
+    color: $color-text;
+
+    &:focus,
+    &:hover {
+      color: $color-text;
+    }
+  }
+
   &.added {
     .tile__wrapper {
-      border-color: $green;
+      border-color: $color-added;
     }
 
     .tile__image,
-    .tile__title {
-      opacity: 0.25;
+    .tile__title,
+    .button-link {
+      opacity: 0.4;
     }
   }
 }

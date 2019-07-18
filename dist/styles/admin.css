@@ -10,6 +10,7 @@
   float: none; }
 
 .toolbar {
+  min-height: 28px;
   padding: 1em 0;
   display: -webkit-flex;
   display: flex;
@@ -141,11 +142,17 @@
     width: 20px;
     height: 20px;
     margin: 0 8px; }
+  .tile .button-link {
+    line-height: 28px;
+    color: #344053; }
+    .tile .button-link:focus, .tile .button-link:hover {
+      color: #344053; }
   .tile.added .tile__wrapper {
     border-color: #99c220; }
   .tile.added .tile__image,
-  .tile.added .tile__title {
-    opacity: 0.25; }
+  .tile.added .tile__title,
+  .tile.added .button-link {
+    opacity: 0.4; }
 
 .blur-up:not(.lazyloaded) {
   opacity: 0.2;
