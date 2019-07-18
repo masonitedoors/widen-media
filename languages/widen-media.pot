@@ -2,10 +2,9 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Widen Media 1.0.0\n"
-"Report-Msgid-Bugs-To: "
-"https://wordpress.org/support/plugin/wp-plugin-boilerplate\n"
-"POT-Creation-Date: 2019-06-18 20:29:03+00:00\n"
+"Project-Id-Version: Widen Media 2.0.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/widen-media\n"
+"POT-Creation-Date: 2019-07-18 19:13:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,16 +13,85 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: node-wp-i18n 1.2.3\n"
 
-#: lib/Admin.php:57
-msgid "Widen Media Settings"
+#: lib/Admin/tiles/image.php:46
+msgid "View In Media Library"
+msgstr ""
+
+#: lib/Admin/tiles/image.php:59
+msgid "Add To Media Library"
+msgstr ""
+
+#: lib/Admin/widen-media-assets.php:21
+msgid ""
+"Unsupported image filetypes (anything other than JPG, PNG, & GIF) will be "
+"automatically added to the WordPress Media Library as a PNG."
+msgstr ""
+
+#: lib/Admin.php:74
+msgid "The options below are readonly and can only be set via wp-config.php."
+msgstr ""
+
+#: lib/Admin.php:86
+msgid "WIDEN_MEDIA_ACCESS_TOKEN must be defined within wp-config.php."
+msgstr ""
+
+#: lib/Admin.php:159
+msgid "Widen Media Library"
+msgstr ""
+
+#: lib/Admin.php:160
+msgid "Add New"
+msgstr ""
+
+#: lib/Admin.php:190
+msgid "Settings"
+msgstr ""
+
+#: lib/Paginator.php:233
+#. translators: %1$s: Total item count for current page, %2$s: Total item
+#. count, %3$s: Search query
+msgid "Displaying %1$s of %2$s items for %3$s"
+msgstr ""
+
+#: lib/Paginator.php:241
+#. translators: %1$s: Search query
+msgid "No results were found for %1$s"
+msgstr ""
+
+#: lib/Paginator.php:249
+msgid "Search results navigation"
+msgstr ""
+
+#: lib/Paginator.php:265
+msgid "First page"
+msgstr ""
+
+#: lib/Paginator.php:278
+msgid "Previous page"
+msgstr ""
+
+#: lib/Paginator.php:285
+msgid "Current page"
+msgstr ""
+
+#: lib/Paginator.php:287
+msgid "of"
+msgstr ""
+
+#: lib/Paginator.php:299
+msgid "Next page"
+msgstr ""
+
+#: lib/Paginator.php:312
+msgid "Last page"
+msgstr ""
+
+#: lib/Widen.php:72 lib/Widen.php:118
+msgid "An unknown error occurred"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
 msgid "Widen Media"
-msgstr ""
-
-#: lib/Admin.php:88
-msgid "Settings"
 msgstr ""
 
 #. Description of the plugin/theme
