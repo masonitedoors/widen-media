@@ -76,7 +76,6 @@ import '../styles/admin.scss';
       type: 'POST',
       data,
     }).done(response => {
-      console.log(response)
       window.location.reload()
     })
   })
