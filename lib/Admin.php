@@ -38,12 +38,54 @@ class Admin extends Plugin {
 	 */
 	private static function can_load_scripts( $hook ) : bool {
 		switch ( $hook ) {
-			case 'settings_page_widen-media':
 			case 'media_page_widen-media-assets':
 				return true;
 			default:
 				return false;
 		}
+	}
+
+	/**
+	 * Append our plugin's settings to the existing WordPress media settings.
+	 */
+	public function settings_init() : void {
+
+		add_settings_section(
+			'widen-media-general',
+			'Widen Media',
+			[ $this, 'section_description' ],
+			'media'
+		);
+
+		add_settings_field(
+			'widen-media-access-token',
+			'Access Token',
+			[ $this, 'access_token_setting_cb' ],
+			'media',
+			'widen-media-general'
+		);
+
+	}
+
+	/**
+	 * The description for our settings settings.
+	 */
+	public function section_description() : void {
+		esc_html_e( 'The options below are readonly and can only be set via wp-config.php.', 'widen-media' );
+	}
+
+	/**
+	 * The callback for our access_token setting.
+	 */
+	public function access_token_setting_cb() : void {
+		?>
+		<label for="access_token">
+			<input disabled name="access_token" type="text" id="access_token" value="<?php echo esc_attr( $this->get_access_token() ); ?>" class="regular-text">
+		</label>
+		<?php if ( ! $this->is_access_token_defined() ) : ?>
+			<p class="description"><?php esc_html_e( 'WIDEN_MEDIA_ACCESS_TOKEN must be defined within wp-config.php.', 'widen-media' ); ?></p>
+		<?php endif; ?>
+		<?php
 	}
 
 	/**
@@ -120,31 +162,13 @@ class Admin extends Plugin {
 			'widen-media-assets',
 			[ $this, 'media_assets_page_cb' ]
 		);
-
-		add_submenu_page(
-			'options-general.php',
-			__( 'Widen Media Settings', 'widen-media' ),
-			__( 'Widen Media', 'widen-media' ),
-			'manage_options',
-			'widen-media',
-			[ $this, 'options_page_cb' ]
-		);
-
-		remove_submenu_page( 'upload.php', 'widen-media-asset' );
 	}
 
 	/**
 	 * Callback for the media assets page.
 	 */
 	public function media_assets_page_cb() : void {
-		include_once 'Admin/pages/media-assets.php';
-	}
-
-	/**
-	 * Callback for the options page.
-	 */
-	public function options_page_cb() : void {
-		include_once 'Admin/pages/options.php';
+		include_once 'Admin/widen-media-assets.php';
 	}
 
 	/**
@@ -173,9 +197,7 @@ class Admin extends Plugin {
 	 * Return the plugin's settings page URL.
 	 */
 	protected static function get_settings_page_url() : string {
-		$base = admin_url( 'options-general.php' );
-
-		return add_query_arg( 'page', 'widen-media', $base );
+		return admin_url( 'options-media.php' );
 	}
 
 	/**
