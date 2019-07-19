@@ -25,7 +25,7 @@ This plugin uses [V2 of the Widen API](https://widenv2.docs.apiary.io/). You wil
 define( 'WIDEN_MEDIA_ACCESS_TOKEN', 'my-widen-api-token' );
 ```
 
-## Widen Meta
+## Widen Metadata
 
 Some additional Widen metadata is captured and saved to the database on the "Add to Media Library" action. This plugin does not currently support syncing of meta data between Widen & WordPress.
 
