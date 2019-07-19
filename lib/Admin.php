@@ -325,6 +325,57 @@ class Admin extends Plugin {
 	}
 
 	/**
+	 * Filters the HTML content for the image tag.
+	 *
+	 * @since 2.6.0
+	 *
+	 * @param string       $html  HTML content for the image.
+	 * @param int          $id    Attachment ID.
+	 * @param string       $alt   Alternate text.
+	 * @param string       $title Attachment title.
+	 * @param string       $align Part of the class name for aligning the image.
+	 * @param string|array $size  Size of image. Image size or array of width and height values (in that order).
+	 *                            Default 'medium'.
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/get_image_tag/
+	 */
+	public function filter_widen_image_tag( $html, $id, $alt, $title, $align, $size ) : string {
+		$widen_media_id = get_post_meta( $id, '_widen_media_id', true );
+
+		// Do nothing special if this is not a Widen image.
+		if ( empty( $widen_media_id ) ) {
+			return $html;
+		}
+
+		list( $img_src, $width, $height ) = image_downsize( $id, $size );
+		$hwstring                         = image_hwstring( $width, $height );
+
+		$title = $title ? 'title="' . esc_attr( $title ) . '" ' : '';
+
+		$class = 'align' . esc_attr( $align ) . ' size-' . esc_attr( $size ) . ' wp-image-' . $id;
+
+		/**
+		 * Filters the value of the attachment's image tag class attribute.
+		 *
+		 * @since 2.6.0
+		 *
+		 * @param string       $class CSS class name or space-separated list of classes.
+		 * @param int          $id    Attachment ID.
+		 * @param string       $align Part of the class name for aligning the image.
+		 * @param string|array $size  Size of image. Image size or array of width and height values (in that order).
+		 *                            Default 'medium'.
+		 */
+		$class = apply_filters( 'get_image_tag_class', $class, $id, $align, $size );
+
+		// Get correct image src.
+		$img_src = wp_get_attachment_url( $id );
+
+		$html = '<img src="' . esc_attr( $img_src ) . '" alt="' . esc_attr( $alt ) . '" ' . $title . $hwstring . 'class="' . $class . '" />';
+
+		return $html;
+	}
+
+	/**
 	 * Add widen asset to WordPress media library.
 	 * This is called via ajax.
 	 *
@@ -418,13 +469,7 @@ class Admin extends Plugin {
 
 		/**
 		 * Store the asset's ID from Widen as post_meta.
-		 *
-		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
-		 */
-		update_post_meta( $attachment_id, '_widen_media_id', $asset_data['id'] );
-
-		/**
-		 * Store the asset's ID from Widen as post_meta.
+		 * This is also used throughout this plugin in checking if an image is from Widen.
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
 		 */
@@ -478,9 +523,7 @@ class Admin extends Plugin {
 	}
 
 	/**
-	 * Undocumented function
-	 *
-	 * @return void
+	 * Hide WordPress core media buttons.
 	 */
 	public function hide_core_media_buttons() : void {
 		$screen = get_current_screen();

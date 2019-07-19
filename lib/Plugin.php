@@ -102,11 +102,14 @@ class Plugin {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'register_media_page' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'settings_init' );
 		$this->loader->add_filter( 'plugin_action_links_' . $plugin_basename, $plugin_admin, 'settings_link', 10, 4 );
-		$this->loader->add_filter( 'wp_get_attachment_image_src', $plugin_admin, 'fix_widen_attachment_urls', 10, 4 );
 		$this->loader->add_action( 'admin_post_handle_search_submit', $plugin_admin, 'handle_search_submit' );
 		$this->loader->add_action( 'wp_ajax_widen_media_add_image_to_library', $plugin_admin, 'add_image_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_add_audio_to_library', $plugin_admin, 'add_audio_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_add_pdf_to_library', $plugin_admin, 'add_pdf_to_library' );
+
+		// Fix URL issues stemming from there being no actual file gets uploaded to WordPress.
+		$this->loader->add_filter( 'wp_get_attachment_image_src', $plugin_admin, 'fix_widen_attachment_urls', 10, 4 );
+		$this->loader->add_filter( 'get_image_tag', $plugin_admin, 'filter_widen_image_tag', 10, 6 );
 
 		// Prevent user from accessing the native 'add new' button for the WordPress Media Library.
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'hide_add_new_media_menu' );
