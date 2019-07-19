@@ -19,11 +19,24 @@ composer require masonitedoors/widen-media
 
 ## Configuration
 
+### WordPress
+
 This plugin uses [V2 of the Widen API](https://widenv2.docs.apiary.io/). You will need to define your Widen API access token in `wp-config.php`.
 
 ```php
 define( 'WIDEN_MEDIA_ACCESS_TOKEN', 'my-widen-api-token' );
 ```
+
+### Widen
+
+This plugin uses the `expand` property when requesting data from the V2 of the Widen API. In order for this plugin to work, you must create "Share Links" within the administration screen of your organization's Widen account that match what this plugin is expecting. This can usually be found by visiting `https://your-organiztion-name.widencollective.com/admin/imageembed`. Keep in mind that for images Widen will always be able to create a PNG, JPEG, & GIF. If another file format is uploaded such as TIFF, this plugin will take the PNG.
+
+| Share Link    | Description                                                                                  |
+| ------------- | -------------------------------------------------------------------------------------------- |
+| Original PNG  | The original image as a PNG                                                                  |
+| Original JPEG | The original image as a JPEG                                                                 |
+| Thumbnail PNG | The original image as a 500x500 PNG. Used in the results page UI.                            |
+| Skeleton PNG  | The original image as a 100x100 PNG. Used when loading larger images in the results page UI. |
 
 ## Widen Metadata
 
