@@ -449,6 +449,7 @@ class Admin extends Plugin {
 		$attachment_metadata = [
 			'width'  => $asset_data['width'],
 			'height' => $asset_data['height'],
+			'file'   => $asset_data['url'],
 			'sizes'  => [
 				'full' => [
 					'file'      => $asset_data['url'],
