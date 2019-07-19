@@ -1,16 +1,15 @@
-const path = require( 'path' );
-const FriendlyErrorsWebpackPlugin = require( 'friendly-errors-webpack-plugin' );
-const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
-const StyleLintPlugin = require( 'stylelint-webpack-plugin' );
+const path = require('path')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const StyleLintPlugin = require('stylelint-webpack-plugin')
 
 module.exports = {
   entry: {
     admin: './src/scripts/admin.js',
-    frontend: './src/scripts/frontend.js'
   },
   output: {
-    path: path.resolve( __dirname, 'dist' ),
-    filename: 'scripts/[name].js'
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'scripts/[name].js',
   },
   stats: 'none',
   mode: 'production',
@@ -21,24 +20,14 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
-          presets: [ 'env' ],
-          cacheDirectory: true
-        }
+          presets: ['env'],
+          cacheDirectory: true,
+        },
       },
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader',
-          'sass-loader'
-        ]
-      },
-      {
-        test: /\.vue$/,
-        exclude: /node_modules/,
-        loader: 'vue-loader'
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
       },
       {
         test: /\.(jpe?g|gif|png|svg|eot|woff|woff2|ttf)$/,
@@ -49,22 +38,22 @@ module.exports = {
             options: {
               emitFile: false,
               name: '[path][name].[ext]',
-              publicPath: './../../'
-            }
-          }
-        ]
-      }
-    ]
+              publicPath: './../../',
+            },
+          },
+        ],
+      },
+    ],
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: 'styles/[name].css' }),
     new FriendlyErrorsWebpackPlugin(),
-    new StyleLintPlugin()
+    new StyleLintPlugin(),
   ],
   resolve: {
-    extensions: [ '.js', '.json', '.vue' ]
+    extensions: ['.js', '.json'],
   },
   externals: {
-    jquery: 'jQuery'
-  }
-};
+    jquery: 'jQuery',
+  },
+}

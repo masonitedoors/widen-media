@@ -116,18 +116,6 @@ class Plugin {
 	}
 
 	/**
-	 * Register all of the hooks related to the public-facing functionality
-	 * of the plugin.
-	 */
-	private function define_frontend_hooks() : void {
-		$plugin_frontend = new Frontend();
-
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_frontend, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_frontend, 'enqueue_scripts' );
-		$this->loader->add_shortcode( 'Widen_Media', $plugin_frontend, 'shortcode' );
-	}
-
-	/**
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *
 	 * Load the dependencies, define the locale, and set the hooks for the Dashboard and
@@ -138,7 +126,6 @@ class Plugin {
 		$this->define_plugin_dir_path();
 		$this->define_plugin_dir_url();
 		$this->define_admin_hooks();
-		$this->define_frontend_hooks();
 		$this->loader->run();
 	}
 
