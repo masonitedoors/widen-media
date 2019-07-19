@@ -8,12 +8,13 @@ declare( strict_types = 1 );
 // If this file is called directly, abort.
 defined( 'WPINC' ) || die();
 
-$image_id       = $item['id'];
-$image_filename = $item['filename'];
-$original_url   = $item['embeds']['original']['url'];
-$thumbnail_url  = $item['embeds']['ThumbnailPNG']['url'];
-$skeleton_url   = $item['embeds']['SkeletonPNG']['url'];
-$description    = implode( ' ', $item['metadata']['fields']['description'] );
+$image_id        = $item['id'] ?? '';
+$image_filename  = $item['filename'] ?? '';
+$original_url    = $item['embeds']['original']['url'] ?? '';
+$thumbnail_url   = $item['embeds']['ThumbnailPNG']['url'] ?? '';
+$skeleton_url    = $item['embeds']['SkeletonPNG']['url'] ?? '';
+$description_arr = $item['metadata']['fields']['description'] ?? [];
+$description     = implode( ' ', $description_arr );
 
 if ( strpos( $original_url, '.tif' ) !== false ) {
 	$original_url = $item['embeds']['OriginalPNG']['url'];
