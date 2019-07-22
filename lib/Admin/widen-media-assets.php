@@ -7,10 +7,11 @@ namespace Masonite\WP\Widen_Media;
 // If this file is called directly, abort.
 defined( 'WPINC' ) || die();
 
-$query        = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''; // phpcs:disable WordPress.Security.NonceVerification.Recommended
-$current_page = ( isset( $_GET['paged'] ) && '0' !== $_GET['paged'] ) ? intval( wp_unslash( $_GET['paged'] ) ) : 1; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-$limit        = 25;
-$offset       = ( $current_page - 1 ) * $limit;
+$query         = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''; // phpcs:disable WordPress.Security.NonceVerification.Recommended
+$current_page  = ( isset( $_GET['paged'] ) && '0' !== $_GET['paged'] ) ? intval( wp_unslash( $_GET['paged'] ) ) : 1; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+$is_collection = isset( $_GET['collection'] ) && '1' === $_GET['collection'];
+$limit         = 25;
+$offset        = ( $current_page - 1 ) * $limit;
 
 ?>
 
@@ -26,11 +27,14 @@ $offset       = ( $current_page - 1 ) * $limit;
 
 		<input type="hidden" name="action" value="handle_search_submit" />
 		<input type="hidden" name="prev_s" value="<?php echo esc_attr( $query ); ?>" />
+		<input type="hidden" name="collection" value="<?php echo ( $is_collection ? '1' : '0' ); ?>" />
 
 		<div class="search-box">
 			<label class="screen-reader-text" for="widen-search-input">Search Widen:</label>
 			<input type="search" id="widen-search-input" name="s" value="<?php echo esc_attr( $query ); ?>" />
-			<input type="submit" id="widen-search-submit" class="button" value="Search Widen" />
+			<input type="submit" id="widen-search-submit" class="button button-primary" value="<?php esc_html_e( 'Search Widen', 'widen-media' ); ?>" />
+			<label for="widen-collection"><?php esc_html_e( 'Collection', 'widen-media' ); ?></label>
+			<input type="checkbox" id="widen-collection" />
 			<span id="widen-search-spinner" class="spinner"></span>
 		</div>
 
@@ -39,7 +43,7 @@ $offset       = ( $current_page - 1 ) * $limit;
 			<?php
 
 			// Make our API request to Widen.
-			$response = $this->widen->search_assets( $query, $offset, $limit );
+			$response = $this->widen->search_assets( $query, $offset, $limit, $is_collection );
 
 			if ( ! is_wp_error( $response ) ) {
 				// Setup pagination.

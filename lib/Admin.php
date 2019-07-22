@@ -276,6 +276,13 @@ class Admin extends Plugin {
 				$query = '';
 			}
 
+			// Check is searching for a collection.
+			if ( isset( $_POST['collection'] ) && '1' === $_POST['collection'] ) {
+				$is_collection = true;
+			} else {
+				$is_collection = false;
+			}
+
 			// Get the pagination.
 			// Reset the pagination if new search.
 			if ( isset( $_POST['paged'] ) && $prev_query === $query ) {
@@ -289,11 +296,32 @@ class Admin extends Plugin {
 			// Build our search url.
 			$url = add_query_arg(
 				[
-					's'     => $query,
-					'paged' => $paged,
+					's'          => $query,
+					'paged'      => $paged,
+					'collection' => '1',
 				],
 				$base_url
 			);
+
+			// Build our search url.
+			if ( $is_collection ) {
+				$url = add_query_arg(
+					[
+						's'          => $query,
+						'paged'      => $paged,
+						'collection' => '1',
+					],
+					$base_url
+				);
+			} else {
+				$url = add_query_arg(
+					[
+						's'     => $query,
+						'paged' => $paged,
+					],
+					$base_url
+				);
+			}
 
 			wp_safe_redirect( $url );
 

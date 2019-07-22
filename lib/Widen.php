@@ -30,16 +30,16 @@ class Widen {
 	/**
 	 * Search Widen assets.
 	 *
-	 * @param String  $query      The search query.
-	 * @param Int     $offset     The offset for the search.
-	 * @param Int     $limit      The response item limit.
-	 * @param Boolean $collection Search for a collection.
+	 * @param String  $query         The search query.
+	 * @param Int     $offset        The offset for the search.
+	 * @param Int     $limit         The response item limit.
+	 * @param Boolean $is_collection Search for a collection.
 	 *
 	 * @link https://widenv2.docs.apiary.io/
 	 */
-	public function search_assets( $query, $offset = 0, $limit = 10, $collection = false ) {
+	public function search_assets( $query, $offset = 0, $limit = 10, $is_collection = false ) {
 		$base_url = 'https://api.widencollective.com/v2/assets/search';
-		$before   = $collection ? 'acn:' : '';
+		$before   = $is_collection ? 'acn:' : '';
 
 		$url = add_query_arg(
 			[
