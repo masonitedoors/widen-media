@@ -55,6 +55,13 @@ class Paginator extends Admin {
 	private $query;
 
 	/**
+	 * If current search is a collection.
+	 *
+	 * @var Boolean
+	 */
+	private $is_collection;
+
+	/**
 	 * The base url.
 	 *
 	 * @var String
@@ -104,8 +111,9 @@ class Paginator extends Admin {
 	 * @param Int    $current_page_items_count The number of items shown for the current page.
 	 * @param Int    $total_items_count        The total item count.
 	 * @param String $query                    The search query.
+	 * @param Bool   $is_collection            If currently searching collections.
 	 */
-	public function __construct( $current_page, $limit, $current_page_items_count, $total_items_count, $query ) {
+	public function __construct( $current_page, $limit, $current_page_items_count, $total_items_count, $query, $is_collection ) {
 
 		$this->current_page             = intval( $current_page );
 		$this->limit                    = intval( $limit );
@@ -113,6 +121,7 @@ class Paginator extends Admin {
 		$this->total_items_count        = intval( $total_items_count );
 		$this->total_page_count         = intval( ceil( $this->total_items_count / $this->limit ) );
 		$this->query                    = $query;
+		$this->is_collection            = $is_collection;
 		$this->has_results              = $this->has_results();
 		$this->is_first_page            = $this->is_first_page();
 		$this->is_second_page           = $this->is_second_page();
@@ -161,13 +170,24 @@ class Paginator extends Admin {
 	 * Get the first page url.
 	 */
 	public function get_first_page_url() : string {
-		$first_page_url = add_query_arg(
-			[
-				's'     => $this->query,
-				'paged' => 1,
-			],
-			$this->base_url
-		);
+		if ( $this->is_collection ) {
+			$first_page_url = add_query_arg(
+				[
+					'search'     => $this->query,
+					'collection' => 1,
+					'paged'      => 1,
+				],
+				$this->base_url
+			);
+		} else {
+			$first_page_url = add_query_arg(
+				[
+					'search' => $this->query,
+					'paged'  => 1,
+				],
+				$this->base_url
+			);
+		}
 
 		return $first_page_url;
 	}
@@ -176,13 +196,24 @@ class Paginator extends Admin {
 	 * Get the previous page url.
 	 */
 	public function get_prev_page_url() : string {
-		$prev_page_url = add_query_arg(
-			[
-				's'     => $this->query,
-				'paged' => ( $this->current_page - 1 ),
-			],
-			$this->base_url
-		);
+		if ( $this->is_collection ) {
+			$prev_page_url = add_query_arg(
+				[
+					'search'     => $this->query,
+					'collection' => 1,
+					'paged'      => ( $this->current_page - 1 ),
+				],
+				$this->base_url
+			);
+		} else {
+			$prev_page_url = add_query_arg(
+				[
+					'search' => $this->query,
+					'paged'  => ( $this->current_page - 1 ),
+				],
+				$this->base_url
+			);
+		}
 
 		return $prev_page_url;
 	}
@@ -191,13 +222,24 @@ class Paginator extends Admin {
 	 * Get the next page url.
 	 */
 	public function get_next_page_url() : string {
-		$next_page_url = add_query_arg(
-			[
-				's'     => $this->query,
-				'paged' => ( $this->current_page + 1 ),
-			],
-			$this->base_url
-		);
+		if ( $this->is_collection ) {
+			$next_page_url = add_query_arg(
+				[
+					'search'     => $this->query,
+					'collection' => 1,
+					'paged'      => ( $this->current_page + 1 ),
+				],
+				$this->base_url
+			);
+		} else {
+			$next_page_url = add_query_arg(
+				[
+					'search' => $this->query,
+					'paged'  => ( $this->current_page + 1 ),
+				],
+				$this->base_url
+			);
+		}
 
 		return $next_page_url;
 	}
@@ -206,13 +248,24 @@ class Paginator extends Admin {
 	 * Get the last page url.
 	 */
 	public function get_last_page_url() : string {
-		$last_page_url = add_query_arg(
-			[
-				's'     => $this->query,
-				'paged' => $this->total_page_count,
-			],
-			$this->base_url
-		);
+		if ( $this->is_collection ) {
+			$last_page_url = add_query_arg(
+				[
+					'search'     => $this->query,
+					'collection' => 1,
+					'paged'      => $this->total_page_count,
+				],
+				$this->base_url
+			);
+		} else {
+			$last_page_url = add_query_arg(
+				[
+					'search' => $this->query,
+					'paged'  => $this->total_page_count,
+				],
+				$this->base_url
+			);
+		}
 
 		return $last_page_url;
 	}
@@ -253,6 +306,15 @@ class Paginator extends Admin {
 			<?php if ( $this->has_results ) : ?>
 
 				<span class="displaying-num"><?php echo $results_meta; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+
+				<?php if ( $this->is_collection ) : ?>
+
+					<span class="collection-actions">
+						<button id="widen-save-collection" class="button button-primary"><?php esc_html_e( 'Save Collection', 'widen-media' ); ?></button>
+					</span>
+
+				<?php endif; ?>
+
 				<span class="pagination-links">
 
 				<?php if ( $this->is_first_page || $this->is_second_page ) : ?>

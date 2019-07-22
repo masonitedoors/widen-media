@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Widen Media 2.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/widen-media\n"
-"POT-Creation-Date: 2019-07-18 19:13:34+00:00\n"
+"POT-Creation-Date: 2019-07-22 20:26:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,18 +13,30 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: node-wp-i18n 1.2.3\n"
 
-#: lib/Admin/tiles/image.php:46
+#: lib/Admin/tiles/image.php:49
 msgid "View In Media Library"
 msgstr ""
 
-#: lib/Admin/tiles/image.php:59
-msgid "Add To Media Library"
+#: lib/Admin/tiles/image.php:62
+msgid "Add to Media Library"
 msgstr ""
 
-#: lib/Admin/widen-media-assets.php:21
+#: lib/Admin/widen-media.php:22
 msgid ""
 "Unsupported image filetypes (anything other than JPG, PNG, & GIF) will be "
 "automatically added to the WordPress Media Library as a PNG."
+msgstr ""
+
+#: lib/Admin/widen-media.php:32 lib/Admin/widen-media.php:38
+msgid "Search Widen"
+msgstr ""
+
+#: lib/Admin/widen-media.php:36
+msgid "Search Widen Collections"
+msgstr ""
+
+#: lib/Admin/widen-media.php:36 lib/Admin.php:646 lib/Admin.php:672
+msgid "Collection"
 msgstr ""
 
 #: lib/Admin.php:74
@@ -39,54 +51,158 @@ msgstr ""
 msgid "Widen Media Library"
 msgstr ""
 
-#: lib/Admin.php:160
+#: lib/Admin.php:160 lib/Admin.php:652
 msgid "Add New"
 msgstr ""
 
-#: lib/Admin.php:190
+#: lib/Admin.php:197
 msgid "Settings"
 msgstr ""
 
-#: lib/Paginator.php:233
+#: lib/Admin.php:632
+msgid "Direct file uploads are not allowed. Please add media via Widen."
+msgstr ""
+
+#: lib/Admin.php:645 lib/Admin.php:650
+msgid "Collections"
+msgstr ""
+
+#: lib/Admin.php:647
+msgid "Collection Archives"
+msgstr ""
+
+#: lib/Admin.php:648
+msgid "Collection Attributes"
+msgstr ""
+
+#: lib/Admin.php:649
+msgid "Parent Collection:"
+msgstr ""
+
+#: lib/Admin.php:651
+msgid "Add New Collection"
+msgstr ""
+
+#: lib/Admin.php:653
+msgid "New Collection"
+msgstr ""
+
+#: lib/Admin.php:654
+msgid "Edit Collection"
+msgstr ""
+
+#: lib/Admin.php:655
+msgid "Update Collection"
+msgstr ""
+
+#: lib/Admin.php:656
+msgid "View Collection"
+msgstr ""
+
+#: lib/Admin.php:657
+msgid "View Collections"
+msgstr ""
+
+#: lib/Admin.php:658
+msgid "Search Collections"
+msgstr ""
+
+#: lib/Admin.php:659
+msgid "Not found"
+msgstr ""
+
+#: lib/Admin.php:660
+msgid "Not found in Trash"
+msgstr ""
+
+#: lib/Admin.php:661
+msgid "Featured Image"
+msgstr ""
+
+#: lib/Admin.php:662
+msgid "Set featured image"
+msgstr ""
+
+#: lib/Admin.php:663
+msgid "Remove featured image"
+msgstr ""
+
+#: lib/Admin.php:664
+msgid "Use as featured image"
+msgstr ""
+
+#: lib/Admin.php:665
+msgid "Insert into collection"
+msgstr ""
+
+#: lib/Admin.php:666
+msgid "Uploaded to this collection"
+msgstr ""
+
+#: lib/Admin.php:667
+msgid "Collection list"
+msgstr ""
+
+#: lib/Admin.php:668
+msgid "Collection list navigation"
+msgstr ""
+
+#: lib/Admin.php:669
+msgid "Filter collection list"
+msgstr ""
+
+#: lib/Admin.php:673
+msgid "Widen Media Collections"
+msgstr ""
+
+#: lib/Admin.php:723
+msgid "Collection Links"
+msgstr ""
+
+#: lib/Paginator.php:286
 #. translators: %1$s: Total item count for current page, %2$s: Total item
 #. count, %3$s: Search query
 msgid "Displaying %1$s of %2$s items for %3$s"
 msgstr ""
 
-#: lib/Paginator.php:241
+#: lib/Paginator.php:294
 #. translators: %1$s: Search query
 msgid "No results were found for %1$s"
 msgstr ""
 
-#: lib/Paginator.php:249
+#: lib/Paginator.php:302
 msgid "Search results navigation"
 msgstr ""
 
-#: lib/Paginator.php:265
+#: lib/Paginator.php:313
+msgid "Save Collection"
+msgstr ""
+
+#: lib/Paginator.php:327
 msgid "First page"
 msgstr ""
 
-#: lib/Paginator.php:278
+#: lib/Paginator.php:340
 msgid "Previous page"
 msgstr ""
 
-#: lib/Paginator.php:285
+#: lib/Paginator.php:347
 msgid "Current page"
 msgstr ""
 
-#: lib/Paginator.php:287
+#: lib/Paginator.php:349
 msgid "of"
 msgstr ""
 
-#: lib/Paginator.php:299
+#: lib/Paginator.php:361
 msgid "Next page"
 msgstr ""
 
-#: lib/Paginator.php:312
+#: lib/Paginator.php:374
 msgid "Last page"
 msgstr ""
 
-#: lib/Widen.php:72 lib/Widen.php:118
+#: lib/Widen.php:81 lib/Widen.php:120 lib/Widen.php:160
 msgid "An unknown error occurred"
 msgstr ""
 
@@ -104,4 +220,14 @@ msgstr ""
 
 #. Author URI of the plugin/theme
 msgid "https://www.masonite.com/"
+msgstr ""
+
+#: lib/Admin.php:643
+msgctxt "Post Type General Name"
+msgid "Collections"
+msgstr ""
+
+#: lib/Admin.php:644
+msgctxt "Post Type Singular Name"
+msgid "Collection"
 msgstr ""

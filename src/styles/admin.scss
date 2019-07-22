@@ -37,6 +37,47 @@ $breakpoint-xs: 500px;
   }
 }
 
+#search-results {
+  margin-top: $gutter;
+  border-top: 1px solid #e5e5e5;
+}
+
+#widen-save-collection {
+  margin: 0 $gutter;
+}
+
+.collection-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    margin: 0;
+  }
+}
+
+.search-box {
+  display: flex;
+}
+
+.search-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 4px;
+  padding: 0 6px;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+
+  input[type="checkbox"] {
+    margin: 0 6px 0 0;
+  }
+
+  label {
+    user-select: none;
+  }
+}
+
 .button.add-to-library {
   margin: 0;
   display: block;
@@ -47,12 +88,11 @@ $breakpoint-xs: 500px;
   flex-flow: row wrap;
   margin: 0;
   margin-left: ($gutter * -1);
-  justify-content: space-between;
 }
 
 .tile {
   padding-left: $gutter;
-  margin: 0 auto $gutter;
+  margin: 0 0 $gutter;
   box-sizing: border-box;
   justify-content: space-between;
   width: percentage(1 / 5);

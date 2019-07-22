@@ -38,7 +38,7 @@ class Admin extends Plugin {
 	 */
 	private static function can_load_scripts( $hook ) : bool {
 		switch ( $hook ) {
-			case 'media_page_widen-media-assets':
+			case 'media_page_widen-media':
 				return true;
 			default:
 				return false;
@@ -146,7 +146,7 @@ class Admin extends Plugin {
 			'widen_media',
 			[
 				'ajax_url'   => admin_url( 'admin-ajax.php' ),
-				'ajax_nonce' => wp_create_nonce( 'widen_media_add_to_library_nonce' ),
+				'ajax_nonce' => wp_create_nonce( 'widen_media_ajax_request' ),
 			]
 		);
 	}
@@ -159,16 +159,23 @@ class Admin extends Plugin {
 			__( 'Widen Media Library', 'widen-media' ),
 			__( 'Add New', 'widen-media' ),
 			'manage_options',
-			'widen-media-assets',
-			[ $this, 'media_assets_page_cb' ]
+			'widen-media',
+			[ $this, 'assets_page_cb' ]
 		);
 	}
 
 	/**
 	 * Callback for the media assets page.
 	 */
-	public function media_assets_page_cb() : void {
-		include_once 'Admin/widen-media-assets.php';
+	public function assets_page_cb() : void {
+		include_once 'Admin/widen-media.php';
+	}
+
+	/**
+	 * Callback for the media assets page.
+	 */
+	public function collections_page_cb() : void {
+		include_once 'Admin/widen-media-collections.php';
 	}
 
 	/**
@@ -206,7 +213,7 @@ class Admin extends Plugin {
 	protected static function get_media_assets_page() : string {
 		$base = admin_url( 'upload.php' );
 
-		return add_query_arg( 'page', 'widen-media-assets', $base );
+		return add_query_arg( 'page', 'widen-media', $base );
 	}
 
 	/**
@@ -247,9 +254,10 @@ class Admin extends Plugin {
 	/**
 	 * Get the appropriate tile template based on the item's format type (image, pdf, etc).
 	 *
-	 * @param Array $item A single item from the responses items array.
+	 * @param Array $item          A single item from the responses items array.
+	 * @param Bool  $is_collection If the current search is for a collection.
 	 */
-	public static function get_tile( $item ) : void {
+	public static function get_tile( $item, $is_collection = false ) : void {
 		$format_type = $item['file_properties']['format_type'] ?? 'unknown';
 
 		include "Admin/tiles/$format_type.php";
@@ -263,15 +271,15 @@ class Admin extends Plugin {
 		if ( ! empty( $_POST ) && check_admin_referer( 'search_submit', 'widen_media_nonce' ) ) {
 
 			// Get the previous search query.
-			if ( isset( $_POST['prev_s'] ) ) {
-				$prev_query = rawurlencode( sanitize_text_field( wp_unslash( $_POST['prev_s'] ) ) );
+			if ( isset( $_POST['prev_search'] ) ) {
+				$prev_query = rawurlencode( sanitize_text_field( wp_unslash( $_POST['prev_search'] ) ) );
 			} else {
 				$prev_query = null;
 			}
 
 			// Get the search query.
-			if ( isset( $_POST['s'] ) ) {
-				$query = rawurlencode( sanitize_text_field( wp_unslash( $_POST['s'] ) ) );
+			if ( isset( $_POST['search'] ) ) {
+				$query = rawurlencode( sanitize_text_field( wp_unslash( $_POST['search'] ) ) );
 			} else {
 				$query = '';
 			}
@@ -294,20 +302,10 @@ class Admin extends Plugin {
 			$base_url = self::get_media_assets_page();
 
 			// Build our search url.
-			$url = add_query_arg(
-				[
-					's'          => $query,
-					'paged'      => $paged,
-					'collection' => '1',
-				],
-				$base_url
-			);
-
-			// Build our search url.
 			if ( $is_collection ) {
 				$url = add_query_arg(
 					[
-						's'          => $query,
+						'search'     => $query,
 						'paged'      => $paged,
 						'collection' => '1',
 					],
@@ -316,8 +314,8 @@ class Admin extends Plugin {
 			} else {
 				$url = add_query_arg(
 					[
-						's'     => $query,
-						'paged' => $paged,
+						'search' => $query,
+						'paged'  => $paged,
 					],
 					$base_url
 				);
@@ -416,7 +414,7 @@ class Admin extends Plugin {
 	 */
 	public function add_image_to_library() : void {
 		// Kill this process if this method wasn't called from our form.
-		check_ajax_referer( 'widen_media_add_to_library_nonce', 'nonce' );
+		check_ajax_referer( 'widen_media_ajax_request', 'nonce' );
 
 		// Set our default/fallback values.
 		$asset_data = [
@@ -509,6 +507,52 @@ class Admin extends Plugin {
 	}
 
 	/**
+	 * Save a collection.
+	 * This is called via ajax.
+	 *
+	 * @see src/scripts/admin.js
+	 */
+	public function save_collection() : void {
+		// Kill this process if this method wasn't called from our form.
+		check_ajax_referer( 'widen_media_ajax_request', 'nonce' );
+
+		// Set our default/fallback values.
+		$collection = [
+			'title' => '',
+			'links' => [],
+		];
+
+		if ( isset( $_POST['query'] ) ) {
+			$collection['title'] = sanitize_text_field( wp_unslash( $_POST['query'] ) );
+		}
+		if ( isset( $_POST['links'] ) ) {
+			$collection['links'] = sanitize_text_field( wp_unslash( $_POST['links'] ) );
+		}
+
+		// Save the collection to our custom post type.
+		$post_id = wp_insert_post(
+			[
+				'post_type'      => 'wm_collection',
+				'post_title'     => $collection['title'],
+				'post_content'   => '',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			]
+		);
+
+		/**
+		 * Update the post type's data.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
+		 */
+		update_post_meta( $post_id, '_widen_media_links', $collection['links'] );
+
+		// Exit since this is executed via Ajax.
+		exit();
+	}
+
+	/**
 	 * Retrieves the attachment ID from the file URL.
 	 *
 	 * @param String $image_url The image URL.
@@ -573,7 +617,7 @@ class Admin extends Plugin {
 	public function edit_new_media_link( $wp_admin_bar ) : void {
 		$new_content_node = $wp_admin_bar->get_node( 'new-media' );
 
-		$new_content_node->href = '?page=widen-media-assets';
+		$new_content_node->href = '?page=widen-media';
 
 		$wp_admin_bar->add_node( $new_content_node );
 	}
@@ -588,6 +632,143 @@ class Admin extends Plugin {
 		$file['error'] = __( 'Direct file uploads are not allowed. Please add media via Widen.', 'widen-media' );
 
 		return $file;
+	}
+
+	/**
+	 * Register the plugin's custom post types.
+	 */
+	public function register_post_types() : void {
+
+		$labels = [
+			'name'                  => _x( 'Collections', 'Post Type General Name', 'widen-media' ),
+			'singular_name'         => _x( 'Collection', 'Post Type Singular Name', 'widen-media' ),
+			'menu_name'             => __( 'Collections', 'widen-media' ),
+			'name_admin_bar'        => __( 'Collection', 'widen-media' ),
+			'archives'              => __( 'Collection Archives', 'widen-media' ),
+			'attributes'            => __( 'Collection Attributes', 'widen-media' ),
+			'parent_item_colon'     => __( 'Parent Collection:', 'widen-media' ),
+			'all_items'             => __( 'Collections', 'widen-media' ),
+			'add_new_item'          => __( 'Add New Collection', 'widen-media' ),
+			'add_new'               => __( 'Add New', 'widen-media' ),
+			'new_item'              => __( 'New Collection', 'widen-media' ),
+			'edit_item'             => __( 'Edit Collection', 'widen-media' ),
+			'update_item'           => __( 'Update Collection', 'widen-media' ),
+			'view_item'             => __( 'View Collection', 'widen-media' ),
+			'view_items'            => __( 'View Collections', 'widen-media' ),
+			'search_items'          => __( 'Search Collections', 'widen-media' ),
+			'not_found'             => __( 'Not found', 'widen-media' ),
+			'not_found_in_trash'    => __( 'Not found in Trash', 'widen-media' ),
+			'featured_image'        => __( 'Featured Image', 'widen-media' ),
+			'set_featured_image'    => __( 'Set featured image', 'widen-media' ),
+			'remove_featured_image' => __( 'Remove featured image', 'widen-media' ),
+			'use_featured_image'    => __( 'Use as featured image', 'widen-media' ),
+			'insert_into_item'      => __( 'Insert into collection', 'widen-media' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this collection', 'widen-media' ),
+			'items_list'            => __( 'Collection list', 'widen-media' ),
+			'items_list_navigation' => __( 'Collection list navigation', 'widen-media' ),
+			'filter_items_list'     => __( 'Filter collection list', 'widen-media' ),
+		];
+		$args   = [
+			'label'               => __( 'Collection', 'widen-media' ),
+			'description'         => __( 'Widen Media Collections', 'widen-media' ),
+			'labels'              => $labels,
+			'supports'            => [ 'title' ],
+			'hierarchical'        => false,
+			'public'              => false,
+			'show_ui'             => true,
+			'show_in_menu'        => 'upload.php',
+			'show_in_admin_bar'   => false,
+			'show_in_nav_menus'   => false,
+			'can_export'          => true,
+			'has_archive'         => false,
+			'exclude_from_search' => false,
+			'publicly_queryable'  => false,
+			'show_in_rest'        => true,
+			'capability_type'     => 'post',
+			'capabilities'        => [
+				'create_posts' => false,
+			],
+			'map_meta_cap'        => true,
+		];
+
+		register_post_type( 'wm_collection', $args );
+
+	}
+
+	/**
+	 * Remove quici edit from collections custom post type.
+	 *
+	 * @param Array  $actions The row actions.
+	 * @param Object $post    The post object.
+	 */
+	public function remove_collections_quick_edit( $actions, $post ) : array {
+		// Only modify actions for our collections custom post type.
+		if ( 'wm_collection' !== $post->post_type ) {
+			return $actions;
+		}
+
+		unset( $actions['edit'] );
+		unset( $actions['inline hide-if-no-js'] );
+
+		return $actions;
+	}
+
+	/**
+	 * Register a meta box for the collections custom post type.
+	 */
+	public function collection_data_meta_box() : void {
+
+		add_meta_box(
+			'collection-links',
+			__( 'Collection Links', 'widen-media' ),
+			[ $this, 'collection_links_meta_box_cb' ],
+			'wm_collection'
+		);
+
+	}
+
+	/**
+	 * The callback for the collection data meta box.
+	 */
+	public function collection_links_meta_box_cb() : void {
+		$post_id = get_the_ID();
+
+		$links_str = get_post_meta( $post_id, '_widen_media_links', true );
+		$links_arr = json_decode( $links_str );
+
+		echo '<ul>';
+
+		foreach ( $links_arr as $link ) {
+			echo '<li><a href="' . esc_url( $link->url ) . '">' . esc_url( $link->url ) . '<a/></li>';
+		}
+
+		echo '</ul>';
+	}
+
+	/**
+	 * Outputs JSON to the page so we can grab it as needed via js.
+	 * Used when adding collections to the database.
+	 *
+	 * @param String $query The query title.
+	 * @param Array  $items The response items.
+	 */
+	public static function json_query_data( $query, $items ) {
+		$asset_links = [];
+
+		foreach ( $items as $item ) {
+			$id  = $item['id'] ?? '';
+			$url = $item['embeds']['original']['url'] ?? '';
+			$url = Util::remove_query_string( $url );
+
+			$asset_links[] = [
+				'id'  => $id,
+				'url' => $url,
+			];
+		}
+
+		$json = wp_json_encode( $asset_links );
+
+		echo '<script id="widen_query_data" type="application/json">' . $json . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 }

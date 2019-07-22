@@ -47,3 +47,11 @@ Some additional Widen metadata is captured and saved to the database on the "Add
 ```php
 get_post_meta( $attachment_id, '_widen_media_id', true );
 ```
+
+## Collections
+
+Users can search for Widen collections and save them to their site. This plugin only provides a way to store the collections for other plugins to access.
+
+```php
+get_post_meta( $collection_id, '_widen_media_links', true );
+```

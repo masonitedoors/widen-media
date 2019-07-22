@@ -5,6 +5,8 @@
 
 declare( strict_types = 1 );
 
+namespace Masonite\WP\Widen_Media;
+
 // If this file is called directly, abort.
 defined( 'WPINC' ) || die();
 
@@ -21,7 +23,7 @@ if ( strpos( $original_url, '.tif' ) !== false ) {
 }
 
 // Remove query string from url.
-$original_url = preg_replace( '/\?.*/', '', $original_url );
+$original_url = Util::remove_query_string( $original_url );
 
 // Check if the image has already been added.
 $already_added = self::attachment_exists( $original_url );
@@ -57,7 +59,7 @@ $attachment_id = $already_added ? self::get_attachment_id( $original_url ) : '';
 						data-filename="<?php echo esc_attr( $image_filename ); ?>"
 						data-description="<?php echo esc_attr( $description ); ?>"
 						data-url="<?php echo esc_attr( $original_url ); ?>"
-					><?php esc_html_e( 'Add To Media Library', 'widen-media' ); ?></button>
+					><?php esc_html_e( 'Add to Media Library', 'widen-media' ); ?></button>
 					<span class="spinner"></span>
 				</div>
 

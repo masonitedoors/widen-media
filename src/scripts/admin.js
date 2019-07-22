@@ -4,6 +4,7 @@ import '../styles/admin.scss';
   const form = $('#widen-media')
   const paginationButton = $('.pagination-links .button')
   const addToLibrary = $('.add-to-library')
+  const saveCollection = $('#widen-save-collection')
 
   form.submit(() => {
     startSearchSpinner()
@@ -64,6 +65,33 @@ import '../styles/admin.scss';
         }
         break
       default:
+    }
+
+    /**
+     * Make the ajax request via WordPress.
+     *
+     * @see https://developer.wordpress.org/plugins/javascript/ajax/
+     */
+    $.ajax({
+      url: widen_media.ajax_url,
+      type: 'POST',
+      data,
+    }).done(response => {
+      window.location.reload()
+    })
+  })
+
+  saveCollection.click(e => {
+    e.preventDefault()
+
+    const query = $('[name="prev_search"]').val()
+    const links = $('#widen_query_data').html()
+
+    const data = {
+      action: 'widen_media_save_collection',
+      nonce: widen_media.ajax_nonce,
+      query,
+      links,
     }
 
     /**

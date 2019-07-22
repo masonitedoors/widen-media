@@ -25,6 +25,46 @@
   .toolbar .displaying-num {
     margin-right: auto; }
 
+#search-results {
+  margin-top: 18px;
+  border-top: 1px solid #e5e5e5; }
+
+#widen-save-collection {
+  margin: 0 18px; }
+
+.collection-actions {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-justify-content: center;
+          justify-content: center; }
+  .collection-actions p {
+    margin: 0; }
+
+.search-box {
+  display: -webkit-flex;
+  display: flex; }
+
+.search-option {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  margin: 0 4px;
+  padding: 0 6px;
+  border-radius: 2px;
+  border: 1px solid #ddd; }
+  .search-option input[type="checkbox"] {
+    margin: 0 6px 0 0; }
+  .search-option label {
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none; }
+
 .button.add-to-library {
   margin: 0;
   display: block; }
@@ -35,13 +75,11 @@
   -webkit-flex-flow: row wrap;
           flex-flow: row wrap;
   margin: 0;
-  margin-left: -18px;
-  -webkit-justify-content: space-between;
-          justify-content: space-between; }
+  margin-left: -18px; }
 
 .tile {
   padding-left: 18px;
-  margin: 0 auto 18px;
+  margin: 0 0 18px;
   box-sizing: border-box;
   -webkit-justify-content: space-between;
           justify-content: space-between;

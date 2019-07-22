@@ -40,6 +40,15 @@ class Util {
 	}
 
 	/**
+	 * Remove the query string from a url.
+	 *
+	 * @param String $url The url to clean.
+	 */
+	public static function remove_query_string( $url ) : string {
+		return preg_replace( '/\?.*/', '', $url );
+	}
+
+	/**
 	 * Sanitize a string removing any leading or trailing slashes..
 	 *
 	 * @param String $str The string to sanitize.

@@ -7,10 +7,10 @@ namespace Masonite\WP\Widen_Media;
 // If this file is called directly, abort.
 defined( 'WPINC' ) || die();
 
-$query         = isset( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : ''; // phpcs:disable WordPress.Security.NonceVerification.Recommended
+$query         = isset( $_GET['search'] ) ? sanitize_text_field( wp_unslash( $_GET['search'] ) ) : ''; // phpcs:disable WordPress.Security.NonceVerification.Recommended
 $current_page  = ( isset( $_GET['paged'] ) && '0' !== $_GET['paged'] ) ? intval( wp_unslash( $_GET['paged'] ) ) : 1; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 $is_collection = isset( $_GET['collection'] ) && '1' === $_GET['collection'];
-$limit         = 25;
+$limit         = $is_collection ? 100 : 25;
 $offset        = ( $current_page - 1 ) * $limit;
 
 ?>
@@ -26,15 +26,16 @@ $offset        = ( $current_page - 1 ) * $limit;
 		<?php wp_nonce_field( 'search_submit', 'widen_media_nonce' ); ?>
 
 		<input type="hidden" name="action" value="handle_search_submit" />
-		<input type="hidden" name="prev_s" value="<?php echo esc_attr( $query ); ?>" />
-		<input type="hidden" name="collection" value="<?php echo ( $is_collection ? '1' : '0' ); ?>" />
+		<input type="hidden" name="prev_search" value="<?php echo esc_attr( $query ); ?>" />
 
 		<div class="search-box">
-			<label class="screen-reader-text" for="widen-search-input">Search Widen:</label>
-			<input type="search" id="widen-search-input" name="s" value="<?php echo esc_attr( $query ); ?>" />
-			<input type="submit" id="widen-search-submit" class="button button-primary" value="<?php esc_html_e( 'Search Widen', 'widen-media' ); ?>" />
-			<label for="widen-collection"><?php esc_html_e( 'Collection', 'widen-media' ); ?></label>
-			<input type="checkbox" id="widen-collection" />
+			<label class="screen-reader-text" for="widen-search-input"><?php esc_html_e( 'Search Widen', 'widen-media' ); ?></label>
+			<input type="search" id="widen-search-input" name="search" value="<?php echo esc_attr( $query ); ?>" />
+			<div class="search-option">
+				<input type="checkbox" name="collection" id="widen-search-collection" class="search-option" value="1" <?php checked( $is_collection ); ?> />
+				<label for="widen-search-collection" title="<?php esc_html_e( 'Search Widen Collections', 'widen-media' ); ?>"><?php esc_html_e( 'Collection', 'widen-media' ); ?></label>
+			</div>
+			<input type="submit" id="widen-search-submit" class="button" value="<?php esc_html_e( 'Search Widen', 'widen-media' ); ?>" />
 			<span id="widen-search-spinner" class="spinner"></span>
 		</div>
 
@@ -52,7 +53,8 @@ $offset        = ( $current_page - 1 ) * $limit;
 					$limit,
 					count( $response['items'] ),
 					$response['total_count'],
-					$query
+					$query,
+					$is_collection
 				);
 			} else {
 				// Display error message.
@@ -68,13 +70,19 @@ $offset        = ( $current_page - 1 ) * $limit;
 
 			<?php if ( ! is_wp_error( $response ) ) : ?>
 
+				<?php if ( $is_collection ) : ?>
+
+					<?php self::json_query_data( $query, $response['items'] ); ?>
+
+				<?php endif; ?>
+
 				<?php $pagination->display(); ?>
 
 				<ul class="tiles">
 
 				<?php foreach ( $response['items'] as $item ) : ?>
 
-					<?php $this->get_tile( $item ); ?>
+					<?php $this->get_tile( $item, $is_collection ); ?>
 
 				<?php endforeach; ?>
 
