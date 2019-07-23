@@ -40,18 +40,18 @@ This plugin uses the `expand` property when requesting data from the V2 of the W
 
 ## Widen Metadata
 
-Some additional Widen metadata is captured and saved to the database on the "Add to Media Library" action. This plugin does not currently support syncing of meta data between Widen & WordPress.
-
-### ID
-
-```php
-get_post_meta( $attachment_id, '_widen_media_id', true );
-```
+Some additional Widen metadata is captured and saved to the database on the `Add to Media Library` action. This plugin does not currently support syncing of meta data between Widen & WordPress.
 
 ## Collections
 
-Users can search for Widen collections and save them to their site. This plugin only provides a way to store the collections for other plugins to access.
+This plugin saves Widen collections under the post type `wm_collection` in order to provide a way for other themes and plugins to have access to this data without having to directly interact with Widen's API.
 
-```php
-get_post_meta( $collection_id, '_widen_media_links', true );
-```
+Within the main search page under "Add New", users can toggle "collection" when searching Widen. This will return only results that match that collection name.
+
+When searching for a collection, a _Save Collection_ button will be displayed. This button saves the current result page's collection to the metadata of a new post under the `wp_collection` post type. Note that a collection large than 100 assets will only save the 100 assets on the current results page.
+
+## Available Functions
+
+This plugin provides some function to allow other plugins to easly interact with Widen data imported into WordPress as well as the Widen API.
+
+...
