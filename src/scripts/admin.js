@@ -28,6 +28,7 @@ import '../styles/admin.scss';
     const filename = $(this).attr('data-filename')
     const description = $(this).attr('data-description')
     const url = $(this).attr('data-url')
+    const fields = $(this).attr('data-fields')
 
     // Create our data based on the asset type.
     switch (type) {
@@ -40,6 +41,7 @@ import '../styles/admin.scss';
           filename,
           description,
           url,
+          fields,
         }
         break
       case 'pdf':
@@ -77,6 +79,7 @@ import '../styles/admin.scss';
       type: 'POST',
       data,
     }).done(response => {
+      console.log(response)
       window.location.reload()
     })
   })
@@ -104,6 +107,7 @@ import '../styles/admin.scss';
       type: 'POST',
       data,
     }).done(response => {
+      console.log(response)
       window.location.reload()
     })
   })

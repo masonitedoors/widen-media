@@ -340,7 +340,7 @@ class Admin extends Plugin {
 	 * @param bool         $icon          Whether the image should be treated as an icon. Default false.
 	 */
 	public function fix_widen_attachment_urls( $image, $attachment_id, $size, $icon ) {
-		$widen_media_id = get_post_meta( $attachment_id, '_widen_media_id', true );
+		$widen_media_id = get_post_meta( $attachment_id, 'widen_media_id', true );
 
 		// Check if this is an image from Widen.
 		if ( ! empty( $widen_media_id ) ) {
@@ -366,7 +366,7 @@ class Admin extends Plugin {
 	 * @link https://developer.wordpress.org/reference/hooks/get_image_tag/
 	 */
 	public function filter_widen_image_tag( $html, $id, $alt, $title, $align, $size ) : string {
-		$widen_media_id = get_post_meta( $id, '_widen_media_id', true );
+		$widen_media_id = get_post_meta( $id, 'widen_media_id', true );
 
 		// Do nothing special if this is not a Widen image.
 		if ( empty( $widen_media_id ) ) {
@@ -423,6 +423,7 @@ class Admin extends Plugin {
 			'filename'    => '',
 			'description' => '',
 			'url'         => '',
+			'fields'      => [],
 			'width'       => '',
 			'height'      => '',
 			'mime_type'   => '',
@@ -442,6 +443,9 @@ class Admin extends Plugin {
 		}
 		if ( isset( $_POST['url'] ) ) {
 			$asset_data['url'] = sanitize_text_field( wp_unslash( $_POST['url'] ) );
+		}
+		if ( isset( $_POST['fields'] ) ) {
+			$asset_data['fields'] = json_decode( sanitize_text_field( wp_unslash( $_POST['fields'] ) ) );
 		}
 
 		// Get asset size & mime type.
@@ -500,7 +504,17 @@ class Admin extends Plugin {
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
 		 */
-		update_post_meta( $attachment_id, '_widen_media_id', $asset_data['id'] );
+		update_post_meta( $attachment_id, 'widen_media_id', $asset_data['id'] );
+
+		/**
+		 * Store all other custom Widen fields as post_meta.
+		 */
+		foreach ( $asset_data['fields'] as $key => $value ) {
+			$meta_key   = "widen_media_$key";
+			$meta_value = maybe_serialize( $value );
+
+			update_post_meta( $attachment_id, $meta_key, $meta_value );
+		}
 
 		// Exit since this is executed via Ajax.
 		exit();
@@ -672,7 +686,7 @@ class Admin extends Plugin {
 			'label'               => __( 'Collection', 'widen-media' ),
 			'description'         => __( 'Widen Media Collections', 'widen-media' ),
 			'labels'              => $labels,
-			'supports'            => [ 'title' ],
+			'supports'            => [ 'title', 'custom-fields' ],
 			'hierarchical'        => false,
 			'public'              => false,
 			'show_ui'             => true,

@@ -17,6 +17,8 @@ $thumbnail_url   = $item['embeds']['ThumbnailPNG']['url'] ?? '';
 $skeleton_url    = $item['embeds']['SkeletonPNG']['url'] ?? '';
 $description_arr = $item['metadata']['fields']['description'] ?? [];
 $description     = implode( ' ', $description_arr );
+$fields_arr      = $item['metadata']['fields'] ?? [];
+$fields          = wp_json_encode( $fields_arr );
 
 if ( strpos( $original_url, '.tif' ) !== false ) {
 	$original_url = $item['embeds']['OriginalPNG']['url'];
@@ -59,6 +61,7 @@ $attachment_id = $already_added ? self::get_attachment_id( $original_url ) : '';
 						data-filename="<?php echo esc_attr( $image_filename ); ?>"
 						data-description="<?php echo esc_attr( $description ); ?>"
 						data-url="<?php echo esc_attr( $original_url ); ?>"
+						data-fields="<?php echo esc_attr( $fields ); ?>"
 					><?php esc_html_e( 'Add to Media Library', 'widen-media' ); ?></button>
 					<span class="spinner"></span>
 				</div>
