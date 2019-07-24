@@ -418,15 +418,18 @@ class Admin extends Plugin {
 
 		// Set our default/fallback values.
 		$asset_data = [
-			'type'        => '',
-			'id'          => '',
-			'filename'    => '',
-			'description' => '',
-			'url'         => '',
-			'fields'      => [],
-			'width'       => '',
-			'height'      => '',
-			'mime_type'   => '',
+			'type'             => '',
+			'id'               => '',
+			'filename'         => '',
+			'description'      => '',
+			'mime_type'        => '',
+			'url'              => '',
+			'width'            => '',
+			'height'           => '',
+			'thumbnail_url'    => '',
+			'thumbnail_width'  => '',
+			'thumbnail_height' => '',
+			'fields'           => [],
 		];
 
 		if ( isset( $_POST['type'] ) ) {
@@ -444,16 +447,25 @@ class Admin extends Plugin {
 		if ( isset( $_POST['url'] ) ) {
 			$asset_data['url'] = sanitize_text_field( wp_unslash( $_POST['url'] ) );
 		}
+		if ( isset( $_POST['thumbnailUrl'] ) ) {
+			$asset_data['thumbnail_url'] = sanitize_text_field( wp_unslash( $_POST['thumbnailUrl'] ) );
+		}
 		if ( isset( $_POST['fields'] ) ) {
 			$asset_data['fields'] = json_decode( sanitize_text_field( wp_unslash( $_POST['fields'] ) ) );
 		}
 
 		// Get asset size & mime type.
 		if ( 'image' === $asset_data['type'] ) {
+			// Original image sizes.
 			$image_size              = @getimagesize( $asset_data['url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			$asset_data['width']     = $image_size[0];
 			$asset_data['height']    = $image_size[1];
 			$asset_data['mime_type'] = $image_size['mime'];
+
+			// Thumnbail image sizes.
+			$thumbnail_image_size           = @getimagesize( $asset_data['thumbnail_url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$asset_data['thumbnail_width']  = $thumbnail_image_size[0];
+			$asset_data['thumbnail_height'] = $thumbnail_image_size[1];
 		}
 
 		/**
@@ -466,7 +478,7 @@ class Admin extends Plugin {
 			'post_mime_type' => $asset_data['mime_type'],
 			'post_title'     => pathinfo( $asset_data['filename'], PATHINFO_FILENAME ),
 			'post_content'   => $asset_data['description'], // Attachment Description.
-			'post_excerpt'   => $asset_data['description'], // Attachment Caption.
+			'post_excerpt'   => '',                         // Attachment Caption.
 		];
 		$attachment_id = wp_insert_attachment( $attachment );
 
@@ -481,10 +493,16 @@ class Admin extends Plugin {
 			'height' => $asset_data['height'],
 			'file'   => $asset_data['url'],
 			'sizes'  => [
-				'full' => [
+				'full'         => [
 					'file'      => $asset_data['url'],
 					'width'     => $asset_data['width'],
 					'height'    => $asset_data['height'],
+					'mime-type' => $asset_data['mime_type'],
+				],
+				'wm-thumbnail' => [
+					'file'      => $asset_data['thumbnail_url'],
+					'width'     => $asset_data['thumbnail_width'],
+					'height'    => $asset_data['thumbnail_height'],
 					'mime-type' => $asset_data['mime_type'],
 				],
 			],

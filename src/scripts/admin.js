@@ -28,6 +28,7 @@ import '../styles/admin.scss';
     const filename = $(this).attr('data-filename')
     const description = $(this).attr('data-description')
     const url = $(this).attr('data-url')
+    const thumbnailUrl = $(this).attr('data-thumbnail-url')
     const fields = $(this).attr('data-fields')
 
     // Create our data based on the asset type.
@@ -41,6 +42,7 @@ import '../styles/admin.scss';
           filename,
           description,
           url,
+          thumbnailUrl,
           fields,
         }
         break

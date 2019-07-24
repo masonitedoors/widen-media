@@ -61,6 +61,7 @@ $attachment_id = $already_added ? self::get_attachment_id( $original_url ) : '';
 						data-filename="<?php echo esc_attr( $image_filename ); ?>"
 						data-description="<?php echo esc_attr( $description ); ?>"
 						data-url="<?php echo esc_attr( $original_url ); ?>"
+						data-thumbnail-url="<?php echo esc_attr( $thumbnail_url ); ?>"
 						data-fields="<?php echo esc_attr( $fields ); ?>"
 					><?php esc_html_e( 'Add to Media Library', 'widen-media' ); ?></button>
 					<span class="spinner"></span>
