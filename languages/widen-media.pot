@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Widen Media 2.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/widen-media\n"
-"POT-Creation-Date: 2019-07-26 15:38:48+00:00\n"
+"POT-Creation-Date: 2019-07-26 20:55:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,11 +12,6 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: node-wp-i18n 1.2.3\n"
-
-#: inc/api.php:24
-#. translators: %1$d: The collection ID
-msgid "No collection was found with the ID %1$d"
-msgstr ""
 
 #: lib/Admin/tiles/image.php:52
 msgid "View In Media Library"
@@ -40,123 +35,119 @@ msgstr ""
 msgid "Search Widen Collections"
 msgstr ""
 
-#: lib/Admin/widen-media.php:36 lib/Admin.php:674 lib/Admin.php:700
+#: lib/Admin/widen-media.php:36 lib/Admin.php:680 lib/Admin.php:706
 msgid "Collection"
 msgstr ""
 
-#: lib/Admin.php:74
+#: lib/Admin.php:75
 msgid "The options below are readonly and can only be set via wp-config.php."
 msgstr ""
 
-#: lib/Admin.php:86
+#: lib/Admin.php:87
 msgid "WIDEN_MEDIA_ACCESS_TOKEN must be defined within wp-config.php."
 msgstr ""
 
-#: lib/Admin.php:159
+#: lib/Admin.php:160
 msgid "Widen Media Library"
 msgstr ""
 
-#: lib/Admin.php:160 lib/Admin.php:680
+#: lib/Admin.php:161 lib/Admin.php:686
 msgid "Add New"
 msgstr ""
 
-#: lib/Admin.php:197
+#: lib/Admin.php:198
 msgid "Settings"
 msgstr ""
 
-#: lib/Admin.php:660
+#: lib/Admin.php:666
 msgid "Direct file uploads are not allowed. Please add media via Widen."
 msgstr ""
 
-#: lib/Admin.php:673 lib/Admin.php:678
+#: lib/Admin.php:679 lib/Admin.php:684
 msgid "Collections"
 msgstr ""
 
-#: lib/Admin.php:675
+#: lib/Admin.php:681
 msgid "Collection Archives"
 msgstr ""
 
-#: lib/Admin.php:676
+#: lib/Admin.php:682
 msgid "Collection Attributes"
 msgstr ""
 
-#: lib/Admin.php:677
+#: lib/Admin.php:683
 msgid "Parent Collection:"
 msgstr ""
 
-#: lib/Admin.php:679
+#: lib/Admin.php:685
 msgid "Add New Collection"
 msgstr ""
 
-#: lib/Admin.php:681
+#: lib/Admin.php:687
 msgid "New Collection"
 msgstr ""
 
-#: lib/Admin.php:682
-msgid "Edit Collection"
-msgstr ""
-
-#: lib/Admin.php:683
+#: lib/Admin.php:689
 msgid "Update Collection"
 msgstr ""
 
-#: lib/Admin.php:684
+#: lib/Admin.php:690
 msgid "View Collection"
 msgstr ""
 
-#: lib/Admin.php:685
+#: lib/Admin.php:691
 msgid "View Collections"
 msgstr ""
 
-#: lib/Admin.php:686
+#: lib/Admin.php:692
 msgid "Search Collections"
 msgstr ""
 
-#: lib/Admin.php:687
+#: lib/Admin.php:693
 msgid "Not found"
 msgstr ""
 
-#: lib/Admin.php:688
+#: lib/Admin.php:694
 msgid "Not found in Trash"
 msgstr ""
 
-#: lib/Admin.php:689
+#: lib/Admin.php:695
 msgid "Featured Image"
 msgstr ""
 
-#: lib/Admin.php:690
+#: lib/Admin.php:696
 msgid "Set featured image"
 msgstr ""
 
-#: lib/Admin.php:691
+#: lib/Admin.php:697
 msgid "Remove featured image"
 msgstr ""
 
-#: lib/Admin.php:692
+#: lib/Admin.php:698
 msgid "Use as featured image"
 msgstr ""
 
-#: lib/Admin.php:693
+#: lib/Admin.php:699
 msgid "Insert into collection"
 msgstr ""
 
-#: lib/Admin.php:694
+#: lib/Admin.php:700
 msgid "Uploaded to this collection"
 msgstr ""
 
-#: lib/Admin.php:695
+#: lib/Admin.php:701
 msgid "Collection list"
 msgstr ""
 
-#: lib/Admin.php:696
+#: lib/Admin.php:702
 msgid "Collection list navigation"
 msgstr ""
 
-#: lib/Admin.php:697
+#: lib/Admin.php:703
 msgid "Filter collection list"
 msgstr ""
 
-#: lib/Admin.php:701
+#: lib/Admin.php:707
 msgid "Widen Media Collections"
 msgstr ""
 
@@ -223,12 +214,12 @@ msgstr ""
 msgid "https://www.masonite.com/"
 msgstr ""
 
-#: lib/Admin.php:671
+#: lib/Admin.php:677
 msgctxt "Post Type General Name"
 msgid "Collections"
 msgstr ""
 
-#: lib/Admin.php:672
+#: lib/Admin.php:678
 msgctxt "Post Type Singular Name"
 msgid "Collection"
 msgstr ""
