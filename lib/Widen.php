@@ -14,14 +14,14 @@ class Widen {
 	/**
 	 * The access token for Widen.
 	 *
-	 * @var String
+	 * @var string
 	 */
 	private $access_token;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param String $access_token The access token for Widen.
+	 * @param string $access_token The access token for Widen.
 	 */
 	public function __construct( $access_token ) {
 		$this->access_token = $access_token;
@@ -46,10 +46,10 @@ class Widen {
 	/**
 	 * Search Widen assets.
 	 *
-	 * @param String  $query         The search query.
-	 * @param Int     $offset        The offset for the search.
-	 * @param Int     $limit         The response item limit.
-	 * @param Boolean $is_collection Search for a collection.
+	 * @param string  $query         The search query.
+	 * @param int     $offset        The offset for the search.
+	 * @param int     $limit         The response item limit.
+	 * @param boolean $is_collection Search for a collection.
 	 *
 	 * @link https://widenv2.docs.apiary.io/#reference/assets/assets/list-by-search-query
 	 */
@@ -92,7 +92,7 @@ class Widen {
 	/**
 	 * Get an individual asset from Widen.
 	 *
-	 * @param String $id The asset ID.
+	 * @param string $id The asset ID.
 	 *
 	 * @link https://widenv2.docs.apiary.io/#reference/assets/assets/retrieve-by-id
 	 */
@@ -131,7 +131,7 @@ class Widen {
 	/**
 	 * List all collections from Widen.
 	 *
-	 * @param String $type The collection type.
+	 * @param string $type The collection type.
 	 *
 	 * @link https://widenv2.docs.apiary.io/#reference/collections/collections
 	 */

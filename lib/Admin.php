@@ -34,7 +34,7 @@ class Admin extends Plugin {
 	/**
 	 * Check to see if we are able to load our plugin's admin scripts & styles.
 	 *
-	 * @param String $hook The page hook.
+	 * @param string $hook The page hook.
 	 */
 	private static function can_load_scripts( $hook ) : bool {
 		$screen = get_current_screen();
@@ -92,7 +92,7 @@ class Admin extends Plugin {
 	/**
 	 * Register the stylesheets for the Dashboard.
 	 *
-	 * @param String $hook The page hook.
+	 * @param string $hook The page hook.
 	 */
 	public function enqueue_styles( $hook ) : void {
 		if ( ! self::can_load_scripts( $hook ) ) {
@@ -111,7 +111,7 @@ class Admin extends Plugin {
 	/**
 	 * Register the JavaScript for the dashboard.
 	 *
-	 * @param String $hook The page hook.
+	 * @param string $hook The page hook.
 	 */
 	public function enqueue_scripts( $hook ) : void {
 		if ( ! self::can_load_scripts( $hook ) ) {
@@ -255,8 +255,8 @@ class Admin extends Plugin {
 	/**
 	 * Get the appropriate tile template based on the item's format type (image, pdf, etc).
 	 *
-	 * @param Array $item          A single item from the responses items array.
-	 * @param Bool  $is_collection If the current search is for a collection.
+	 * @param array $item          A single item from the responses items array.
+	 * @param bool  $is_collection If the current search is for a collection.
 	 */
 	public static function get_tile( $item, $is_collection = false ) : void {
 		$format_type = $item['file_properties']['format_type'] ?? 'unknown';
@@ -584,7 +584,7 @@ class Admin extends Plugin {
 	/**
 	 * Retrieves the attachment ID from the file URL.
 	 *
-	 * @param String $image_url The image URL.
+	 * @param string $image_url The image URL.
 	 *
 	 * @link https://pippinsplugins.com/retrieve-attachment-id-from-image-url/
 	 */
@@ -610,7 +610,7 @@ class Admin extends Plugin {
 	/**
 	 * Check if attachment exists within the database.
 	 *
-	 * @param String $image_url The image URL.
+	 * @param string $image_url The image URL.
 	 */
 	public static function attachment_exists( $image_url ) : bool {
 		$attachment_id = self::get_attachment_id( $image_url );
@@ -660,7 +660,7 @@ class Admin extends Plugin {
 	 * Only allow new media to be added from Widen.
 	 * This blocks files from being uploaded directly to the site.
 	 *
-	 * @param Array $file The file array.
+	 * @param array $file The file array.
 	 */
 	public function disable_new_uploads( $file ) : array {
 		$file['error'] = __( 'Direct file uploads are not allowed. Please add media via Widen.', 'widen-media' );
@@ -732,8 +732,8 @@ class Admin extends Plugin {
 	/**
 	 * Remove quici edit from collections custom post type.
 	 *
-	 * @param Array  $actions The row actions.
-	 * @param Object $post    The post object.
+	 * @param array  $actions The row actions.
+	 * @param object $post    The post object.
 	 */
 	public function remove_collections_quick_edit( $actions, $post ) : array {
 		// Only modify actions for our collections custom post type.
@@ -801,8 +801,8 @@ class Admin extends Plugin {
 	 * Returns JSON to be used within a page so we can grab it as needed via js.
 	 * Used when adding image collections to the database.
 	 *
-	 * @param String $query The query title.
-	 * @param Array  $items The response items.
+	 * @param string $query The query title.
+	 * @param array  $items The response items.
 	 */
 	public static function json_image_query_data( $query, $items ) : string {
 		$assets = [];

@@ -15,103 +15,103 @@ class Paginator extends Admin {
 	/**
 	 * The current paged value.
 	 *
-	 * @var Int
+	 * @var int
 	 */
 	private $current_page;
 
 	/**
 	 * The max amount of items displayed per page.
 	 *
-	 * @var Int
+	 * @var int
 	 */
 	private $limit;
 
 	/**
 	 * The total number of items shown on the currnent page.
 	 *
-	 * @var Int
+	 * @var int
 	 */
 	private $current_page_items_count;
 
 	/**
 	 * The total item count.
 	 *
-	 * @var Int
+	 * @var int
 	 */
 	private $total_items_count;
 
 	/**
 	 * The page count.
 	 *
-	 * @var Int
+	 * @var int
 	 */
 	private $total_page_count;
 
 	/**
 	 * The search query.
 	 *
-	 * @var String
+	 * @var string
 	 */
 	private $query;
 
 	/**
 	 * If current search is a collection.
 	 *
-	 * @var Boolean
+	 * @var boolean
 	 */
 	private $is_collection;
 
 	/**
 	 * The base url.
 	 *
-	 * @var String
+	 * @var string
 	 */
 	private $base_url;
 
 	/**
 	 * If the query has results.
 	 *
-	 * @var Boolean
+	 * @var boolean
 	 */
 	private $has_results;
 
 	/**
 	 * If we are on the first page.
 	 *
-	 * @var Boolean
+	 * @var boolean
 	 */
 	private $is_first_page;
 
 	/**
 	 * If we are on the second page.
 	 *
-	 * @var Boolean
+	 * @var boolean
 	 */
 	private $is_second_page;
 
 	/**
 	 * If we are on the second last page.
 	 *
-	 * @var Boolean
+	 * @var boolean
 	 */
 	private $is_second_last_page;
 
 	/**
 	 * If we are on the last page.
 	 *
-	 * @var Boolean
+	 * @var boolean
 	 */
 	private $is_last_page;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param Int    $current_page             The current paged value.
-	 * @param Int    $limit                    The max amount of items displayed per page.
-	 * @param Int    $current_page_items_count The number of items shown for the current page.
-	 * @param Int    $total_items_count        The total item count.
-	 * @param String $query                    The search query.
-	 * @param Bool   $is_collection            If currently searching collections.
+	 * @param int     $current_page             The current paged value.
+	 * @param int     $limit                    The max amount of items displayed per page.
+	 * @param int     $current_page_items_count The number of items shown for the current page.
+	 * @param int     $total_items_count        The total item count.
+	 * @param string  $query                    The search query.
+	 * @param boolean $is_collection            If currently searching collections.
 	 */
 	public function __construct( $current_page, $limit, $current_page_items_count, $total_items_count, $query, $is_collection ) {
 
