@@ -10,38 +10,25 @@ use Masonite\WP\Widen_Media;
  * Returns the collection object.
  *
  * @param Int $id The collection ID.
- *
- * @return WP_Error|array
  */
-function wm_get_collection( int $id ) {
-	$collection_obj = get_post( $id );
+function wm_get_collection( int $id ) : ?object {
+	$collection_wp_obj = get_post( $id );
 
-	// Return WP_Error if no collection was found.
-	if ( empty( $collection_obj ) ) {
-		$error         = new WP_Error();
-		$error_message = sprintf(
-			/* translators: %1$d: The collection ID */
-			__( 'No collection was found with the ID %1$d', 'widen-media' ),
-			$id,
-		);
-
-		$error->add( 'collection_not_found', $error_message );
-
-		return $error;
+	if ( empty( $collection_wp_obj ) ) {
+		return null;
 	}
 
-	// Get the collection items.
-	$items_str = get_post_meta( $id, 'items', true );
-	$items     = json_decode( $items_str, true );
+	$collection = new stdClass();
 
-	// Build the collection we want to return array.
-	$collection = [
-		'id'          => $collection_obj->ID ?? null,
-		'title'       => $collection_obj->post_title ?? null,
-		'name'        => $collection_obj->post_name ?? null,
-		'total_count' => count( $items ),
-		'items'       => $items,
-	];
+	$collection->ID          = $collection_wp_obj->ID ?? null;
+	$collection->title       = $collection_wp_obj->post_title ?? null;
+	$collection->name        = $collection_wp_obj->post_name ?? null;
+	$collection->total_count = count( $items );
+
+	// Get the collection items.
+	$items = json_decode( get_post_meta( $id, 'items', true ) );
+
+	$collection->items = $items;
 
 	return $collection;
 }
