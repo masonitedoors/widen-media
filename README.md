@@ -54,20 +54,14 @@ When searching for a collection, a _Save Collection_ button will be displayed. T
 
 This plugin provides some function to allow other plugins to easly interact with Widen data imported into WordPress as well as the Widen API.
 
-### wm_get_collection( $collection_id )
+### wm_get_collection( int $collection_id )
 
 Returns the collection object.
 
-...
-
-### wm_get_asset_fields( $asset_id )
+### wm_get_asset_fields( int $asset_id )
 
 Returns all the fields from Widen for an asset that exists within the WordPress Media Library.
 
-...
-
-### wm_get_asset_field( $asset_id, $key, $single = false )
+### wm_get_asset_field( int $asset_id, string $key, bool $single = false )
 
 Returns a single field for a Widen asset that exists within the WordPress Media Library.
-
-...
