@@ -20,6 +20,7 @@ $description     = implode( ' ', $description_arr );
 $fields_arr      = $item['metadata']['fields'] ?? [];
 $fields          = wp_json_encode( $fields_arr );
 
+// Change possible TIF url to PNG url.
 if ( strpos( $original_url, '.tif' ) !== false ) {
 	$original_url = $item['embeds']['OriginalPNG']['url'];
 }

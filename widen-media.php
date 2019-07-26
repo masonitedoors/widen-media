@@ -41,5 +41,11 @@ add_action(
 	function () {
 		$plugin = new Plugin();
 		$plugin->run();
+
+		/**
+		 * Provide functions for other plugins/themes to use
+		 * in order to interact with the data from this plugin.
+		 */
+		require_once __DIR__ . '/inc/api.php';
 	}
 );

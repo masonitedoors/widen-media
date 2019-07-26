@@ -90,13 +90,13 @@ import '../styles/admin.scss';
     e.preventDefault()
 
     const query = $('[name="prev_search"]').val()
-    const links = $('#widen_query_data').html()
+    const items = $('#widen_image_query_data').html()
 
     const data = {
       action: 'widen_media_save_collection',
       nonce: widen_media.ajax_nonce,
       query,
-      links,
+      items,
     }
 
     /**
@@ -110,7 +110,7 @@ import '../styles/admin.scss';
       data,
     }).done(response => {
       console.log(response)
-      window.location.reload()
+      // window.location.reload()
     })
   })
 

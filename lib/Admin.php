@@ -451,7 +451,7 @@ class Admin extends Plugin {
 			$asset_data['thumbnail_url'] = sanitize_text_field( wp_unslash( $_POST['thumbnailUrl'] ) );
 		}
 		if ( isset( $_POST['fields'] ) ) {
-			$asset_data['fields'] = json_decode( sanitize_text_field( wp_unslash( $_POST['fields'] ) ) );
+			$asset_data['fields'] = sanitize_text_field( wp_unslash( $_POST['fields'] ) );
 		}
 
 		// Get asset size & mime type.
@@ -525,21 +525,16 @@ class Admin extends Plugin {
 		update_post_meta( $attachment_id, 'widen_media_id', $asset_data['id'] );
 
 		/**
-		 * Store all other custom Widen fields as post_meta.
+		 * Store custom Widen fields as post_meta.
 		 */
-		foreach ( $asset_data['fields'] as $key => $value ) {
-			$meta_key   = "widen_media_$key";
-			$meta_value = maybe_serialize( $value );
-
-			update_post_meta( $attachment_id, $meta_key, $meta_value );
-		}
+		update_post_meta( $attachment_id, 'widen_media_fields', $asset_data['fields'] );
 
 		// Exit since this is executed via Ajax.
 		exit();
 	}
 
 	/**
-	 * Save a collection.
+	 * Save a collection to the wp_collection post type.
 	 * This is called via ajax.
 	 *
 	 * @see src/scripts/admin.js
@@ -551,14 +546,15 @@ class Admin extends Plugin {
 		// Set our default/fallback values.
 		$collection = [
 			'title' => '',
-			'links' => [],
+			'items' => '',
 		];
 
 		if ( isset( $_POST['query'] ) ) {
 			$collection['title'] = sanitize_text_field( wp_unslash( $_POST['query'] ) );
 		}
-		if ( isset( $_POST['links'] ) ) {
-			$collection['links'] = sanitize_text_field( wp_unslash( $_POST['links'] ) );
+
+		if ( isset( $_POST['items'] ) ) {
+			$collection['items'] = sanitize_text_field( $_POST['items'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		}
 
 		// Save the collection to our custom post type.
@@ -574,11 +570,11 @@ class Admin extends Plugin {
 		);
 
 		/**
-		 * Update the post type's data.
+		 * Add our items to the collection.
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
 		 */
-		update_post_meta( $post_id, '_widen_media_links', $collection['links'] );
+		update_post_meta( $post_id, 'items', $collection['items'] );
 
 		// Exit since this is executed via Ajax.
 		exit();
@@ -746,61 +742,41 @@ class Admin extends Plugin {
 	}
 
 	/**
-	 * Register a meta box for the collections custom post type.
-	 */
-	public function collection_data_meta_box() : void {
-
-		add_meta_box(
-			'collection-links',
-			__( 'Collection Links', 'widen-media' ),
-			[ $this, 'collection_links_meta_box_cb' ],
-			'wm_collection'
-		);
-
-	}
-
-	/**
-	 * The callback for the collection data meta box.
-	 */
-	public function collection_links_meta_box_cb() : void {
-		$post_id = get_the_ID();
-
-		$links_str = get_post_meta( $post_id, '_widen_media_links', true );
-		$links_arr = json_decode( $links_str );
-
-		echo '<ul>';
-
-		foreach ( $links_arr as $link ) {
-			echo '<li><a href="' . esc_url( $link->url ) . '">' . esc_url( $link->url ) . '<a/></li>';
-		}
-
-		echo '</ul>';
-	}
-
-	/**
-	 * Outputs JSON to the page so we can grab it as needed via js.
-	 * Used when adding collections to the database.
+	 * Returns JSON to be used within a page so we can grab it as needed via js.
+	 * Used when adding image collections to the database.
 	 *
 	 * @param String $query The query title.
 	 * @param Array  $items The response items.
 	 */
-	public static function json_query_data( $query, $items ) {
-		$asset_links = [];
+	public static function json_image_query_data( $query, $items ) : string {
+		$assets = [];
 
 		foreach ( $items as $item ) {
-			$id  = $item['id'] ?? '';
-			$url = $item['embeds']['original']['url'] ?? '';
-			$url = Util::remove_query_string( $url );
+			$id            = $item['id'] ?? '';
+			$original_url  = $item['embeds']['original']['url'] ?? '';
+			$thumbnail_url = $item['embeds']['ThumbnailPNG']['url'] ?? '';
+			$fields        = $item['metadata']['fields'] ?? [];
 
-			$asset_links[] = [
-				'id'  => $id,
-				'url' => $url,
+			// Change possible TIF url to PNG url.
+			if ( strpos( $original_url, '.tif' ) !== false ) {
+				$original_url = $item['embeds']['OriginalPNG']['url'];
+			}
+
+			// Remove query strings from urls.
+			$original_url  = Util::remove_query_string( $original_url );
+			$thumbnail_url = Util::remove_query_string( $thumbnail_url );
+
+			$assets[] = [
+				'id'            => $id,
+				'url'           => $original_url,
+				'thumbnail_url' => $thumbnail_url,
+				'fields'        => $fields,
 			];
 		}
 
-		$json = wp_json_encode( $asset_links );
+		$json = wp_json_encode( $assets );
 
-		echo '<script id="widen_query_data" type="application/json">' . $json . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		return $json;
 	}
 
 }
