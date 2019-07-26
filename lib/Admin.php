@@ -37,12 +37,13 @@ class Admin extends Plugin {
 	 * @param String $hook The page hook.
 	 */
 	private static function can_load_scripts( $hook ) : bool {
-		switch ( $hook ) {
-			case 'media_page_widen-media':
-				return true;
-			default:
-				return false;
+		$screen = get_current_screen();
+
+		if ( 'media_page_widen-media' === $hook || 'wm_collection' === $screen->post_type ) {
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -684,7 +685,7 @@ class Admin extends Plugin {
 			'add_new_item'          => __( 'Add New Collection', 'widen-media' ),
 			'add_new'               => __( 'Add New', 'widen-media' ),
 			'new_item'              => __( 'New Collection', 'widen-media' ),
-			'edit_item'             => __( 'Edit Collection', 'widen-media' ),
+			'edit_item'             => '', // Hide since we are making this `readonly`.
 			'update_item'           => __( 'Update Collection', 'widen-media' ),
 			'view_item'             => __( 'View Collection', 'widen-media' ),
 			'view_items'            => __( 'View Collections', 'widen-media' ),
@@ -705,7 +706,7 @@ class Admin extends Plugin {
 			'label'               => __( 'Collection', 'widen-media' ),
 			'description'         => __( 'Widen Media Collections', 'widen-media' ),
 			'labels'              => $labels,
-			'supports'            => [ 'title', 'custom-fields' ],
+			'supports'            => false,
 			'hierarchical'        => false,
 			'public'              => false,
 			'show_ui'             => true,
@@ -744,6 +745,56 @@ class Admin extends Plugin {
 		unset( $actions['inline hide-if-no-js'] );
 
 		return $actions;
+	}
+
+	/**
+	 * The callback to display our custom markup for the wm_collection custom post type.
+	 */
+	public function view_collection_cb() : void {
+		$screen = get_current_screen();
+
+		// Do nothing if this is not our custom post type.
+		if ( 'wm_collection' !== $screen->post_type ) {
+			return;
+		}
+
+		// Grab the collection ID.
+		$collection_id = get_the_ID();
+
+		// Get the collection items.
+		$items = json_decode( get_post_meta( $collection_id, 'items', true ) );
+
+		the_title( '<h1>', '</h1>' );
+
+		$html  = '';
+		$html .= '<ul class="collection-items">';
+
+		foreach ( $items as $item ) {
+			$fields = $item->fields;
+
+			$html .= '<li class="collection-item">';
+			$html .= '<div class="collection-item__thumbnail-wrapper">';
+			$html .= '<img class="collection-item__thumbnail" src="' . esc_url( $item->thumbnail_url ) . '" alt="">';
+			$html .= '</div>';
+			$html .= '<table class="collection-item__fields-table">';
+
+			foreach ( $fields as $key => $value ) {
+
+				if ( is_array( $value ) ) {
+					$value = $value[0] ?? '';
+				}
+
+				$html .= '<tr class="collection-item__field"><th scope="row">' . esc_html( $key ) . ': </th><td>' . esc_html( $value ) . '</td></tr>';
+			}
+
+			$html .= '</table>';
+			$html .= '</li>';
+		}
+
+		$html .= '</ul>';
+
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
 	}
 
 	/**

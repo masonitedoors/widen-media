@@ -241,3 +241,42 @@ $breakpoint-xs: 500px;
 .blur-up.lazyloaded {
   opacity: 1;
 }
+
+// Fix row action alignment issue from us removing the bulk actions via php.
+.post-type-wm_collection .actions.bulkactions {
+  display: none;
+}
+
+.collection-items {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.collection-item {
+  backface-visibility: hidden;
+  padding: ($gutter / 2);
+  display: block;
+  border-radius: 3px;
+  background-color: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e5e5;
+  position: relative;
+  overflow: hidden;
+  width: 400px;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-right: 6px;
+
+  &__thumbnail {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  &__fields-table {
+    th,
+    td {
+      vertical-align: top;
+    }
+  }
+}
