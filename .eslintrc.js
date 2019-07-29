@@ -6,7 +6,6 @@ module.exports = {
   },
   rules: {
     'func-names': 0,
-    'no-console': 0,
   },
   globals: {
     widen_media: 'readonly',
