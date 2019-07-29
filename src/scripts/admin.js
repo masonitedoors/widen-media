@@ -81,7 +81,6 @@ import '../styles/admin.scss';
       type: 'POST',
       data,
     }).done(response => {
-      console.log(response)
       window.location.reload()
     })
   })
@@ -109,8 +108,7 @@ import '../styles/admin.scss';
       type: 'POST',
       data,
     }).done(response => {
-      console.log(response)
-      // window.location.reload()
+      window.location.reload()
     })
   })
 
