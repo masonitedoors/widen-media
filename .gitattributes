@@ -12,5 +12,5 @@ package*.json     export-ignore
 
 # Files to hide by default for GitHub pull request diffs.
 
-languages/        linguist-generated
-dist/             linguist-generated
+languages/**/*    linguist-generated
+dist/**/*         linguist-generated
