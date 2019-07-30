@@ -70,11 +70,13 @@ $offset        = ( $current_page - 1 ) * $limit;
 
 			<?php if ( ! is_wp_error( $response ) ) : ?>
 
-				<?php if ( $is_collection ) : ?>
-
-					<?php self::json_query_data( $query, $response['items'] ); ?>
-
-				<?php endif; ?>
+				<?php
+				// Output JSON onto page so we can grab with JS to store the collection.
+				if ( $is_collection ) {
+					$json = self::json_image_query_data( $query, $response['items'] );
+					echo '<script id="widen_image_query_data" type="application/json">' . $json . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				}
+				?>
 
 				<?php $pagination->display(); ?>
 

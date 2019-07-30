@@ -104,12 +104,13 @@ class Plugin {
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'settings_init' );
 		$this->loader->add_filter( 'plugin_action_links_' . $plugin_basename, $plugin_admin, 'settings_link', 10, 4 );
 		$this->loader->add_action( 'admin_post_handle_search_submit', $plugin_admin, 'handle_search_submit' );
+
+		// Register ajax actions for this plugin.
 		$this->loader->add_action( 'wp_ajax_widen_media_add_image_to_library', $plugin_admin, 'add_image_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_add_audio_to_library', $plugin_admin, 'add_audio_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_add_pdf_to_library', $plugin_admin, 'add_pdf_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_save_collection', $plugin_admin, 'save_collection' );
 		$this->loader->add_filter( 'post_row_actions', $plugin_admin, 'remove_collections_quick_edit', 10, 2 );
-		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'collection_data_meta_box' );
 
 		// Fix URL issues stemming from there being no actual file gets uploaded to WordPress.
 		$this->loader->add_filter( 'wp_get_attachment_image_src', $plugin_admin, 'fix_widen_attachment_urls', 10, 4 );
@@ -120,6 +121,12 @@ class Plugin {
 		$this->loader->add_action( 'admin_head', $plugin_admin, 'hide_core_media_buttons' );
 		$this->loader->add_action( 'admin_bar_menu', $plugin_admin, 'edit_new_media_link', 90 );
 		$this->loader->add_filter( 'wp_handle_upload_prefilter', $plugin_admin, 'disable_new_uploads' );
+
+		// Hook into the post editor so we can display custom markup for the wp_collection custom post type.
+		$this->loader->add_action( 'edit_form_after_title', $plugin_admin, 'view_collection_cb' );
+
+		// Disable bulk actions for our wm_collection custom post type; we can skip over our loader since we only need to return an empty array.
+		add_filter( 'bulk_actions-edit-wm_collection', '__return_empty_array', 100 );
 	}
 
 	/**

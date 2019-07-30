@@ -200,3 +200,35 @@
 .blur-up.lazyloaded {
   opacity: 1; }
 
+.post-type-wm_collection .actions.bulkactions {
+  display: none; }
+
+.collection-items {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+          flex-wrap: wrap; }
+
+.collection-item {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  padding: 9px;
+  display: block;
+  border-radius: 3px;
+  background-color: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e5e5e5;
+  position: relative;
+  overflow: hidden;
+  width: 400px;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-right: 6px; }
+  .collection-item__thumbnail {
+    max-width: 100%;
+    height: auto;
+    display: block; }
+  .collection-item__fields-table th,
+  .collection-item__fields-table td {
+    vertical-align: top; }
+

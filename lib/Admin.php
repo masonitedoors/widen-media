@@ -34,15 +34,16 @@ class Admin extends Plugin {
 	/**
 	 * Check to see if we are able to load our plugin's admin scripts & styles.
 	 *
-	 * @param String $hook The page hook.
+	 * @param string $hook The page hook.
 	 */
 	private static function can_load_scripts( $hook ) : bool {
-		switch ( $hook ) {
-			case 'media_page_widen-media':
-				return true;
-			default:
-				return false;
+		$screen = get_current_screen();
+
+		if ( 'media_page_widen-media' === $hook || 'wm_collection' === $screen->post_type ) {
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -91,7 +92,7 @@ class Admin extends Plugin {
 	/**
 	 * Register the stylesheets for the Dashboard.
 	 *
-	 * @param String $hook The page hook.
+	 * @param string $hook The page hook.
 	 */
 	public function enqueue_styles( $hook ) : void {
 		if ( ! self::can_load_scripts( $hook ) ) {
@@ -110,7 +111,7 @@ class Admin extends Plugin {
 	/**
 	 * Register the JavaScript for the dashboard.
 	 *
-	 * @param String $hook The page hook.
+	 * @param string $hook The page hook.
 	 */
 	public function enqueue_scripts( $hook ) : void {
 		if ( ! self::can_load_scripts( $hook ) ) {
@@ -254,8 +255,8 @@ class Admin extends Plugin {
 	/**
 	 * Get the appropriate tile template based on the item's format type (image, pdf, etc).
 	 *
-	 * @param Array $item          A single item from the responses items array.
-	 * @param Bool  $is_collection If the current search is for a collection.
+	 * @param array $item          A single item from the responses items array.
+	 * @param bool  $is_collection If the current search is for a collection.
 	 */
 	public static function get_tile( $item, $is_collection = false ) : void {
 		$format_type = $item['file_properties']['format_type'] ?? 'unknown';
@@ -340,7 +341,7 @@ class Admin extends Plugin {
 	 * @param bool         $icon          Whether the image should be treated as an icon. Default false.
 	 */
 	public function fix_widen_attachment_urls( $image, $attachment_id, $size, $icon ) {
-		$widen_media_id = get_post_meta( $attachment_id, '_widen_media_id', true );
+		$widen_media_id = get_post_meta( $attachment_id, 'widen_media_id', true );
 
 		// Check if this is an image from Widen.
 		if ( ! empty( $widen_media_id ) ) {
@@ -366,7 +367,7 @@ class Admin extends Plugin {
 	 * @link https://developer.wordpress.org/reference/hooks/get_image_tag/
 	 */
 	public function filter_widen_image_tag( $html, $id, $alt, $title, $align, $size ) : string {
-		$widen_media_id = get_post_meta( $id, '_widen_media_id', true );
+		$widen_media_id = get_post_meta( $id, 'widen_media_id', true );
 
 		// Do nothing special if this is not a Widen image.
 		if ( empty( $widen_media_id ) ) {
@@ -418,14 +419,18 @@ class Admin extends Plugin {
 
 		// Set our default/fallback values.
 		$asset_data = [
-			'type'        => '',
-			'id'          => '',
-			'filename'    => '',
-			'description' => '',
-			'url'         => '',
-			'width'       => '',
-			'height'      => '',
-			'mime_type'   => '',
+			'type'             => '',
+			'id'               => '',
+			'filename'         => '',
+			'description'      => '',
+			'mime_type'        => '',
+			'url'              => '',
+			'width'            => '',
+			'height'           => '',
+			'thumbnail_url'    => '',
+			'thumbnail_width'  => '',
+			'thumbnail_height' => '',
+			'fields'           => [],
 		];
 
 		if ( isset( $_POST['type'] ) ) {
@@ -443,13 +448,25 @@ class Admin extends Plugin {
 		if ( isset( $_POST['url'] ) ) {
 			$asset_data['url'] = sanitize_text_field( wp_unslash( $_POST['url'] ) );
 		}
+		if ( isset( $_POST['thumbnailUrl'] ) ) {
+			$asset_data['thumbnail_url'] = sanitize_text_field( wp_unslash( $_POST['thumbnailUrl'] ) );
+		}
+		if ( isset( $_POST['fields'] ) ) {
+			$asset_data['fields'] = sanitize_text_field( wp_unslash( $_POST['fields'] ) );
+		}
 
 		// Get asset size & mime type.
 		if ( 'image' === $asset_data['type'] ) {
+			// Original image sizes.
 			$image_size              = @getimagesize( $asset_data['url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			$asset_data['width']     = $image_size[0];
 			$asset_data['height']    = $image_size[1];
 			$asset_data['mime_type'] = $image_size['mime'];
+
+			// Thumnbail image sizes.
+			$thumbnail_image_size           = @getimagesize( $asset_data['thumbnail_url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$asset_data['thumbnail_width']  = $thumbnail_image_size[0];
+			$asset_data['thumbnail_height'] = $thumbnail_image_size[1];
 		}
 
 		/**
@@ -462,7 +479,7 @@ class Admin extends Plugin {
 			'post_mime_type' => $asset_data['mime_type'],
 			'post_title'     => pathinfo( $asset_data['filename'], PATHINFO_FILENAME ),
 			'post_content'   => $asset_data['description'], // Attachment Description.
-			'post_excerpt'   => $asset_data['description'], // Attachment Caption.
+			'post_excerpt'   => '',                         // Attachment Caption.
 		];
 		$attachment_id = wp_insert_attachment( $attachment );
 
@@ -477,10 +494,16 @@ class Admin extends Plugin {
 			'height' => $asset_data['height'],
 			'file'   => $asset_data['url'],
 			'sizes'  => [
-				'full' => [
+				'full'         => [
 					'file'      => $asset_data['url'],
 					'width'     => $asset_data['width'],
 					'height'    => $asset_data['height'],
+					'mime-type' => $asset_data['mime_type'],
+				],
+				'wm-thumbnail' => [
+					'file'      => $asset_data['thumbnail_url'],
+					'width'     => $asset_data['thumbnail_width'],
+					'height'    => $asset_data['thumbnail_height'],
 					'mime-type' => $asset_data['mime_type'],
 				],
 			],
@@ -500,14 +523,19 @@ class Admin extends Plugin {
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
 		 */
-		update_post_meta( $attachment_id, '_widen_media_id', $asset_data['id'] );
+		update_post_meta( $attachment_id, 'widen_media_id', $asset_data['id'] );
+
+		/**
+		 * Store custom Widen fields as post_meta.
+		 */
+		update_post_meta( $attachment_id, 'widen_media_fields', $asset_data['fields'] );
 
 		// Exit since this is executed via Ajax.
 		exit();
 	}
 
 	/**
-	 * Save a collection.
+	 * Save a collection to the wp_collection post type.
 	 * This is called via ajax.
 	 *
 	 * @see src/scripts/admin.js
@@ -519,14 +547,15 @@ class Admin extends Plugin {
 		// Set our default/fallback values.
 		$collection = [
 			'title' => '',
-			'links' => [],
+			'items' => '',
 		];
 
 		if ( isset( $_POST['query'] ) ) {
 			$collection['title'] = sanitize_text_field( wp_unslash( $_POST['query'] ) );
 		}
-		if ( isset( $_POST['links'] ) ) {
-			$collection['links'] = sanitize_text_field( wp_unslash( $_POST['links'] ) );
+
+		if ( isset( $_POST['items'] ) ) {
+			$collection['items'] = sanitize_text_field( $_POST['items'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		}
 
 		// Save the collection to our custom post type.
@@ -542,11 +571,11 @@ class Admin extends Plugin {
 		);
 
 		/**
-		 * Update the post type's data.
+		 * Add our items to the collection.
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
 		 */
-		update_post_meta( $post_id, '_widen_media_links', $collection['links'] );
+		update_post_meta( $post_id, 'items', $collection['items'] );
 
 		// Exit since this is executed via Ajax.
 		exit();
@@ -555,14 +584,19 @@ class Admin extends Plugin {
 	/**
 	 * Retrieves the attachment ID from the file URL.
 	 *
-	 * @param String $image_url The image URL.
+	 * @param string $image_url The image URL.
 	 *
 	 * @link https://pippinsplugins.com/retrieve-attachment-id-from-image-url/
 	 */
 	public static function get_attachment_id( $image_url ) : ?string {
 		global $wpdb;
 
-		$attachment = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE guid='%s';", $image_url ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
+		$attachment = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT ID FROM $wpdb->posts WHERE guid='%s';", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
+				esc_url( $image_url )
+			)
+		);
 
 		if ( isset( $attachment[0] ) ) {
 			$attachment_id = $attachment[0];
@@ -576,7 +610,7 @@ class Admin extends Plugin {
 	/**
 	 * Check if attachment exists within the database.
 	 *
-	 * @param String $image_url The image URL.
+	 * @param string $image_url The image URL.
 	 */
 	public static function attachment_exists( $image_url ) : bool {
 		$attachment_id = self::get_attachment_id( $image_url );
@@ -626,7 +660,7 @@ class Admin extends Plugin {
 	 * Only allow new media to be added from Widen.
 	 * This blocks files from being uploaded directly to the site.
 	 *
-	 * @param Array $file The file array.
+	 * @param array $file The file array.
 	 */
 	public function disable_new_uploads( $file ) : array {
 		$file['error'] = __( 'Direct file uploads are not allowed. Please add media via Widen.', 'widen-media' );
@@ -651,7 +685,7 @@ class Admin extends Plugin {
 			'add_new_item'          => __( 'Add New Collection', 'widen-media' ),
 			'add_new'               => __( 'Add New', 'widen-media' ),
 			'new_item'              => __( 'New Collection', 'widen-media' ),
-			'edit_item'             => __( 'Edit Collection', 'widen-media' ),
+			'edit_item'             => '', // Hide since we are making this `readonly`.
 			'update_item'           => __( 'Update Collection', 'widen-media' ),
 			'view_item'             => __( 'View Collection', 'widen-media' ),
 			'view_items'            => __( 'View Collections', 'widen-media' ),
@@ -672,7 +706,7 @@ class Admin extends Plugin {
 			'label'               => __( 'Collection', 'widen-media' ),
 			'description'         => __( 'Widen Media Collections', 'widen-media' ),
 			'labels'              => $labels,
-			'supports'            => [ 'title' ],
+			'supports'            => false,
 			'hierarchical'        => false,
 			'public'              => false,
 			'show_ui'             => true,
@@ -698,8 +732,8 @@ class Admin extends Plugin {
 	/**
 	 * Remove quici edit from collections custom post type.
 	 *
-	 * @param Array  $actions The row actions.
-	 * @param Object $post    The post object.
+	 * @param array  $actions The row actions.
+	 * @param object $post    The post object.
 	 */
 	public function remove_collections_quick_edit( $actions, $post ) : array {
 		// Only modify actions for our collections custom post type.
@@ -714,61 +748,91 @@ class Admin extends Plugin {
 	}
 
 	/**
-	 * Register a meta box for the collections custom post type.
+	 * The callback to display our custom markup for the wm_collection custom post type.
 	 */
-	public function collection_data_meta_box() : void {
+	public function view_collection_cb() : void {
+		$screen = get_current_screen();
 
-		add_meta_box(
-			'collection-links',
-			__( 'Collection Links', 'widen-media' ),
-			[ $this, 'collection_links_meta_box_cb' ],
-			'wm_collection'
-		);
-
-	}
-
-	/**
-	 * The callback for the collection data meta box.
-	 */
-	public function collection_links_meta_box_cb() : void {
-		$post_id = get_the_ID();
-
-		$links_str = get_post_meta( $post_id, '_widen_media_links', true );
-		$links_arr = json_decode( $links_str );
-
-		echo '<ul>';
-
-		foreach ( $links_arr as $link ) {
-			echo '<li><a href="' . esc_url( $link->url ) . '">' . esc_url( $link->url ) . '<a/></li>';
+		// Do nothing if this is not our custom post type.
+		if ( 'wm_collection' !== $screen->post_type ) {
+			return;
 		}
 
-		echo '</ul>';
+		// Grab the collection ID.
+		$collection_id = get_the_ID();
+
+		// Get the collection items.
+		$items = json_decode( get_post_meta( $collection_id, 'items', true ) );
+
+		the_title( '<h1>', '</h1>' );
+
+		$html  = '';
+		$html .= '<ul class="collection-items">';
+
+		foreach ( $items as $item ) {
+			$fields = $item->fields;
+
+			$html .= '<li class="collection-item">';
+			$html .= '<div class="collection-item__thumbnail-wrapper">';
+			$html .= '<img class="collection-item__thumbnail" src="' . esc_url( $item->thumbnail_url ) . '" alt="">';
+			$html .= '</div>';
+			$html .= '<table class="collection-item__fields-table">';
+
+			foreach ( $fields as $key => $value ) {
+
+				if ( is_array( $value ) ) {
+					$value = $value[0] ?? '';
+				}
+
+				$html .= '<tr class="collection-item__field"><th scope="row">' . esc_html( $key ) . ': </th><td>' . esc_html( $value ) . '</td></tr>';
+			}
+
+			$html .= '</table>';
+			$html .= '</li>';
+		}
+
+		$html .= '</ul>';
+
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+
 	}
 
 	/**
-	 * Outputs JSON to the page so we can grab it as needed via js.
-	 * Used when adding collections to the database.
+	 * Returns JSON to be used within a page so we can grab it as needed via js.
+	 * Used when adding image collections to the database.
 	 *
-	 * @param String $query The query title.
-	 * @param Array  $items The response items.
+	 * @param string $query The query title.
+	 * @param array  $items The response items.
 	 */
-	public static function json_query_data( $query, $items ) {
-		$asset_links = [];
+	public static function json_image_query_data( $query, $items ) : string {
+		$assets = [];
 
 		foreach ( $items as $item ) {
-			$id  = $item['id'] ?? '';
-			$url = $item['embeds']['original']['url'] ?? '';
-			$url = Util::remove_query_string( $url );
+			$id            = $item['id'] ?? '';
+			$original_url  = $item['embeds']['original']['url'] ?? '';
+			$thumbnail_url = $item['embeds']['ThumbnailPNG']['url'] ?? '';
+			$fields        = $item['metadata']['fields'] ?? [];
 
-			$asset_links[] = [
-				'id'  => $id,
-				'url' => $url,
+			// Change possible TIF url to PNG url.
+			if ( strpos( $original_url, '.tif' ) !== false ) {
+				$original_url = $item['embeds']['OriginalPNG']['url'];
+			}
+
+			// Remove query strings from urls.
+			$original_url  = Util::remove_query_string( $original_url );
+			$thumbnail_url = Util::remove_query_string( $thumbnail_url );
+
+			$assets[] = [
+				'id'            => $id,
+				'url'           => $original_url,
+				'thumbnail_url' => $thumbnail_url,
+				'fields'        => $fields,
 			];
 		}
 
-		$json = wp_json_encode( $asset_links );
+		$json = wp_json_encode( $assets );
 
-		echo '<script id="widen_query_data" type="application/json">' . $json . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		return $json;
 	}
 
 }

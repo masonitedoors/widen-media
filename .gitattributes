@@ -9,3 +9,8 @@ composer*         export-ignore
 package*.json     export-ignore
 *.xml             export-ignore
 *.config.js       export-ignore
+
+# Files to hide by default for GitHub pull request diffs.
+
+languages/**/*    linguist-generated
+dist/**/*         linguist-generated

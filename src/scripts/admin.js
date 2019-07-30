@@ -28,6 +28,8 @@ import '../styles/admin.scss';
     const filename = $(this).attr('data-filename')
     const description = $(this).attr('data-description')
     const url = $(this).attr('data-url')
+    const thumbnailUrl = $(this).attr('data-thumbnail-url')
+    const fields = $(this).attr('data-fields')
 
     // Create our data based on the asset type.
     switch (type) {
@@ -40,6 +42,8 @@ import '../styles/admin.scss';
           filename,
           description,
           url,
+          thumbnailUrl,
+          fields,
         }
         break
       case 'pdf':
@@ -85,13 +89,13 @@ import '../styles/admin.scss';
     e.preventDefault()
 
     const query = $('[name="prev_search"]').val()
-    const links = $('#widen_query_data').html()
+    const items = $('#widen_image_query_data').html()
 
     const data = {
       action: 'widen_media_save_collection',
       nonce: widen_media.ajax_nonce,
       query,
-      links,
+      items,
     }
 
     /**
