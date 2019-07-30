@@ -750,7 +750,7 @@ class Admin extends Plugin {
 			'show_in_rest'        => true,
 			'capability_type'     => 'post',
 			'capabilities'        => [
-				'create_posts' => false,
+				'create_posts' => 'do_not_allow',
 			],
 			'map_meta_cap'        => true,
 		];
