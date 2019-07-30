@@ -309,9 +309,29 @@ class Paginator extends Admin {
 
 				<?php if ( $this->is_collection ) : ?>
 
-					<span class="collection-actions">
-						<button id="widen-save-collection" class="button button-primary"><?php esc_html_e( 'Save Collection', 'widen-media' ); ?></button>
-					</span>
+					<?php $collection_exists = Admin::collection_exists( $this->query ); ?>
+
+					<?php if ( $collection_exists ) : ?>
+
+						<?php
+						$collection     = Admin::get_collection( $this->query );
+						$collection_url = get_edit_post_link( $collection->ID );
+						?>
+
+						<span class="collection-actions">
+							<div class="collection-exists">
+								<p><?php esc_html_e( 'This collection already exists:', 'widen-media' ); ?></p>
+								<a href="<?php echo esc_url( $collection_url ); ?>" class="view-collection-link"><?php esc_html_e( 'View Collection', 'widen-media' ); ?></a>
+							</div>
+						</span>
+
+					<?php else : ?>
+
+						<span class="collection-actions">
+							<button id="widen-save-collection" class="button button-primary"><?php esc_html_e( 'Save Collection', 'widen-media' ); ?></button>
+						</span>
+
+					<?php endif; ?>
 
 				<?php endif; ?>
 

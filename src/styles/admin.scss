@@ -280,3 +280,12 @@ $breakpoint-xs: 500px;
     }
   }
 }
+
+.collection-exists {
+  display: flex;
+  margin-right: 4px;
+
+  .view-collection-link {
+    margin: 0 6px;
+  }
+}

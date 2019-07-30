@@ -623,6 +623,36 @@ class Admin extends Plugin {
 	}
 
 	/**
+	 * Check if collection already exists within the database.
+	 *
+	 * @param string $collection_title The title of the collection. This should be the search query.
+	 */
+	public static function get_collection( $collection_title ) : ?object {
+		$collection = get_page_by_title( $collection_title, OBJECT, 'wm_collection' );
+
+		if ( empty( $collection ) ) {
+			return null;
+		}
+
+		return $collection;
+	}
+
+	/**
+	 * Check if a collection already exists within the database.
+	 *
+	 * @param string $collection_title The title of the collection. This should be the search query.
+	 */
+	public static function collection_exists( $collection_title ) : bool {
+		$collection = self::get_collection( $collection_title );
+
+		if ( $collection ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Hide the add new media menu item.
 	 */
 	public function hide_add_new_media_menu() : void {
@@ -715,7 +745,7 @@ class Admin extends Plugin {
 			'show_in_nav_menus'   => false,
 			'can_export'          => true,
 			'has_archive'         => false,
-			'exclude_from_search' => false,
+			'exclude_from_search' => true,
 			'publicly_queryable'  => false,
 			'show_in_rest'        => true,
 			'capability_type'     => 'post',
