@@ -778,6 +778,13 @@ class Admin extends Plugin {
 	}
 
 	/**
+	 * Remove the default publish/update metabox from the wm_collection custom post type.
+	 */
+	public function remove_collections_submit_box() : void {
+		remove_meta_box( 'submitdiv', 'wm_collection', 'side' );
+	}
+
+	/**
 	 * The callback to display our custom markup for the wm_collection custom post type.
 	 */
 	public function view_collection_cb() : void {
