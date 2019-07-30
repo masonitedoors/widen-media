@@ -207,7 +207,8 @@
   display: -webkit-flex;
   display: flex;
   -webkit-flex-wrap: wrap;
-          flex-wrap: wrap; }
+          flex-wrap: wrap;
+  margin-top: 0; }
 
 .collection-item {
   -webkit-backface-visibility: hidden;

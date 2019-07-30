@@ -785,6 +785,58 @@ class Admin extends Plugin {
 	}
 
 	/**
+	 * Register the metaboxes we are using within the wm_collection post type.
+	 */
+	public function register_collection_meta_boxes() : void {
+
+		add_meta_box(
+			'submitdiv',
+			__( 'Publish', 'widen-media' ),
+			[ $this, 'collection_submitdiv_cb' ],
+			'wm_collection',
+			'side',
+			'high'
+		);
+
+	}
+
+	/**
+	 * The callback for our custom submitdiv for the wp_collection post type.
+	 */
+	public function collection_submitdiv_cb() : void {
+		include_once 'Admin/meta-boxes/collection-submit.php';
+	}
+
+	/**
+	 * The callback fired when a collection is saved/updated.
+	 *
+	 * @param int $post_id The post ID for the collection being saved.
+	 */
+	public function save_post_collection_cb( $post_id ) : void {
+		$screen = get_current_screen();
+
+		// Only hook into save_post for our wm_collection post type.
+		if ( 'wm_collection' !== $screen->post_type ) {
+			return;
+		}
+
+		$collection_wp_obj = get_post( $post_id );
+		$query             = $collection_wp_obj->post_title;
+		$response          = $this->widen->search_assets( $query, 0, 100, true );
+
+		// Build JSON that we can use to store the collection.
+		$json = self::json_image_query_data( $query, $response['items'] );
+		$json = wp_slash( $json );
+
+		/**
+		 * Add our items to the collection.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
+		 */
+		update_post_meta( $post_id, 'items', $json );
+	}
+
+	/**
 	 * The callback to display our custom markup for the wm_collection custom post type.
 	 */
 	public function view_collection_cb() : void {
@@ -800,8 +852,6 @@ class Admin extends Plugin {
 
 		// Get the collection items.
 		$items = json_decode( get_post_meta( $collection_id, 'items', true ) );
-
-		the_title( '<h1>', '</h1>' );
 
 		$html  = '';
 		$html .= '<ul class="collection-items">';

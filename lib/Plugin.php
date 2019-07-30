@@ -112,6 +112,8 @@ class Plugin {
 		$this->loader->add_action( 'wp_ajax_widen_media_save_collection', $plugin_admin, 'save_collection' );
 		$this->loader->add_filter( 'post_row_actions', $plugin_admin, 'remove_collections_quick_edit', 10, 2 );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'remove_collections_submit_box' );
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'register_collection_meta_boxes' );
+		$this->loader->add_action( 'save_post', $plugin_admin, 'save_post_collection_cb' );
 
 		// Fix URL issues stemming from there being no actual file gets uploaded to WordPress.
 		$this->loader->add_filter( 'wp_get_attachment_image_src', $plugin_admin, 'fix_widen_attachment_urls', 10, 4 );
