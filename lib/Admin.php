@@ -681,9 +681,11 @@ class Admin extends Plugin {
 	public function edit_new_media_link( $wp_admin_bar ) : void {
 		$new_content_node = $wp_admin_bar->get_node( 'new-media' );
 
-		$new_content_node->href = '?page=widen-media';
+		if ( $new_content_node ) {
+			$new_content_node->href = '?page=widen-media';
+			$wp_admin_bar->add_node( $new_content_node );
+		}
 
-		$wp_admin_bar->add_node( $new_content_node );
 	}
 
 	/**
