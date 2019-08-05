@@ -14,7 +14,7 @@ if ( ! function_exists( 'wm_get_collection' ) ) :
 	 * @param int $collection_id The collection ID.
 	 */
 	function wm_get_collection( int $collection_id ) : ?object {
-		$collection_wp_obj = get_post( $id );
+		$collection_wp_obj = get_post( $collection_id );
 
 		if ( empty( $collection_wp_obj ) ) {
 			return null;
@@ -22,15 +22,14 @@ if ( ! function_exists( 'wm_get_collection' ) ) :
 
 		$collection = new stdClass();
 
-		$collection->ID          = $collection_wp_obj->ID ?? null;
-		$collection->title       = $collection_wp_obj->post_title ?? null;
-		$collection->name        = $collection_wp_obj->post_name ?? null;
-		$collection->total_count = count( $items );
+		$collection->ID    = $collection_wp_obj->ID ?? null;
+		$collection->title = $collection_wp_obj->post_title ?? null;
+		$collection->name  = $collection_wp_obj->post_name ?? null;
 
 		// Get the collection items.
-		$items = json_decode( get_post_meta( $id, 'items', true ) );
-
-		$collection->items = $items;
+		$items                   = json_decode( get_post_meta( $collection_id, 'items', true ) );
+		$collection->total_count = count( $items );
+		$collection->items       = $items;
 
 		return $collection;
 	}
