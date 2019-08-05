@@ -6,6 +6,35 @@ declare( strict_types = 1 );
 
 use Masonite\WP\Widen_Media;
 
+if ( ! function_exists( 'wm_get_collections' ) ) :
+
+	/**
+	 * Returns an arry of collection objects.
+	 */
+	function wm_get_collections() : array {
+		$collections       = [];
+		$args              = [
+			'post_type' => 'wm_collection',
+			'nopaging'  => true,
+			'order'     => 'ASC',
+			'orderby'   => 'menu_order',
+		];
+		$collections_query = new WP_Query( $args );
+
+		if ( $collections_query->have_posts() ) {
+			while ( $collections_query->have_posts() ) {
+				$collections_query->the_post();
+				$collections[] = wm_get_collection( get_the_ID() );
+			}
+		}
+
+		wp_reset_postdata();
+
+		return $collections;
+	}
+
+endif;
+
 if ( ! function_exists( 'wm_get_collection' ) ) :
 
 	/**

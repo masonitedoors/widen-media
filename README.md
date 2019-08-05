@@ -54,6 +54,10 @@ When searching for a collection, a _Save Collection_ button will be displayed. T
 
 This plugin provides some function to allow other plugins to easly interact with Widen data imported into WordPress as well as the Widen API.
 
+### wm_get_collections()
+
+Returns an array of collection objects.
+
 ### wm_get_collection( int $collection_id )
 
 Returns the collection object.
