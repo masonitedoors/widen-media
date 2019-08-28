@@ -34,8 +34,9 @@ import '../styles/admin.scss';
     // Create our data based on the asset type.
     switch (type) {
       case 'image':
+      case 'pdf':
         data = {
-          action: 'widen_media_add_image_to_library',
+          action: 'widen_media_add_asset_to_library',
           nonce: widen_media.ajax_nonce,
           type,
           id,
@@ -44,17 +45,6 @@ import '../styles/admin.scss';
           url,
           thumbnailUrl,
           fields,
-        }
-        break
-      case 'pdf':
-        data = {
-          action: 'widen_media_add_pdf_to_library',
-          nonce: widen_media.ajax_nonce,
-          type,
-          id,
-          filename,
-          description,
-          url,
         }
         break
       case 'audio':
@@ -108,7 +98,8 @@ import '../styles/admin.scss';
       type: 'POST',
       data,
     }).done(response => {
-      window.location.reload()
+      console.log(response)
+      // window.location.reload()
     })
   })
 

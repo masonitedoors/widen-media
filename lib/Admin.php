@@ -408,12 +408,15 @@ class Admin extends Plugin {
 	 *
 	 * @see src/scripts/admin.js
 	 *
+	 * $_POST['type']
 	 * $_POST['id']
 	 * $_POST['filename]
 	 * $_POST['description']
 	 * $_POST['url']
+	 * $_POST['thumbnailUrl']
+	 * $_POST['fields']
 	 */
-	public function add_image_to_library() : void {
+	public function add_asset_to_library() : void {
 		// Kill this process if this method wasn't called from our form.
 		check_ajax_referer( 'widen_media_ajax_request', 'nonce' );
 
@@ -456,7 +459,7 @@ class Admin extends Plugin {
 		}
 
 		// Get asset size & mime type.
-		if ( 'image' === $asset_data['type'] ) {
+		if ( 'image' === $asset_data['type'] || 'pdf' === $asset_data['type'] ) {
 			// Original image sizes.
 			$image_size              = @getimagesize( $asset_data['url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 			$asset_data['width']     = $image_size[0];
