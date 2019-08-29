@@ -15,6 +15,7 @@ $image_filename  = $item['filename'] ?? '';
 $original_url    = $item['embeds']['original']['url'] ?? '';
 $thumbnail_url   = $item['embeds']['ThumbnailPNG']['url'] ?? '';
 $skeleton_url    = $item['embeds']['SkeletonPNG']['url'] ?? '';
+$pager_url       = $item['embeds']['PagerPNG']['url'] ?? '';
 $description_arr = $item['metadata']['fields']['description'] ?? [];
 $description     = implode( ' ', $description_arr );
 $fields_arr      = $item['metadata']['fields'] ?? [];
@@ -25,8 +26,10 @@ if ( strpos( $original_url, '.tif' ) !== false ) {
 	$original_url = $item['embeds']['OriginalPNG']['url'];
 }
 
-// Remove query string from url.
-$original_url = Util::remove_query_string( $original_url );
+// Remove query string from urls.
+$original_url  = Util::remove_query_string( $original_url );
+$thumbnail_url = Util::remove_query_string( $thumbnail_url );
+$pager_url     = Util::remove_query_string( $pager_url );
 
 // Check if the image has already been added.
 $already_added = self::attachment_exists( $original_url );
@@ -63,6 +66,7 @@ $attachment_id = $already_added ? self::get_attachment_id( $original_url ) : '';
 						data-description="<?php echo esc_attr( $description ); ?>"
 						data-url="<?php echo esc_attr( $original_url ); ?>"
 						data-thumbnail-url="<?php echo esc_attr( $thumbnail_url ); ?>"
+						data-pager-url="<?php echo esc_attr( $pager_url ); ?>"
 						data-fields="<?php echo esc_attr( $fields ); ?>"
 					><?php esc_html_e( 'Add to Media Library', 'widen-media' ); ?></button>
 					<span class="spinner"></span>

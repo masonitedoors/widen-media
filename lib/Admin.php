@@ -419,18 +419,23 @@ class Admin extends Plugin {
 
 		// Set our default/fallback values.
 		$asset_data = [
-			'type'             => '',
-			'id'               => '',
-			'filename'         => '',
-			'description'      => '',
-			'mime_type'        => '',
-			'url'              => '',
-			'width'            => '',
-			'height'           => '',
-			'thumbnail_url'    => '',
-			'thumbnail_width'  => '',
-			'thumbnail_height' => '',
-			'fields'           => [],
+			'type'                => '',
+			'id'                  => '',
+			'filename'            => '',
+			'description'         => '',
+			'mime_type'           => '',
+			'url'                 => '',
+			'width'               => '',
+			'height'              => '',
+			'thumbnail_url'       => '',
+			'thumbnail_width'     => '',
+			'thumbnail_height'    => '',
+			'thumbnail_mime_type' => '',
+			'pager_url'           => '',
+			'pager_width'         => '',
+			'pager_height'        => '',
+			'pager_mime_type'     => '',
+			'fields'              => [],
 		];
 
 		if ( isset( $_POST['type'] ) ) {
@@ -451,6 +456,9 @@ class Admin extends Plugin {
 		if ( isset( $_POST['thumbnailUrl'] ) ) {
 			$asset_data['thumbnail_url'] = sanitize_text_field( wp_unslash( $_POST['thumbnailUrl'] ) );
 		}
+		if ( isset( $_POST['pagerUrl'] ) ) {
+			$asset_data['pager_url'] = sanitize_text_field( wp_unslash( $_POST['pagerUrl'] ) );
+		}
 		if ( isset( $_POST['fields'] ) ) {
 			$asset_data['fields'] = sanitize_text_field( wp_unslash( $_POST['fields'] ) );
 		}
@@ -464,9 +472,16 @@ class Admin extends Plugin {
 			$asset_data['mime_type'] = $image_size['mime'];
 
 			// Thumnbail image sizes.
-			$thumbnail_image_size           = @getimagesize( $asset_data['thumbnail_url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			$asset_data['thumbnail_width']  = $thumbnail_image_size[0];
-			$asset_data['thumbnail_height'] = $thumbnail_image_size[1];
+			$thumbnail_image_size              = @getimagesize( $asset_data['thumbnail_url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$asset_data['thumbnail_width']     = $thumbnail_image_size[0];
+			$asset_data['thumbnail_height']    = $thumbnail_image_size[1];
+			$asset_data['thumbnail_mime_type'] = $thumbnail_image_size['mime'];
+
+			// Pager image sizes.
+			$pager_image_size              = @getimagesize( $asset_data['pager_url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$asset_data['pager_width']     = $pager_image_size[0];
+			$asset_data['pager_height']    = $pager_image_size[1];
+			$asset_data['pager_mime_type'] = $pager_image_size['mime'];
 		}
 
 		/**
@@ -504,7 +519,13 @@ class Admin extends Plugin {
 					'file'      => $asset_data['thumbnail_url'],
 					'width'     => $asset_data['thumbnail_width'],
 					'height'    => $asset_data['thumbnail_height'],
-					'mime-type' => $asset_data['mime_type'],
+					'mime-type' => $asset_data['thumbnail_mime_type'],
+				],
+				'wm-pager'     => [
+					'file'      => $asset_data['pager_url'],
+					'width'     => $asset_data['pager_width'],
+					'height'    => $asset_data['pager_height'],
+					'mime-type' => $asset_data['pager_mime_type'],
 				],
 			],
 		];
@@ -900,6 +921,7 @@ class Admin extends Plugin {
 			$id            = $item['id'] ?? '';
 			$original_url  = $item['embeds']['original']['url'] ?? '';
 			$thumbnail_url = $item['embeds']['ThumbnailPNG']['url'] ?? '';
+			$pager_url     = $item['embeds']['PagerPNG']['url'] ?? '';
 			$fields        = $item['metadata']['fields'] ?? [];
 
 			// Change possible TIF url to PNG url.
@@ -910,11 +932,13 @@ class Admin extends Plugin {
 			// Remove query strings from urls.
 			$original_url  = Util::remove_query_string( $original_url );
 			$thumbnail_url = Util::remove_query_string( $thumbnail_url );
+			$pager_url     = Util::remove_query_string( $pager_url );
 
 			$assets[] = [
 				'id'            => $id,
 				'url'           => $original_url,
 				'thumbnail_url' => $thumbnail_url,
+				'pager_url'     => $pager_url,
 				'fields'        => $fields,
 			];
 		}
