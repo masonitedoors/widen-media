@@ -31,12 +31,13 @@ define( 'WIDEN_MEDIA_ACCESS_TOKEN', 'my-widen-api-token' );
 
 This plugin uses the `expand` property when requesting data from the V2 of the Widen API. In order for this plugin to work, you must create "Share Links" within the administration screen of your organization's Widen account that match what this plugin is expecting. This can usually be found by visiting `https://your-organiztion-name.widencollective.com/admin/imageembed`. Keep in mind that for images Widen will always be able to create a PNG, JPEG, & GIF. If another file format is uploaded such as TIFF, this plugin will take the PNG.
 
-| Share Link    | Description                                                                                  |
-| ------------- | -------------------------------------------------------------------------------------------- |
-| Original PNG  | The original image as a PNG                                                                  |
-| Original JPEG | The original image as a JPEG                                                                 |
-| Thumbnail PNG | The original image as a 500x500 PNG. Used in the results page UI.                            |
-| Skeleton PNG  | The original image as a 100x100 PNG. Used when loading larger images in the results page UI. |
+| Share Link Name | Description                                                                                                       |
+| --------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Original PNG    | The original image as a PNG.                                                                                      |
+| Original JPEG   | The original image as a JPEG.                                                                                     |
+| Thumbnail PNG   | The original image as a 500x500 PNG. Used in the results page UI.                                                 |
+| Skeleton PNG    | The original image as a 100x100 PNG with reduced quality. Used when loading larger images in the results page UI. |
+| Pager PNG       | The original image as a 64x64 PNG. This should be a full quality image that can be used within a carousel pager.  |
 
 ## Widen Metadata
 
