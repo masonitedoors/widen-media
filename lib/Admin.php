@@ -759,7 +759,7 @@ class Admin extends Plugin {
 			'label'               => __( 'Collection', 'widen-media' ),
 			'description'         => __( 'Widen Media Collections', 'widen-media' ),
 			'labels'              => $labels,
-			'supports'            => false,
+			'supports'            => [],
 			'hierarchical'        => false,
 			'public'              => false,
 			'show_ui'             => true,
