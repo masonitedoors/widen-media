@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Fix PHP Warning from incorrect argment when registering custom post type.
+- Fix PHP Warning from incorrect argument when registering custom post type.
 
 ## [2.5.1] - 2019-08-29
 
