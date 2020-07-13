@@ -90,6 +90,41 @@ class Admin extends Plugin {
 	}
 
 	/**
+	 * Register our image sizes with WordPress.
+	 */
+	public function register_image_sizes(): void {
+		add_image_size( 'wm-thumbnail', 500, 500 );
+		add_image_size( 'wm-pager', 64, 64 );
+	}
+
+	/**
+	 * Make our custom image sizes selectable from WordPress admin.
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/add_image_size/#for-media-library-images-admin
+	 *
+	 * @param array $sizes The array of available image sizes.
+	 */
+	public function add_selectable_image_sizes( $sizes ): array {
+		$widen_media_image_sizes = [
+			'wm-thumbnail' => __( 'Widen Media Thumbnail', 'widen-media' ),
+			'wm-pager'     => __( 'Widen Media Pager', 'widen-media' ),
+		];
+
+		return array_merge( $sizes, $widen_media_image_sizes );
+	}
+
+	/**
+	 * Disable responsive images in WordPress.
+	 *
+	 * Mocking out behavior from disable-responsive-images plugin.
+	 *
+	 * @link https://github.com/josephfusco/disable-responsive-images
+	 */
+	public function disable_srcset(): int {
+		return 1;
+	}
+
+	/**
 	 * Register the stylesheets for the Dashboard.
 	 *
 	 * @param string $hook The page hook.

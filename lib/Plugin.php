@@ -115,6 +115,13 @@ class Plugin {
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'register_collection_meta_boxes' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'save_post_collection_cb' );
 
+		// Register custom image sizes with WordPress.
+		$this->loader->add_action( 'after_setup_theme', $plugin_admin, 'register_image_sizes' );
+		$this->loader->add_filter( 'image_size_names_choose', $plugin_admin, 'add_selectable_image_sizes' );
+
+		// Disable WP responsive images (srcset).
+		$this->loader->add_filter( 'max_srcset_image_width', $plugin_admin, 'disable_srcset' );
+
 		// Fix URL issues stemming from there being no actual file gets uploaded to WordPress.
 		$this->loader->add_filter( 'wp_get_attachment_image_src', $plugin_admin, 'fix_widen_attachment_urls', 10, 4 );
 		$this->loader->add_filter( 'get_image_tag', $plugin_admin, 'filter_widen_image_tag', 10, 6 );
