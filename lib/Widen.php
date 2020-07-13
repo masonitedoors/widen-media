@@ -32,7 +32,7 @@ class Widen {
 	 *
 	 * @param Integer $timeout The request timeout.
 	 */
-	public function get_request_args( $timeout = 10 ) : array {
+	public function get_request_args( $timeout = 10 ): array {
 		$args = [
 			'timeout' => $timeout,
 			'headers' => [

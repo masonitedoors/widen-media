@@ -16,7 +16,7 @@ class Util {
 	 * @param string $label The button label.
 	 * @param array  $var   The var to display.
 	 */
-	public static function print( $label, $var ) : void {
+	public static function print( $label, $var ): void {
 		// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_print_r
 		?>
 		<br class="clear" />
@@ -35,7 +35,7 @@ class Util {
 	 * @param string $needle   The substring.
 	 * @param string $haystack The string to search.
 	 */
-	public static function contains( $needle, $haystack ) : bool {
+	public static function contains( $needle, $haystack ): bool {
 		return strpos( $haystack, $needle ) !== false;
 	}
 
@@ -44,7 +44,7 @@ class Util {
 	 *
 	 * @param string $url The url to clean.
 	 */
-	public static function remove_query_string( $url ) : string {
+	public static function remove_query_string( $url ): string {
 		return preg_replace( '/\?.*/', '', $url );
 	}
 
@@ -53,7 +53,7 @@ class Util {
 	 *
 	 * @param string $str The string to sanitize.
 	 */
-	public static function unslash_leading_trailing( $str ) : string {
+	public static function unslash_leading_trailing( $str ): string {
 		$str = untrailingslashit( $str );
 		$str = ltrim( $str, '/' );
 
@@ -65,7 +65,7 @@ class Util {
 	 *
 	 * @param array $data The data to be encoded.
 	 */
-	public static function encode_data( $data ) : string {
+	public static function encode_data( $data ): string {
 		$encoded_data = base64_encode( wp_json_encode( $data ) ) ?? ''; // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 
 		return $encoded_data;
@@ -76,7 +76,7 @@ class Util {
 	 *
 	 * @param string $data The data to be decoded.
 	 */
-	public static function decode_data( $data ) : ?object {
+	public static function decode_data( $data ): ?object {
 		$decoded_data = json_decode( base64_decode( $data ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
 
 		return $decoded_data;

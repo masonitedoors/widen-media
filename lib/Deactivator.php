@@ -14,7 +14,7 @@ class Deactivator {
 	/**
 	 * Short Description.
 	 */
-	public static function deactivate() : void {
+	public static function deactivate(): void {
 	}
 
 }

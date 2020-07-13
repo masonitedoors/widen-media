@@ -11,7 +11,7 @@ if ( ! function_exists( 'wm_get_collections' ) ) :
 	/**
 	 * Returns an arry of collection objects.
 	 */
-	function wm_get_collections() : array {
+	function wm_get_collections(): array {
 		$collections       = [];
 		$args              = [
 			'post_type' => 'wm_collection',
@@ -42,7 +42,7 @@ if ( ! function_exists( 'wm_get_collection' ) ) :
 	 *
 	 * @param int $collection_id The collection ID.
 	 */
-	function wm_get_collection( int $collection_id ) : ?object {
+	function wm_get_collection( int $collection_id ): ?object {
 		$collection_wp_obj = get_post( $collection_id );
 
 		if ( empty( $collection_wp_obj ) ) {

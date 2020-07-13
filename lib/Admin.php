@@ -36,7 +36,7 @@ class Admin extends Plugin {
 	 *
 	 * @param string $hook The page hook.
 	 */
-	private static function can_load_scripts( $hook ) : bool {
+	private static function can_load_scripts( $hook ): bool {
 		$screen = get_current_screen();
 
 		if ( 'media_page_widen-media' === $hook || 'wm_collection' === $screen->post_type ) {
@@ -49,7 +49,7 @@ class Admin extends Plugin {
 	/**
 	 * Append our plugin's settings to the existing WordPress media settings.
 	 */
-	public function settings_init() : void {
+	public function settings_init(): void {
 
 		add_settings_section(
 			'widen-media-general',
@@ -71,14 +71,14 @@ class Admin extends Plugin {
 	/**
 	 * The description for our settings settings.
 	 */
-	public function section_description() : void {
+	public function section_description(): void {
 		esc_html_e( 'The options below are readonly and can only be set via wp-config.php.', 'widen-media' );
 	}
 
 	/**
 	 * The callback for our access_token setting.
 	 */
-	public function access_token_setting_cb() : void {
+	public function access_token_setting_cb(): void {
 		?>
 		<label for="access_token">
 			<input disabled name="access_token" type="text" id="access_token" value="<?php echo esc_attr( $this->get_access_token() ); ?>" class="regular-text">
@@ -94,7 +94,7 @@ class Admin extends Plugin {
 	 *
 	 * @param string $hook The page hook.
 	 */
-	public function enqueue_styles( $hook ) : void {
+	public function enqueue_styles( $hook ): void {
 		if ( ! self::can_load_scripts( $hook ) ) {
 			return;
 		}
@@ -113,7 +113,7 @@ class Admin extends Plugin {
 	 *
 	 * @param string $hook The page hook.
 	 */
-	public function enqueue_scripts( $hook ) : void {
+	public function enqueue_scripts( $hook ): void {
 		if ( ! self::can_load_scripts( $hook ) ) {
 			return;
 		}
@@ -155,7 +155,7 @@ class Admin extends Plugin {
 	/**
 	 * Register the options page for the plugin.
 	 */
-	public function register_media_page() : void {
+	public function register_media_page(): void {
 		add_media_page(
 			__( 'Widen Media Library', 'widen-media' ),
 			__( 'Add New', 'widen-media' ),
@@ -168,14 +168,14 @@ class Admin extends Plugin {
 	/**
 	 * Callback for the media assets page.
 	 */
-	public function assets_page_cb() : void {
+	public function assets_page_cb(): void {
 		include_once 'Admin/widen-media.php';
 	}
 
 	/**
 	 * Callback for the media assets page.
 	 */
-	public function collections_page_cb() : void {
+	public function collections_page_cb(): void {
 		include_once 'Admin/widen-media-collections.php';
 	}
 
@@ -187,7 +187,7 @@ class Admin extends Plugin {
 	 * @param array  $plugin_data The plugin data.
 	 * @param string $context     The context.
 	 */
-	public function settings_link( $links, $plugin_file, $plugin_data, $context ) : array {
+	public function settings_link( $links, $plugin_file, $plugin_data, $context ): array {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return $links;
 		}
@@ -204,14 +204,14 @@ class Admin extends Plugin {
 	/**
 	 * Return the plugin's settings page URL.
 	 */
-	protected static function get_settings_page_url() : string {
+	protected static function get_settings_page_url(): string {
 		return admin_url( 'options-media.php' );
 	}
 
 	/**
 	 * Return the base url to the media assets page (search results).
 	 */
-	protected static function get_media_assets_page() : string {
+	protected static function get_media_assets_page(): string {
 		$base = admin_url( 'upload.php' );
 
 		return add_query_arg( 'page', 'widen-media', $base );
@@ -220,7 +220,7 @@ class Admin extends Plugin {
 	/**
 	 * Check if access token is defined.
 	 */
-	public static function is_access_token_defined() : bool {
+	public static function is_access_token_defined(): bool {
 		if ( ! defined( 'WIDEN_MEDIA_ACCESS_TOKEN' ) ) {
 			return false;
 		}
@@ -230,7 +230,7 @@ class Admin extends Plugin {
 	/**
 	 * Return the widen access token.
 	 */
-	public static function get_access_token() : ?string {
+	public static function get_access_token(): ?string {
 		if ( self::is_access_token_defined() ) {
 			return WIDEN_MEDIA_ACCESS_TOKEN;
 		}
@@ -258,7 +258,7 @@ class Admin extends Plugin {
 	 * @param array $item          A single item from the responses items array.
 	 * @param bool  $is_collection If the current search is for a collection.
 	 */
-	public static function get_tile( $item, $is_collection = false ) : void {
+	public static function get_tile( $item, $is_collection = false ): void {
 		$format_type = $item['file_properties']['format_type'] ?? 'unknown';
 
 		include "Admin/tiles/$format_type.php";
@@ -267,7 +267,7 @@ class Admin extends Plugin {
 	/**
 	 * Handles the form submission to search widen.
 	 */
-	public function handle_search_submit() : void {
+	public function handle_search_submit(): void {
 
 		if ( ! empty( $_POST ) && check_admin_referer( 'search_submit', 'widen_media_nonce' ) ) {
 
@@ -366,7 +366,7 @@ class Admin extends Plugin {
 	 *
 	 * @link https://developer.wordpress.org/reference/hooks/get_image_tag/
 	 */
-	public function filter_widen_image_tag( $html, $id, $alt, $title, $align, $size ) : string {
+	public function filter_widen_image_tag( $html, $id, $alt, $title, $align, $size ): string {
 		$widen_media_id = get_post_meta( $id, 'widen_media_id', true );
 
 		// Do nothing special if this is not a Widen image.
@@ -413,7 +413,7 @@ class Admin extends Plugin {
 	 * $_POST['description']
 	 * $_POST['url']
 	 */
-	public function add_image_to_library() : void {
+	public function add_image_to_library(): void {
 		// Kill this process if this method wasn't called from our form.
 		check_ajax_referer( 'widen_media_ajax_request', 'nonce' );
 
@@ -561,7 +561,7 @@ class Admin extends Plugin {
 	 *
 	 * @see src/scripts/admin.js
 	 */
-	public function save_collection() : void {
+	public function save_collection(): void {
 		// Kill this process if this method wasn't called from our form.
 		check_ajax_referer( 'widen_media_ajax_request', 'nonce' );
 
@@ -609,7 +609,7 @@ class Admin extends Plugin {
 	 *
 	 * @link https://pippinsplugins.com/retrieve-attachment-id-from-image-url/
 	 */
-	public static function get_attachment_id( $image_url ) : ?string {
+	public static function get_attachment_id( $image_url ): ?string {
 		global $wpdb;
 
 		$attachment = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -633,7 +633,7 @@ class Admin extends Plugin {
 	 *
 	 * @param string $image_url The image URL.
 	 */
-	public static function attachment_exists( $image_url ) : bool {
+	public static function attachment_exists( $image_url ): bool {
 		$attachment_id = self::get_attachment_id( $image_url );
 
 		if ( $attachment_id ) {
@@ -648,7 +648,7 @@ class Admin extends Plugin {
 	 *
 	 * @param string $collection_title The title of the collection. This should be the search query.
 	 */
-	public static function get_collection( $collection_title ) : ?object {
+	public static function get_collection( $collection_title ): ?object {
 		$collection = get_page_by_title( $collection_title, OBJECT, 'wm_collection' );
 
 		if ( empty( $collection ) ) {
@@ -663,7 +663,7 @@ class Admin extends Plugin {
 	 *
 	 * @param string $collection_title The title of the collection. This should be the search query.
 	 */
-	public static function collection_exists( $collection_title ) : bool {
+	public static function collection_exists( $collection_title ): bool {
 		$collection = self::get_collection( $collection_title );
 
 		if ( $collection ) {
@@ -676,14 +676,14 @@ class Admin extends Plugin {
 	/**
 	 * Hide the add new media menu item.
 	 */
-	public function hide_add_new_media_menu() : void {
+	public function hide_add_new_media_menu(): void {
 		remove_submenu_page( 'upload.php', 'media-new.php' );
 	}
 
 	/**
 	 * Hide WordPress core media buttons.
 	 */
-	public function hide_core_media_buttons() : void {
+	public function hide_core_media_buttons(): void {
 		$screen = get_current_screen();
 
 		// Only inject custom styles for uploads page.
@@ -699,7 +699,7 @@ class Admin extends Plugin {
 	 *
 	 * @param WP_Admin_Bar $wp_admin_bar Toolbar instance.
 	 */
-	public function edit_new_media_link( $wp_admin_bar ) : void {
+	public function edit_new_media_link( $wp_admin_bar ): void {
 		$new_content_node = $wp_admin_bar->get_node( 'new-media' );
 
 		if ( $new_content_node ) {
@@ -715,7 +715,7 @@ class Admin extends Plugin {
 	 *
 	 * @param array $file The file array.
 	 */
-	public function disable_new_uploads( $file ) : array {
+	public function disable_new_uploads( $file ): array {
 		$file['error'] = __( 'Direct file uploads are not allowed. Please add media via Widen.', 'widen-media' );
 
 		return $file;
@@ -724,7 +724,7 @@ class Admin extends Plugin {
 	/**
 	 * Register the plugin's custom post types.
 	 */
-	public function register_post_types() : void {
+	public function register_post_types(): void {
 
 		$labels = [
 			'name'                  => _x( 'Collections', 'Post Type General Name', 'widen-media' ),
@@ -788,7 +788,7 @@ class Admin extends Plugin {
 	 * @param array  $actions The row actions.
 	 * @param object $post    The post object.
 	 */
-	public function remove_collections_quick_edit( $actions, $post ) : array {
+	public function remove_collections_quick_edit( $actions, $post ): array {
 		// Only modify actions for our collections custom post type.
 		if ( 'wm_collection' !== $post->post_type ) {
 			return $actions;
@@ -803,14 +803,14 @@ class Admin extends Plugin {
 	/**
 	 * Remove the default publish/update metabox from the wm_collection custom post type.
 	 */
-	public function remove_collections_submit_box() : void {
+	public function remove_collections_submit_box(): void {
 		remove_meta_box( 'submitdiv', 'wm_collection', 'side' );
 	}
 
 	/**
 	 * Register the metaboxes we are using within the wm_collection post type.
 	 */
-	public function register_collection_meta_boxes() : void {
+	public function register_collection_meta_boxes(): void {
 
 		add_meta_box(
 			'submitdiv',
@@ -826,7 +826,7 @@ class Admin extends Plugin {
 	/**
 	 * The callback for our custom submitdiv for the wp_collection post type.
 	 */
-	public function collection_submitdiv_cb() : void {
+	public function collection_submitdiv_cb(): void {
 		include_once 'Admin/meta-boxes/collection-submit.php';
 	}
 
@@ -835,7 +835,7 @@ class Admin extends Plugin {
 	 *
 	 * @param int $post_id The post ID for the collection being saved.
 	 */
-	public function save_post_collection_cb( $post_id ) : void {
+	public function save_post_collection_cb( $post_id ): void {
 		$screen = get_current_screen();
 
 		// Only hook into save_post for our wm_collection post type.
@@ -862,7 +862,7 @@ class Admin extends Plugin {
 	/**
 	 * The callback to display our custom markup for the wm_collection custom post type.
 	 */
-	public function view_collection_cb() : void {
+	public function view_collection_cb(): void {
 		$screen = get_current_screen();
 
 		// Do nothing if this is not our custom post type.
@@ -914,7 +914,7 @@ class Admin extends Plugin {
 	 * @param string $query The query title.
 	 * @param array  $items The response items.
 	 */
-	public static function json_image_query_data( $query, $items ) : string {
+	public static function json_image_query_data( $query, $items ): string {
 		$assets = [];
 
 		foreach ( $items as $item ) {
