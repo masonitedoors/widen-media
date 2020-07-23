@@ -93,8 +93,19 @@ class Admin extends Plugin {
 	 * Register our image sizes with WordPress.
 	 */
 	public function register_image_sizes(): void {
+		// From API.
 		add_image_size( 'wm-thumbnail', 500, 500 );
 		add_image_size( 'wm-pager', 64, 64 );
+
+		// Manually added.
+		add_image_size( 'wm-logo', 203, 49 );
+		add_image_size( 'wm-icon', 103, 103 );
+		add_image_size( 'wm-door-a', 125, 333 );
+		add_image_size( 'wm-door-b', 216, 454 );
+		add_image_size( 'wm-glass', 300, 300 );
+		add_image_size( 'wm-slider', 240, 342 );
+		add_image_size( 'wm-card', 640, 425 );
+		add_image_size( 'wm-card-full-size', 816, 550 );
 	}
 
 	/**
@@ -106,8 +117,16 @@ class Admin extends Plugin {
 	 */
 	public function add_selectable_image_sizes( $sizes ): array {
 		$widen_media_image_sizes = [
-			'wm-thumbnail' => __( 'Widen Media Thumbnail', 'widen-media' ),
-			'wm-pager'     => __( 'Widen Media Pager', 'widen-media' ),
+			'wm-thumbnail'      => __( 'Widen Media: Thumbnail', 'widen-media' ),
+			'wm-pager'          => __( 'Widen Media: Pager', 'widen-media' ),
+			'wm-logo'           => __( 'Widen Media: Logo', 'widen-media' ),
+			'wm-icon'           => __( 'Widen Media: Icon', 'widen-media' ),
+			'wm-door-a'         => __( 'Widen Media: Door A', 'widen-media' ),
+			'wm-door-b'         => __( 'Widen Media: Door B', 'widen-media' ),
+			'wm-glass'          => __( 'Widen Media: Glass', 'widen-media' ),
+			'wm-slider'         => __( 'Widen Media: Slider', 'widen-media' ),
+			'wm-card'           => __( 'Widen Media: Card', 'widen-media' ),
+			'wm-card-full-size' => __( 'Widen Media: Full Size Card', 'widen-media' ),
 		];
 
 		return array_merge( $sizes, $widen_media_image_sizes );
@@ -122,6 +141,37 @@ class Admin extends Plugin {
 	 */
 	public function disable_srcset(): int {
 		return 1;
+	}
+
+	/**
+	 * Handle WordPress core's `image_downsize` for the images added through this plugin.
+	 *
+	 * @param bool|array   $downsize Whether to short-circuit the image downsize.
+	 * @param int          $id       Attachment ID for image.
+	 * @param array|string $size     Requested size of image. Image size name, or array of width and height values (in that order).
+	 */
+	public function handle_image_downsize( $downsize, $id, $size ) {
+		$widen_media_id = get_post_meta( $id, 'widen_media_id', true );
+
+		// Check if this is an image from Widen.
+		if ( ! empty( $widen_media_id ) ) {
+			$meta = wp_get_attachment_metadata( $id );
+
+			if ( isset( $meta['sizes'][ $size ] ) ) {
+				// Use the individual widen media size.
+				$image = $meta['sizes'][ $size ];
+
+				$image_arr = [
+					$image['file'],
+					$image['width'],
+					$image['height'],
+					true,
+				];
+				return $image_arr;
+			}
+			return false;
+		}
+		return false;
 	}
 
 	/**
@@ -462,6 +512,7 @@ class Admin extends Plugin {
 			'url'                 => '',
 			'width'               => '',
 			'height'              => '',
+			'templated_url'       => '',
 			'thumbnail_url'       => '',
 			'thumbnail_width'     => '',
 			'thumbnail_height'    => '',
@@ -487,6 +538,9 @@ class Admin extends Plugin {
 		}
 		if ( isset( $_POST['url'] ) ) {
 			$asset_data['url'] = sanitize_text_field( wp_unslash( $_POST['url'] ) );
+		}
+		if ( isset( $_POST['templatedUrl'] ) ) {
+			$asset_data['templated_url'] = sanitize_text_field( wp_unslash( $_POST['templatedUrl'] ) );
 		}
 		if ( isset( $_POST['thumbnailUrl'] ) ) {
 			$asset_data['thumbnail_url'] = sanitize_text_field( wp_unslash( $_POST['thumbnailUrl'] ) );
@@ -544,23 +598,65 @@ class Admin extends Plugin {
 			'height' => $asset_data['height'],
 			'file'   => $asset_data['url'],
 			'sizes'  => [
-				'full'         => [
-					'file'      => $asset_data['url'],
-					'width'     => $asset_data['width'],
-					'height'    => $asset_data['height'],
-					'mime-type' => $asset_data['mime_type'],
-				],
-				'wm-thumbnail' => [
+				'wm-thumbnail'      => [
 					'file'      => $asset_data['thumbnail_url'],
 					'width'     => $asset_data['thumbnail_width'],
 					'height'    => $asset_data['thumbnail_height'],
 					'mime-type' => $asset_data['thumbnail_mime_type'],
 				],
-				'wm-pager'     => [
+				'wm-pager'          => [
 					'file'      => $asset_data['pager_url'],
 					'width'     => $asset_data['pager_width'],
 					'height'    => $asset_data['pager_height'],
 					'mime-type' => $asset_data['pager_mime_type'],
+				],
+				'wm-logo'           => [
+					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 203, 49 ),
+					'width'     => 203,
+					'height'    => 49,
+					'mime-type' => '',
+				],
+				'wm-icon'           => [
+					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 103, 103 ),
+					'width'     => 103,
+					'height'    => 103,
+					'mime-type' => '',
+				],
+				'wm-door-a'         => [
+					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 125, 333 ),
+					'width'     => 125,
+					'height'    => 333,
+					'mime-type' => '',
+				],
+				'wm-door-b'         => [
+					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 216, 454 ),
+					'width'     => 216,
+					'height'    => 454,
+					'mime-type' => '',
+				],
+				'wm-glass'          => [
+					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 300, 300 ),
+					'width'     => 300,
+					'height'    => 300,
+					'mime-type' => '',
+				],
+				'wm-slider'         => [
+					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 240, 342 ),
+					'width'     => 240,
+					'height'    => 342,
+					'mime-type' => '',
+				],
+				'wm-card'           => [
+					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 640, 425 ),
+					'width'     => 640,
+					'height'    => 425,
+					'mime-type' => '',
+				],
+				'wm-card-full-size' => [
+					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 816, 550 ),
+					'width'     => 816,
+					'height'    => 550,
+					'mime-type' => '',
 				],
 			],
 		];

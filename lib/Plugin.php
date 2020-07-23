@@ -119,6 +119,9 @@ class Plugin {
 		$this->loader->add_action( 'after_setup_theme', $plugin_admin, 'register_image_sizes' );
 		$this->loader->add_filter( 'image_size_names_choose', $plugin_admin, 'add_selectable_image_sizes' );
 
+		// Handle WordPress core's `image_downsize` for the images added through this plugin.
+		$this->loader->add_filter( 'image_downsize', $plugin_admin, 'handle_image_downsize', 10, 3 );
+
 		// Disable WP responsive images (srcset).
 		$this->loader->add_filter( 'max_srcset_image_width', $plugin_admin, 'disable_srcset' );
 

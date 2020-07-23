@@ -29,6 +29,7 @@ import '../styles/admin.scss';
     const description = $(this).attr('data-description')
     const url = $(this).attr('data-url')
     const thumbnailUrl = $(this).attr('data-thumbnail-url')
+    const templatedUrl = $(this).attr('data-templated-url')
     const pagerUrl = $(this).attr('data-pager-url')
     const fields = $(this).attr('data-fields')
 
@@ -44,6 +45,7 @@ import '../styles/admin.scss';
           description,
           url,
           thumbnailUrl,
+          templatedUrl,
           pagerUrl,
           fields,
         }
