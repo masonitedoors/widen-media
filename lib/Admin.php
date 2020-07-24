@@ -504,24 +504,16 @@ class Admin extends Plugin {
 
 		// Set our default/fallback values.
 		$asset_data = [
-			'type'                => '',
-			'id'                  => '',
-			'filename'            => '',
-			'description'         => '',
-			'mime_type'           => '',
-			'url'                 => '',
-			'width'               => '',
-			'height'              => '',
-			'templated_url'       => '',
-			'thumbnail_url'       => '',
-			'thumbnail_width'     => '',
-			'thumbnail_height'    => '',
-			'thumbnail_mime_type' => '',
-			'pager_url'           => '',
-			'pager_width'         => '',
-			'pager_height'        => '',
-			'pager_mime_type'     => '',
-			'fields'              => [],
+			'type'          => '',
+			'id'            => '',
+			'filename'      => '',
+			'description'   => '',
+			'mime_type'     => '',
+			'url'           => '',
+			'width'         => '',
+			'height'        => '',
+			'templated_url' => '',
+			'fields'        => [],
 		];
 
 		if ( isset( $_POST['type'] ) ) {
@@ -542,12 +534,6 @@ class Admin extends Plugin {
 		if ( isset( $_POST['templatedUrl'] ) ) {
 			$asset_data['templated_url'] = sanitize_text_field( wp_unslash( $_POST['templatedUrl'] ) );
 		}
-		if ( isset( $_POST['thumbnailUrl'] ) ) {
-			$asset_data['thumbnail_url'] = sanitize_text_field( wp_unslash( $_POST['thumbnailUrl'] ) );
-		}
-		if ( isset( $_POST['pagerUrl'] ) ) {
-			$asset_data['pager_url'] = sanitize_text_field( wp_unslash( $_POST['pagerUrl'] ) );
-		}
 		if ( isset( $_POST['fields'] ) ) {
 			$asset_data['fields'] = sanitize_text_field( wp_unslash( $_POST['fields'] ) );
 		}
@@ -559,18 +545,6 @@ class Admin extends Plugin {
 			$asset_data['width']     = $image_size[0];
 			$asset_data['height']    = $image_size[1];
 			$asset_data['mime_type'] = $image_size['mime'];
-
-			// Thumnbail image sizes.
-			$thumbnail_image_size              = @getimagesize( $asset_data['thumbnail_url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			$asset_data['thumbnail_width']     = $thumbnail_image_size[0];
-			$asset_data['thumbnail_height']    = $thumbnail_image_size[1];
-			$asset_data['thumbnail_mime_type'] = $thumbnail_image_size['mime'];
-
-			// Pager image sizes.
-			$pager_image_size              = @getimagesize( $asset_data['pager_url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			$asset_data['pager_width']     = $pager_image_size[0];
-			$asset_data['pager_height']    = $pager_image_size[1];
-			$asset_data['pager_mime_type'] = $pager_image_size['mime'];
 		}
 
 		/**
@@ -598,66 +572,16 @@ class Admin extends Plugin {
 			'height' => $asset_data['height'],
 			'file'   => $asset_data['url'],
 			'sizes'  => [
-				'wm-thumbnail'      => [
-					'file'      => $asset_data['thumbnail_url'],
-					'width'     => $asset_data['thumbnail_width'],
-					'height'    => $asset_data['thumbnail_height'],
-					'mime-type' => $asset_data['thumbnail_mime_type'],
-				],
-				'wm-pager'          => [
-					'file'      => $asset_data['pager_url'],
-					'width'     => $asset_data['pager_width'],
-					'height'    => $asset_data['pager_height'],
-					'mime-type' => $asset_data['pager_mime_type'],
-				],
-				'wm-logo'           => [
-					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 203, 49 ),
-					'width'     => 203,
-					'height'    => 49,
-					'mime-type' => '',
-				],
-				'wm-icon'           => [
-					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 103, 103 ),
-					'width'     => 103,
-					'height'    => 103,
-					'mime-type' => '',
-				],
-				'wm-door-a'         => [
-					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 125, 333 ),
-					'width'     => 125,
-					'height'    => 333,
-					'mime-type' => '',
-				],
-				'wm-door-b'         => [
-					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 216, 454 ),
-					'width'     => 216,
-					'height'    => 454,
-					'mime-type' => '',
-				],
-				'wm-glass'          => [
-					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 300, 300 ),
-					'width'     => 300,
-					'height'    => 300,
-					'mime-type' => '',
-				],
-				'wm-slider'         => [
-					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 240, 342 ),
-					'width'     => 240,
-					'height'    => 342,
-					'mime-type' => '',
-				],
-				'wm-card'           => [
-					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 640, 425 ),
-					'width'     => 640,
-					'height'    => 425,
-					'mime-type' => '',
-				],
-				'wm-card-full-size' => [
-					'file'      => Util::create_url_from_template( $asset_data['templated_url'], 816, 550 ),
-					'width'     => 816,
-					'height'    => 550,
-					'mime-type' => '',
-				],
+				'wm-thumbnail'      => Widen::get_size_meta( $asset_data['templated_url'], 500, 500 ),
+				'wm-pager'          => Widen::get_size_meta( $asset_data['templated_url'], 64, 64 ),
+				'wm-logo'           => Widen::get_size_meta( $asset_data['templated_url'], 203, 49 ),
+				'wm-icon'           => Widen::get_size_meta( $asset_data['templated_url'], 103, 103 ),
+				'wm-door-a'         => Widen::get_size_meta( $asset_data['templated_url'], 125, 333 ),
+				'wm-door-b'         => Widen::get_size_meta( $asset_data['templated_url'], 216, 454 ),
+				'wm-glass'          => Widen::get_size_meta( $asset_data['templated_url'], 300, 300 ),
+				'wm-slider'         => Widen::get_size_meta( $asset_data['templated_url'], 240, 342 ),
+				'wm-card'           => Widen::get_size_meta( $asset_data['templated_url'], 640, 425 ),
+				'wm-card-full-size' => Widen::get_size_meta( $asset_data['templated_url'], 816, 550 ),
 			],
 		];
 		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );

@@ -167,4 +167,58 @@ class Widen {
 			return $data;
 		}
 	}
+
+	/**
+	 * Returns a specific image size using widen's templated url.
+	 *
+	 * @param string $templated_url The templated url provided by Widen. This is returned in the image response.
+	 * @param int    $width         The target image width.
+	 * @param int    $height        The target image height.
+	 * @param bool   $crop          If the image should be cropped.
+	 * @param int    $scale         The scale of the image.
+	 */
+	public static function create_url_from_template( $templated_url, $width, $height = null, $crop = false, $scale = 1 ): string {
+		$query_params = [
+			'crop' => $crop ? 'true' : 'false',
+		];
+
+		$url = add_query_arg( $query_params, $templated_url );
+
+		if ( $height ) {
+			$size = $width . 'x' . $height;
+		} else {
+			$size = $width;
+		}
+
+		if ( $crop ) {
+			$url = $url . "?crop=$crop";
+		}
+
+		$url = str_replace( '{size}', $size, $url );
+		$url = str_replace( '{scale}', $scale, $url );
+
+		return $url;
+	}
+
+	/**
+	 * Returns an associate array of image meta for a specific image size.
+	 *
+	 * @param string $templated_url The templated url provided by Widen. This is returned in the image response.
+	 * @param int    $width         The target image width.
+	 * @param int    $height        The target image height.
+	 */
+	public static function get_size_meta( $templated_url, $width, $height ): array {
+		$file = self::create_url_from_template( $templated_url, $width, $height );
+
+		$image_size = @getimagesize( $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+
+		$size_meta = [
+			'file'      => $file,
+			'width'     => $width,
+			'height'    => $height,
+			'mime-type' => $image_size['mime'],
+		];
+
+		return $size_meta;
+	}
 }
