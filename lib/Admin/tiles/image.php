@@ -24,8 +24,8 @@ $thumbnail_url = Widen::create_url_from_template( $templated_url, 500, 500 );
 $skeleton_url  = Widen::create_url_from_template( $templated_url, 50, 50 );
 
 // Check if the image has already been added.
-$already_added = self::attachment_exists( $original_url );
-$attachment_id = $already_added ? self::get_attachment_id( $original_url ) : '';
+$already_added = Util::attachment_exists( $original_url );
+$attachment_id = $already_added ? Util::get_attachment_id( $original_url ) : '';
 
 ?>
 <div class="tile image <?php echo $already_added ? 'added' : ''; ?>">

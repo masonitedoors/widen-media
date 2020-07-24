@@ -655,47 +655,6 @@ class Admin extends Plugin {
 	}
 
 	/**
-	 * Retrieves the attachment ID from the file URL.
-	 *
-	 * @param string $image_url The image URL.
-	 *
-	 * @link https://pippinsplugins.com/retrieve-attachment-id-from-image-url/
-	 */
-	public static function get_attachment_id( $image_url ): ?string {
-		global $wpdb;
-
-		$attachment = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				"SELECT ID FROM $wpdb->posts WHERE guid='%s';", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
-				esc_url( $image_url )
-			)
-		);
-
-		if ( isset( $attachment[0] ) ) {
-			$attachment_id = $attachment[0];
-
-			return $attachment_id;
-		}
-
-		return null;
-	}
-
-	/**
-	 * Check if attachment exists within the database.
-	 *
-	 * @param string $image_url The image URL.
-	 */
-	public static function attachment_exists( $image_url ): bool {
-		$attachment_id = self::get_attachment_id( $image_url );
-
-		if ( $attachment_id ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Check if collection already exists within the database.
 	 *
 	 * @param string $collection_title The title of the collection. This should be the search query.
