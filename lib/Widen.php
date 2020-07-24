@@ -174,26 +174,20 @@ class Widen {
 	 * @param string $templated_url The templated url provided by Widen. This is returned in the image response.
 	 * @param int    $width         The target image width.
 	 * @param int    $height        The target image height.
-	 * @param bool   $crop          If the image should be cropped.
 	 * @param int    $scale         The scale of the image.
 	 */
-	public static function create_url_from_template( $templated_url, $width, $height = null, $crop = false, $scale = 1 ): string {
-		$query_params = [
-			'crop' => $crop ? 'true' : 'false',
-		];
+	public static function create_url_from_template( $templated_url, $width = null, $height = null, $scale = 1 ): string {
+		$url = Util::sanitize_image_url( $templated_url );
 
-		$url = add_query_arg( $query_params, $templated_url );
-
-		if ( $height ) {
+		if ( $width && $height ) {
 			$size = $width . 'x' . $height;
-		} else {
+		} elseif ( $width ) {
 			$size = $width;
+		} else {
+			$size = 'exact';
 		}
 
-		if ( $crop ) {
-			$url = $url . "?crop=$crop";
-		}
-
+		// Perform template string replacements.
 		$url = str_replace( '{size}', $size, $url );
 		$url = str_replace( '{scale}', $scale, $url );
 
@@ -207,7 +201,7 @@ class Widen {
 	 * @param int    $width         The target image width.
 	 * @param int    $height        The target image height.
 	 */
-	public static function get_size_meta( $templated_url, $width, $height ): array {
+	public static function get_size_meta( $templated_url, $width = null, $height = null ): array {
 		$file = self::create_url_from_template( $templated_url, $width, $height );
 
 		$image_size = @getimagesize( $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
