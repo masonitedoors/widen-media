@@ -47,14 +47,14 @@ This plugin provides some function to allow other plugins to easly interact with
 
 Returns an array of collection objects.
 
-### wm_get_collection( int \$collection_id )
+### wm_get_collection( int $collection_id )
 
 Returns the collection object.
 
-### wm_get_asset_fields( int \$asset_id )
+### wm_get_asset_fields( int $asset_id )
 
 Returns all the fields from Widen for an asset that exists within the WordPress Media Library.
 
-### wm_get_asset_field( int $asset_id, string $key, bool \$single = false )
+### wm_get_asset_field( int $asset_id, string $key, bool $single = false )
 
 Returns a single field for a Widen asset that exists within the WordPress Media Library.
