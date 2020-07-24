@@ -49,30 +49,3 @@ add_action(
 		require_once __DIR__ . '/inc/api.php';
 	}
 );
-
-// phpcs:disable
-// 🚨 START REMOVE SECTION BEFORE COMMITTING 🚨
-if ( ! function_exists( 'write_log' ) ) {
-	function write_log( $log ) {
-		if ( true === WP_DEBUG ) {
-			if ( is_array( $log ) || is_object( $log ) ) {
-				error_log( print_r( $log, true ) );
-			} else {
-				error_log( $log );
-			}
-		}
-	}
-}
-
-/**
- * Prepares an attachment post object for JS, where it is expected to be JSON-encoded and fit into an Attachment model.
- *
- * @param int|WP_Post $attachment Attachment ID or object.
- */
-function prepare_attachment_for_js( $attachment ) {
-	// write_log( $attachment );
-	return $attachment;
-}
-add_filter( 'wp_prepare_attachment_for_js', __NAMESPACE__ . '\prepare_attachment_for_js', 10, 1 );
-// 🚨 END REMOVE SECTION BEFORE COMMITTING 🚨
-// phpcs:enable
