@@ -93,11 +93,8 @@ class Admin extends Plugin {
 	 * Register our image sizes with WordPress.
 	 */
 	public function register_image_sizes(): void {
-		// From API.
 		add_image_size( 'wm-thumbnail', 500, 500 );
 		add_image_size( 'wm-pager', 64, 64 );
-
-		// Manually added.
 		add_image_size( 'wm-logo', 203, 49 );
 		add_image_size( 'wm-icon', 103, 103 );
 		add_image_size( 'wm-door-a', 125, 333 );
@@ -974,20 +971,16 @@ class Admin extends Plugin {
 
 		foreach ( $items as $item ) {
 			$id            = $item['id'] ?? '';
-			$original_url  = $item['embeds']['original']['url'] ?? '';
-			$thumbnail_url = $item['embeds']['ThumbnailPNG']['url'] ?? '';
-			$pager_url     = $item['embeds']['PagerPNG']['url'] ?? '';
 			$fields        = $item['metadata']['fields'] ?? [];
+			$original_url  = $item['embeds']['original']['url'] ?? '';
+			$templated_url = $item['embeds']['templated']['url'] ?? '';
 
-			// Change possible TIF url to PNG url.
-			if ( strpos( $original_url, '.tif' ) !== false ) {
-				$original_url = $item['embeds']['OriginalPNG']['url'];
-			}
+			$original_url  = Util::sanitize_image_url( $original_url );
+			$templated_url = Util::sanitize_image_url( $templated_url );
 
-			// Remove query strings from urls.
-			$original_url  = Util::remove_query_string( $original_url );
-			$thumbnail_url = Util::remove_query_string( $thumbnail_url );
-			$pager_url     = Util::remove_query_string( $pager_url );
+			// Create the additional image URL's we need.
+			$thumbnail_url = Widen::create_url_from_template( $templated_url, 500, 500 );
+			$pager_url     = Widen::create_url_from_template( $templated_url, 64, 64 );
 
 			$assets[] = [
 				'id'            => $id,
