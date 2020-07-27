@@ -850,7 +850,7 @@ class Admin extends Plugin {
 		$screen = get_current_screen();
 
 		// Only hook into save_post for our wm_collection post type.
-		if ( 'wm_collection' !== $screen->post_type ) {
+		if ( is_object( $screen ) && 'wm_collection' !== $screen->post_type ) {
 			return;
 		}
 
