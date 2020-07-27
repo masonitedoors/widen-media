@@ -12,7 +12,6 @@ defined( 'WPINC' ) || die();
 
 $image_id        = $item['id'] ?? '';
 $image_filename  = $item['filename'] ?? '';
-$original_url    = $item['embeds']['original']['url'] ?? '';
 $templated_url   = $item['embeds']['templated']['url'] ?? '';
 $description_arr = $item['metadata']['fields']['description'] ?? [];
 $description     = implode( ' ', $description_arr );
@@ -20,6 +19,7 @@ $fields_arr      = $item['metadata']['fields'] ?? [];
 $fields          = wp_json_encode( $fields_arr );
 
 // Create the image URL's needed for this view.
+$original_url  = Widen::create_url_from_template( $templated_url );
 $thumbnail_url = Widen::create_url_from_template( $templated_url, 500, 500 );
 $skeleton_url  = Widen::create_url_from_template( $templated_url, 50, 50 );
 
@@ -56,7 +56,7 @@ $attachment_id = $already_added ? Util::get_attachment_id( $original_url ) : '';
 						data-id="<?php echo esc_attr( $image_id ); ?>"
 						data-filename="<?php echo esc_attr( $image_filename ); ?>"
 						data-description="<?php echo esc_attr( $description ); ?>"
-						data-url="<?php echo esc_attr( Util::sanitize_image_url( $original_url ) ); ?>"
+						data-url="<?php echo esc_attr( $original_url ); ?>"
 						data-templated-url="<?php echo esc_attr( Util::sanitize_image_url( $templated_url ) ); ?>"
 						data-fields="<?php echo esc_attr( $fields ); ?>"
 					><?php esc_html_e( 'Add to Media Library', 'widen-media' ); ?></button>

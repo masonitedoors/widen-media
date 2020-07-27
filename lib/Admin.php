@@ -931,13 +931,12 @@ class Admin extends Plugin {
 		foreach ( $items as $item ) {
 			$id            = $item['id'] ?? '';
 			$fields        = $item['metadata']['fields'] ?? [];
-			$original_url  = $item['embeds']['original']['url'] ?? '';
 			$templated_url = $item['embeds']['templated']['url'] ?? '';
 
-			$original_url  = Util::sanitize_image_url( $original_url );
 			$templated_url = Util::sanitize_image_url( $templated_url );
 
 			// Create the additional image URL's we need.
+			$original_url  = Widen::create_url_from_template( $templated_url );
 			$thumbnail_url = Widen::create_url_from_template( $templated_url, 500, 500 );
 			$pager_url     = Widen::create_url_from_template( $templated_url, 64, 64 );
 
