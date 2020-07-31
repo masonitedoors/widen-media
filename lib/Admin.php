@@ -836,6 +836,13 @@ class Admin extends Plugin {
 	 * @param int $post_id The post ID for the collection being saved.
 	 */
 	public function save_post_collection_cb( $post_id ) : void {
+		// Make sure the function exists, in case a custom post
+		// type is being updated from another screen or using
+		// WordPress BackboneJS API
+		if (!function_exists('get_current_screen')) {
+			return;
+		}
+
 		$screen = get_current_screen();
 
 		// Only hook into save_post for our wm_collection post type.
@@ -863,6 +870,13 @@ class Admin extends Plugin {
 	 * The callback to display our custom markup for the wm_collection custom post type.
 	 */
 	public function view_collection_cb() : void {
+		// Make sure the function exists, in case a custom post
+		// type is being updated from another screen or using
+		// WordPress BackboneJS API
+		if (!function_exists('get_current_screen')) {
+			return;
+		}
+		
 		$screen = get_current_screen();
 
 		// Do nothing if this is not our custom post type.
