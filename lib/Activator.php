@@ -14,7 +14,7 @@ class Activator {
 	/**
 	 * Short Description.
 	 */
-	public static function activate() : void {
+	public static function activate(): void {
 	}
 
 }

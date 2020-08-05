@@ -52,7 +52,7 @@ class Loader {
 	 * @param      int      Optional $priority         The priority at which the function should be fired.
 	 * @param      int      Optional $accepted_args    The number of arguments that should be passed to the $callback.
 	 */
-	public function add_action( $hook, $component, $callback, $priority = 10, $accepted_args = 1 ) : void {
+	public function add_action( $hook, $component, $callback, $priority = 10, $accepted_args = 1 ): void {
 		$this->actions = $this->add( $this->actions, $hook, $component, $callback, $priority, $accepted_args );
 	}
 
@@ -65,7 +65,7 @@ class Loader {
 	 * @param      int      Optional $priority         The priority at which the function should be fired.
 	 * @param      int      Optional $accepted_args    The number of arguments that should be passed to the $callback.
 	 */
-	public function add_filter( $hook, $component, $callback, $priority = 10, $accepted_args = 1 ) : void {
+	public function add_filter( $hook, $component, $callback, $priority = 10, $accepted_args = 1 ): void {
 		$this->filters = $this->add( $this->filters, $hook, $component, $callback, $priority, $accepted_args );
 	}
 
@@ -76,7 +76,7 @@ class Loader {
 	 * @param     object $component      A reference to the instance of the object on which the shortcode is defined.
 	 * @param     string $callback       The name of the function that defines the shortcode.
 	 */
-	public function add_shortcode( $tag, $component, $callback ) : void {
+	public function add_shortcode( $tag, $component, $callback ): void {
 		$this->shortcodes = $this->add( $this->shortcodes, $tag, $component, $callback );
 	}
 
@@ -91,7 +91,7 @@ class Loader {
 	 * @param      int      Optional $priority         The priority at which the function should be fired.
 	 * @param      int      Optional $accepted_args    The number of arguments that should be passed to the $callback.
 	 */
-	private function add( $hooks, $hook, $component, $callback, $priority = 10, $accepted_args = 2 ) : array {
+	private function add( $hooks, $hook, $component, $callback, $priority = 10, $accepted_args = 2 ): array {
 		$hooks[] = [
 			'hook'          => $hook,
 			'component'     => $component,
@@ -106,7 +106,7 @@ class Loader {
 	/**
 	 * Register the filters, actions, & shortcodes with WordPress.
 	 */
-	public function run() : void {
+	public function run(): void {
 		foreach ( $this->filters as $hook ) {
 			add_filter( $hook['hook'], [ $hook['component'], $hook['callback'] ], $hook['priority'], $hook['accepted_args'] );
 		}

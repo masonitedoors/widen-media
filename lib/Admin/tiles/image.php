@@ -12,28 +12,20 @@ defined( 'WPINC' ) || die();
 
 $image_id        = $item['id'] ?? '';
 $image_filename  = $item['filename'] ?? '';
-$original_url    = $item['embeds']['original']['url'] ?? '';
-$thumbnail_url   = $item['embeds']['ThumbnailPNG']['url'] ?? '';
-$skeleton_url    = $item['embeds']['SkeletonPNG']['url'] ?? '';
-$pager_url       = $item['embeds']['PagerPNG']['url'] ?? '';
+$templated_url   = $item['embeds']['templated']['url'] ?? '';
 $description_arr = $item['metadata']['fields']['description'] ?? [];
 $description     = implode( ' ', $description_arr );
 $fields_arr      = $item['metadata']['fields'] ?? [];
 $fields          = wp_json_encode( $fields_arr );
 
-// Change possible TIF url to PNG url.
-if ( strpos( $original_url, '.tif' ) !== false ) {
-	$original_url = $item['embeds']['OriginalPNG']['url'];
-}
-
-// Remove query string from urls.
-$original_url  = Util::remove_query_string( $original_url );
-$thumbnail_url = Util::remove_query_string( $thumbnail_url );
-$pager_url     = Util::remove_query_string( $pager_url );
+// Create the image URL's needed for this view.
+$original_url  = Widen::create_url_from_template( $templated_url );
+$thumbnail_url = Widen::create_url_from_template( $templated_url, 500, 500 );
+$skeleton_url  = Widen::create_url_from_template( $templated_url, 50, 50 );
 
 // Check if the image has already been added.
-$already_added = self::attachment_exists( $original_url );
-$attachment_id = $already_added ? self::get_attachment_id( $original_url ) : '';
+$already_added = Util::attachment_exists( $original_url );
+$attachment_id = $already_added ? Util::get_attachment_id( $original_url ) : '';
 
 ?>
 <div class="tile image <?php echo $already_added ? 'added' : ''; ?>">
@@ -65,8 +57,7 @@ $attachment_id = $already_added ? self::get_attachment_id( $original_url ) : '';
 						data-filename="<?php echo esc_attr( $image_filename ); ?>"
 						data-description="<?php echo esc_attr( $description ); ?>"
 						data-url="<?php echo esc_attr( $original_url ); ?>"
-						data-thumbnail-url="<?php echo esc_attr( $thumbnail_url ); ?>"
-						data-pager-url="<?php echo esc_attr( $pager_url ); ?>"
+						data-templated-url="<?php echo esc_attr( Util::sanitize_image_url( $templated_url ) ); ?>"
 						data-fields="<?php echo esc_attr( $fields ); ?>"
 					><?php esc_html_e( 'Add to Media Library', 'widen-media' ); ?></button>
 					<span class="spinner"></span>
