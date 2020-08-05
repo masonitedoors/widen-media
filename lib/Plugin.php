@@ -126,8 +126,7 @@ class Plugin {
 		$this->loader->add_filter( 'max_srcset_image_width', $plugin_admin, 'disable_srcset' );
 
 		// Fix URL issues stemming from there being no actual file gets uploaded to WordPress.
-		$this->loader->add_filter( 'wp_get_attachment_image_src', $plugin_admin, 'fix_widen_attachment_urls', 10, 4 );
-		$this->loader->add_filter( 'get_image_tag', $plugin_admin, 'filter_widen_image_tag', 10, 6 );
+		$this->loader->add_filter( 'wp_get_attachment_url', $plugin_admin, 'fix_widen_attachment_url', 999, 2 );
 
 		// Prevent user from accessing the native 'add new' button for the WordPress Media Library.
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'hide_add_new_media_menu' );

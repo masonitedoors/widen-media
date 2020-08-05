@@ -12,6 +12,13 @@ namespace Masonite\WP\Widen_Media;
 class Widen {
 
 	/**
+	 * The base URL for Widen images.
+	 *
+	 * @var string
+	 */
+	public static $base_url = 'https://embed.widencdn.net/';
+
+	/**
 	 * The access token for Widen.
 	 *
 	 * @var string

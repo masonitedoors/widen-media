@@ -154,7 +154,7 @@ class Admin extends Plugin {
 		if ( ! empty( $widen_media_id ) ) {
 			$meta = wp_get_attachment_metadata( $id );
 
-			if ( isset( $meta['sizes'][ $size ] ) ) {
+			if ( ! empty( $size ) && isset( $meta['sizes'][ $size ] ) ) {
 				// Use the individual widen media size.
 				$image = $meta['sizes'][ $size ];
 
@@ -413,78 +413,6 @@ class Admin extends Plugin {
 	}
 
 	/**
-	 * Filters the widen image src result.
-	 * This is needed to fix the doubling of the URLs.
-	 *
-	 * @param array|false  $image         Either array with src, width & height, icon src, or false.
-	 * @param int          $attachment_id Image attachment ID.
-	 * @param string|array $size          Size of image. Image size or array of width and height values
-	 *                                    (in that order). Default 'thumbnail'.
-	 * @param bool         $icon          Whether the image should be treated as an icon. Default false.
-	 */
-	public function fix_widen_attachment_urls( $image, $attachment_id, $size, $icon ) {
-		$widen_media_id = get_post_meta( $attachment_id, 'widen_media_id', true );
-
-		// Check if this is an image from Widen.
-		if ( ! empty( $widen_media_id ) ) {
-			$image[0] = wp_get_attachment_url( $attachment_id );
-		}
-
-		return $image;
-	}
-
-	/**
-	 * Filters the HTML content for the image tag.
-	 *
-	 * @since 2.6.0
-	 *
-	 * @param string       $html  HTML content for the image.
-	 * @param int          $id    Attachment ID.
-	 * @param string       $alt   Alternate text.
-	 * @param string       $title Attachment title.
-	 * @param string       $align Part of the class name for aligning the image.
-	 * @param string|array $size  Size of image. Image size or array of width and height values (in that order).
-	 *                            Default 'medium'.
-	 *
-	 * @link https://developer.wordpress.org/reference/hooks/get_image_tag/
-	 */
-	public function filter_widen_image_tag( $html, $id, $alt, $title, $align, $size ): string {
-		$widen_media_id = get_post_meta( $id, 'widen_media_id', true );
-
-		// Do nothing special if this is not a Widen image.
-		if ( empty( $widen_media_id ) ) {
-			return $html;
-		}
-
-		list( $img_src, $width, $height ) = image_downsize( $id, $size );
-		$hwstring                         = image_hwstring( $width, $height );
-
-		$title = $title ? 'title="' . esc_attr( $title ) . '" ' : '';
-
-		$class = 'align' . esc_attr( $align ) . ' size-' . esc_attr( $size ) . ' wp-image-' . $id;
-
-		/**
-		 * Filters the value of the attachment's image tag class attribute.
-		 *
-		 * @since 2.6.0
-		 *
-		 * @param string       $class CSS class name or space-separated list of classes.
-		 * @param int          $id    Attachment ID.
-		 * @param string       $align Part of the class name for aligning the image.
-		 * @param string|array $size  Size of image. Image size or array of width and height values (in that order).
-		 *                            Default 'medium'.
-		 */
-		$class = apply_filters( 'get_image_tag_class', $class, $id, $align, $size );
-
-		// Get correct image src.
-		$img_src = wp_get_attachment_url( $id );
-
-		$html = '<img src="' . esc_attr( $img_src ) . '" alt="' . esc_attr( $alt ) . '" ' . $title . $hwstring . 'class="' . $class . '" />';
-
-		return $html;
-	}
-
-	/**
 	 * Add widen asset to WordPress media library.
 	 * This is called via ajax.
 	 *
@@ -567,8 +495,9 @@ class Admin extends Plugin {
 		$attachment_metadata = [
 			'width'  => $asset_data['width'],
 			'height' => $asset_data['height'],
-			'file'   => $asset_data['url'],
+			'file'   => self::get_widen_url_path( $asset_data['url'] ),
 			'sizes'  => [
+				'full'              => Widen::get_size_meta( $asset_data['templated_url'] ),
 				'wm-thumbnail'      => Widen::get_size_meta( $asset_data['templated_url'], 500, 500 ),
 				'wm-pager'          => Widen::get_size_meta( $asset_data['templated_url'], 64, 64 ),
 				'wm-logo'           => Widen::get_size_meta( $asset_data['templated_url'], 203, 49 ),
@@ -582,6 +511,13 @@ class Admin extends Plugin {
 			],
 		];
 		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+
+		/**
+		 * Update the attachment's file.
+		 *
+		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
+		 */
+		update_post_meta( $attachment_id, '_wp_attached_file', self::get_widen_url_path( $asset_data['url'] ) );
 
 		/**
 		 * Update the attachment's Alternative Text.
@@ -605,6 +541,40 @@ class Admin extends Plugin {
 
 		// Exit since this is executed via Ajax.
 		exit();
+	}
+
+	/**
+	 * Returns the base url.
+	 *
+	 * @param string $url The URL to parse.
+	 */
+	public static function get_widen_url_path( $url ) {
+		$url_arr  = wp_parse_url( $url );
+		$url_path = $url_arr['path'];
+
+		$path = ltrim( $url_path, '/wp-content/uploads/' );
+
+		return $path;
+	}
+
+	/**
+	 * Filters the attachment URL.
+	 *
+	 * @param string $url           URL for the given attachment.
+	 * @param int    $attachment_id Attachment post ID.
+	 */
+	public function fix_widen_attachment_url( $url, $attachment_id ) {
+		$widen_media_id = get_post_meta( $attachment_id, 'widen_media_id', true );
+
+		if ( ! empty( $widen_media_id ) ) {
+			$base_url             = Widen::$base_url;
+			$url_path             = self::get_widen_url_path( $url );
+			$widen_attachment_url = trailingslashit( $base_url ) . $url_path;
+
+			return $widen_attachment_url;
+		}
+
+		return $url;
 	}
 
 	/**

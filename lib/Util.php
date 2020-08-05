@@ -48,8 +48,10 @@ class Util {
 		// phpcs:disable
 		if ( is_array( $log ) || is_object( $log ) ) {
 			error_log( print_r( $log, true ) );
+		} elseif ( null === $log ) {
+			error_log( 'null' );
 		} else {
-			error_log( $log );
+			error_log( (string) $log );
 		}
 		// phpcs:enable
 	}
