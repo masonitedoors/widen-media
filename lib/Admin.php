@@ -32,6 +32,73 @@ class Admin extends Plugin {
 	}
 
 	/**
+	 * Returns the defined image sizes.
+	 */
+	private static function get_defined_image_sizes(): array {
+		$default_image_sizes = [
+			'wm-thumbnail'      => [
+				'label'  => __( 'Widen Media: Thumbnail', 'widen-media' ),
+				'width'  => 500,
+				'height' => 500,
+			],
+			'wm-pager'          => [
+				'label'  => __( 'Widen Media: Pager', 'widen-media' ),
+				'width'  => 64,
+				'height' => 64,
+			],
+			'wm-logo'           => [
+				'label'  => __( 'Widen Media: Logo', 'widen-media' ),
+				'width'  => 203,
+				'height' => 49,
+			],
+			'wm-icon'           => [
+				'label'  => __( 'Widen Media: Icon', 'widen-media' ),
+				'width'  => 103,
+				'height' => 103,
+			],
+			'wm-door-a'         => [
+				'label'  => __( 'Widen Media: Door A', 'widen-media' ),
+				'width'  => 125,
+				'height' => 333,
+			],
+			'wm-door-b'         => [
+				'label'  => __( 'Widen Media: Door B', 'widen-media' ),
+				'width'  => 216,
+				'height' => 454,
+			],
+			'wm-glass'          => [
+				'label'  => __( 'Widen Media: Glass', 'widen-media' ),
+				'width'  => 300,
+				'height' => 300,
+			],
+			'wm-slider'         => [
+				'label'  => __( 'Widen Media: Slider', 'widen-media' ),
+				'width'  => 240,
+				'height' => 342,
+			],
+			'wm-card'           => [
+				'label'  => __( 'Widen Media: Card', 'widen-media' ),
+				'width'  => 640,
+				'height' => 425,
+			],
+			'wm-card-full-size' => [
+				'label'  => __( 'Widen Media: Card - Full Size', 'widen-media' ),
+				'width'  => 816,
+				'height' => 550,
+			],
+		];
+
+		/**
+		 * Filter the plugin's defined image sizes.
+		 *
+		 * @param array $default_image_sizes The array of default image sizes.
+		 */
+		$defined_image_sizes = apply_filters( 'wm_defined_image_sizes', $default_image_sizes );
+
+		return $defined_image_sizes;
+	}
+
+	/**
 	 * Check to see if we are able to load our plugin's admin scripts & styles.
 	 *
 	 * @param string $hook The page hook.
@@ -93,16 +160,11 @@ class Admin extends Plugin {
 	 * Register our image sizes with WordPress.
 	 */
 	public function register_image_sizes(): void {
-		add_image_size( 'wm-thumbnail', 500, 500 );
-		add_image_size( 'wm-pager', 64, 64 );
-		add_image_size( 'wm-logo', 203, 49 );
-		add_image_size( 'wm-icon', 103, 103 );
-		add_image_size( 'wm-door-a', 125, 333 );
-		add_image_size( 'wm-door-b', 216, 454 );
-		add_image_size( 'wm-glass', 300, 300 );
-		add_image_size( 'wm-slider', 240, 342 );
-		add_image_size( 'wm-card', 640, 425 );
-		add_image_size( 'wm-card-full-size', 816, 550 );
+		$sizes = self::get_defined_image_sizes();
+
+		foreach ( $sizes as $key => $size ) {
+			add_image_size( $key, $size['width'], $size['height'] );
+		}
 	}
 
 	/**
@@ -113,20 +175,32 @@ class Admin extends Plugin {
 	 * @param array $sizes The array of available image sizes.
 	 */
 	public function add_selectable_image_sizes( $sizes ): array {
-		$widen_media_image_sizes = [
-			'wm-thumbnail'      => __( 'Widen Media: Thumbnail', 'widen-media' ),
-			'wm-pager'          => __( 'Widen Media: Pager', 'widen-media' ),
-			'wm-logo'           => __( 'Widen Media: Logo', 'widen-media' ),
-			'wm-icon'           => __( 'Widen Media: Icon', 'widen-media' ),
-			'wm-door-a'         => __( 'Widen Media: Door A', 'widen-media' ),
-			'wm-door-b'         => __( 'Widen Media: Door B', 'widen-media' ),
-			'wm-glass'          => __( 'Widen Media: Glass', 'widen-media' ),
-			'wm-slider'         => __( 'Widen Media: Slider', 'widen-media' ),
-			'wm-card'           => __( 'Widen Media: Card', 'widen-media' ),
-			'wm-card-full-size' => __( 'Widen Media: Full Size Card', 'widen-media' ),
-		];
+		$defined_image_sizes     = self::get_defined_image_sizes();
+		$widen_media_image_sizes = [];
+
+		foreach ( $defined_image_sizes as $key => $defined_image_size ) {
+			$widen_media_image_sizes[ $key ] = $defined_image_size['label'];
+		}
 
 		return array_merge( $sizes, $widen_media_image_sizes );
+	}
+
+	/**
+	 * Returns an array with all of the sizes data for a given templated URL.
+	 *
+	 * @param string $templated_url The templated URL from Widen.
+	 */
+	private static function get_attachment_sizes( $templated_url ): array {
+		$defined_sizes    = self::get_defined_image_sizes();
+		$attachment_sizes = [
+			'full' => Widen::get_size_meta( $templated_url ),
+		];
+
+		foreach ( $defined_sizes as $key => $size ) {
+			$attachment_sizes[ $key ] = Widen::get_size_meta( $templated_url, $size['width'], $size['height'] );
+		}
+
+		return $attachment_sizes;
 	}
 
 	/**
@@ -496,41 +570,23 @@ class Admin extends Plugin {
 			'width'  => $asset_data['width'],
 			'height' => $asset_data['height'],
 			'file'   => self::get_widen_url_path( $asset_data['url'] ),
-			'sizes'  => [
-				'full'              => Widen::get_size_meta( $asset_data['templated_url'] ),
-				'wm-thumbnail'      => Widen::get_size_meta( $asset_data['templated_url'], 500, 500 ),
-				'wm-pager'          => Widen::get_size_meta( $asset_data['templated_url'], 64, 64 ),
-				'wm-logo'           => Widen::get_size_meta( $asset_data['templated_url'], 203, 49 ),
-				'wm-icon'           => Widen::get_size_meta( $asset_data['templated_url'], 103, 103 ),
-				'wm-door-a'         => Widen::get_size_meta( $asset_data['templated_url'], 125, 333 ),
-				'wm-door-b'         => Widen::get_size_meta( $asset_data['templated_url'], 216, 454 ),
-				'wm-glass'          => Widen::get_size_meta( $asset_data['templated_url'], 300, 300 ),
-				'wm-slider'         => Widen::get_size_meta( $asset_data['templated_url'], 240, 342 ),
-				'wm-card'           => Widen::get_size_meta( $asset_data['templated_url'], 640, 425 ),
-				'wm-card-full-size' => Widen::get_size_meta( $asset_data['templated_url'], 816, 550 ),
-			],
+			'sizes'  => self::get_attachment_sizes( $asset_data['templated_url'] ),
 		];
 		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
 
 		/**
 		 * Update the attachment's file.
-		 *
-		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
 		 */
 		update_post_meta( $attachment_id, '_wp_attached_file', self::get_widen_url_path( $asset_data['url'] ) );
 
 		/**
 		 * Update the attachment's Alternative Text.
-		 *
-		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
 		 */
 		update_post_meta( $attachment_id, '_wp_attachment_image_alt', $asset_data['description'] );
 
 		/**
 		 * Store the asset's ID from Widen as post_meta.
 		 * This is also used throughout this plugin in checking if an image is from Widen.
-		 *
-		 * @link https://developer.wordpress.org/reference/functions/update_post_meta/
 		 */
 		update_post_meta( $attachment_id, 'widen_media_id', $asset_data['id'] );
 

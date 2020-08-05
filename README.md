@@ -39,6 +39,35 @@ Within the main search page under "Add New", users can toggle "collection" when 
 
 When searching for a collection, a _Save Collection_ button will be displayed. This button saves the current result page's collection to the metadata of a new post under the `wp_collection` post type. Note that a collection large than 100 assets will only save the 100 assets on the current results page.
 
+## Defining Custom Image Sizes
+
+This plugin ships with some default image sizes however a filter has been included if you wish to change those defined sizes from within another plugin or theme.
+
+Example function defining 2 image sizes:
+
+```php
+function filter_defined_image_sizes( $default_image_sizes ) {
+  $sizes = [
+    'banner-sm' => [
+      'label'  => __( 'Small Banner', 'textdomain' ),
+      'width'  => 820,
+      'height' => 312,
+    ],
+    'banner-lg' => [
+      'label'  => __( 'Large Banner', 'textdomain' ),
+      'width'  => 1500,
+      'height' => 500,
+    ],
+  ];
+
+  // Uncomment to append sizes to the plugin's already defined sizes.
+  // $sizes = array_merge( $sizes, $default_image_sizes );
+
+  return $sizes;
+}
+add_filter( 'wm_defined_image_sizes', 'filter_defined_image_sizes', 10, 1 );
+```
+
 ## Plugin API
 
 This plugin provides some function to allow other plugins to easly interact with Widen data imported into WordPress as well as the Widen API.

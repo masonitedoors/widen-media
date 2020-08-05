@@ -1,23 +1,35 @@
-# Copyright (C) 2019 Masonite
+# Copyright (C) 2020 Masonite
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Widen Media 2.1.0\n"
+"Project-Id-Version: Widen Media 2.6.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/widen-media\n"
-"POT-Creation-Date: 2019-07-26 20:55:53+00:00\n"
+"POT-Creation-Date: 2020-08-05 20:12:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: node-wp-i18n 1.2.3\n"
 
-#: lib/Admin/tiles/image.php:52
+#: lib/Admin/meta-boxes/collection-submit.php:17
+msgid "Name: "
+msgstr ""
+
+#: lib/Admin/meta-boxes/collection-submit.php:20
+msgid "ID: "
+msgstr ""
+
+#: lib/Admin/meta-boxes/collection-submit.php:25
+msgid "Sync Collection"
+msgstr ""
+
+#: lib/Admin/tiles/image.php:47
 msgid "View In Media Library"
 msgstr ""
 
-#: lib/Admin/tiles/image.php:67
+#: lib/Admin/tiles/image.php:62
 msgid "Add to Media Library"
 msgstr ""
 
@@ -35,120 +47,164 @@ msgstr ""
 msgid "Search Widen Collections"
 msgstr ""
 
-#: lib/Admin/widen-media.php:36 lib/Admin.php:680 lib/Admin.php:706
+#: lib/Admin/widen-media.php:36 lib/Admin.php:770 lib/Admin.php:796
 msgid "Collection"
 msgstr ""
 
+#: lib/Admin.php:40
+msgid "Widen Media: Thumbnail"
+msgstr ""
+
+#: lib/Admin.php:45
+msgid "Widen Media: Pager"
+msgstr ""
+
+#: lib/Admin.php:50
+msgid "Widen Media: Logo"
+msgstr ""
+
+#: lib/Admin.php:55
+msgid "Widen Media: Icon"
+msgstr ""
+
+#: lib/Admin.php:60
+msgid "Widen Media: Door A"
+msgstr ""
+
+#: lib/Admin.php:65
+msgid "Widen Media: Door B"
+msgstr ""
+
+#: lib/Admin.php:70
+msgid "Widen Media: Glass"
+msgstr ""
+
 #: lib/Admin.php:75
+msgid "Widen Media: Slider"
+msgstr ""
+
+#: lib/Admin.php:80
+msgid "Widen Media: Card"
+msgstr ""
+
+#: lib/Admin.php:85
+msgid "Widen Media: Card - Full Size"
+msgstr ""
+
+#: lib/Admin.php:142
 msgid "The options below are readonly and can only be set via wp-config.php."
 msgstr ""
 
-#: lib/Admin.php:87
+#: lib/Admin.php:154
 msgid "WIDEN_MEDIA_ACCESS_TOKEN must be defined within wp-config.php."
 msgstr ""
 
-#: lib/Admin.php:160
+#: lib/Admin.php:316
 msgid "Widen Media Library"
 msgstr ""
 
-#: lib/Admin.php:161 lib/Admin.php:686
+#: lib/Admin.php:317 lib/Admin.php:776
 msgid "Add New"
 msgstr ""
 
-#: lib/Admin.php:198
+#: lib/Admin.php:354
 msgid "Settings"
 msgstr ""
 
-#: lib/Admin.php:666
+#: lib/Admin.php:756
 msgid "Direct file uploads are not allowed. Please add media via Widen."
 msgstr ""
 
-#: lib/Admin.php:679 lib/Admin.php:684
+#: lib/Admin.php:769 lib/Admin.php:774
 msgid "Collections"
 msgstr ""
 
-#: lib/Admin.php:681
+#: lib/Admin.php:771
 msgid "Collection Archives"
 msgstr ""
 
-#: lib/Admin.php:682
+#: lib/Admin.php:772
 msgid "Collection Attributes"
 msgstr ""
 
-#: lib/Admin.php:683
+#: lib/Admin.php:773
 msgid "Parent Collection:"
 msgstr ""
 
-#: lib/Admin.php:685
+#: lib/Admin.php:775
 msgid "Add New Collection"
 msgstr ""
 
-#: lib/Admin.php:687
+#: lib/Admin.php:777
 msgid "New Collection"
 msgstr ""
 
-#: lib/Admin.php:689
+#: lib/Admin.php:779
 msgid "Update Collection"
 msgstr ""
 
-#: lib/Admin.php:690
+#: lib/Admin.php:780 lib/Paginator.php:324
 msgid "View Collection"
 msgstr ""
 
-#: lib/Admin.php:691
+#: lib/Admin.php:781
 msgid "View Collections"
 msgstr ""
 
-#: lib/Admin.php:692
+#: lib/Admin.php:782
 msgid "Search Collections"
 msgstr ""
 
-#: lib/Admin.php:693
+#: lib/Admin.php:783
 msgid "Not found"
 msgstr ""
 
-#: lib/Admin.php:694
+#: lib/Admin.php:784
 msgid "Not found in Trash"
 msgstr ""
 
-#: lib/Admin.php:695
+#: lib/Admin.php:785
 msgid "Featured Image"
 msgstr ""
 
-#: lib/Admin.php:696
+#: lib/Admin.php:786
 msgid "Set featured image"
 msgstr ""
 
-#: lib/Admin.php:697
+#: lib/Admin.php:787
 msgid "Remove featured image"
 msgstr ""
 
-#: lib/Admin.php:698
+#: lib/Admin.php:788
 msgid "Use as featured image"
 msgstr ""
 
-#: lib/Admin.php:699
+#: lib/Admin.php:789
 msgid "Insert into collection"
 msgstr ""
 
-#: lib/Admin.php:700
+#: lib/Admin.php:790
 msgid "Uploaded to this collection"
 msgstr ""
 
-#: lib/Admin.php:701
+#: lib/Admin.php:791
 msgid "Collection list"
 msgstr ""
 
-#: lib/Admin.php:702
+#: lib/Admin.php:792
 msgid "Collection list navigation"
 msgstr ""
 
-#: lib/Admin.php:703
+#: lib/Admin.php:793
 msgid "Filter collection list"
 msgstr ""
 
-#: lib/Admin.php:707
+#: lib/Admin.php:797
 msgid "Widen Media Collections"
+msgstr ""
+
+#: lib/Admin.php:854
+msgid "Publish"
 msgstr ""
 
 #: lib/Paginator.php:286
@@ -166,35 +222,39 @@ msgstr ""
 msgid "Search results navigation"
 msgstr ""
 
-#: lib/Paginator.php:313
+#: lib/Paginator.php:323
+msgid "This collection already exists:"
+msgstr ""
+
+#: lib/Paginator.php:331
 msgid "Save Collection"
 msgstr ""
 
-#: lib/Paginator.php:327
+#: lib/Paginator.php:347
 msgid "First page"
 msgstr ""
 
-#: lib/Paginator.php:340
+#: lib/Paginator.php:360
 msgid "Previous page"
 msgstr ""
 
-#: lib/Paginator.php:347
+#: lib/Paginator.php:367
 msgid "Current page"
 msgstr ""
 
-#: lib/Paginator.php:349
+#: lib/Paginator.php:369
 msgid "of"
 msgstr ""
 
-#: lib/Paginator.php:361
+#: lib/Paginator.php:381
 msgid "Next page"
 msgstr ""
 
-#: lib/Paginator.php:374
+#: lib/Paginator.php:394
 msgid "Last page"
 msgstr ""
 
-#: lib/Widen.php:81 lib/Widen.php:120 lib/Widen.php:160
+#: lib/Widen.php:88 lib/Widen.php:127 lib/Widen.php:167
 msgid "An unknown error occurred"
 msgstr ""
 
@@ -214,12 +274,12 @@ msgstr ""
 msgid "https://www.masonite.com/"
 msgstr ""
 
-#: lib/Admin.php:677
+#: lib/Admin.php:767
 msgctxt "Post Type General Name"
 msgid "Collections"
 msgstr ""
 
-#: lib/Admin.php:678
+#: lib/Admin.php:768
 msgctxt "Post Type Singular Name"
 msgid "Collection"
 msgstr ""

@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.0] - 2020-08-05
+
+### Added
+
+- New default image sizes.
+- New filter, `wm_defined_image_sizes`, that allows users to define custom image sizes from within another plugin or theme.
+- Disabled WordPress responsive images (srcset).
+
+### Fixed
+
+- Prevent GET/POST from throwing error when dealing with custom post types.
+
 ## [2.5.2] - 2020-02-27
 
 ### Fixed
