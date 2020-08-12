@@ -607,10 +607,17 @@ class Admin extends Plugin {
 	public static function get_widen_url_path( $url ) {
 		$url_arr  = wp_parse_url( $url );
 		$url_path = $url_arr['path'];
+		$path     = '';
 
-		$path = ltrim( $url_path, '/wp-content/uploads/' );
+		// Remove the WordPress uploads base path from the URL.
+		if ( is_multisite() ) {
+			$blog_id = get_current_blog_id();
+			$path    = preg_replace( "/^\/wp-content\/uploads\/sites\/$blog_id\//", '', $url_path );
+		} else {
+			$path = preg_replace( '/^\/wp-content\/uploads\//', '', $url_path );
+		}
 
-		return $path;
+		return ltrim( $path, '/' );
 	}
 
 	/**
@@ -625,7 +632,7 @@ class Admin extends Plugin {
 		if ( ! empty( $widen_media_id ) ) {
 			$base_url             = Widen::$base_url;
 			$url_path             = self::get_widen_url_path( $url );
-			$widen_attachment_url = trailingslashit( $base_url ) . $url_path;
+			$widen_attachment_url = trailingslashit( $base_url ) . ltrim( $url_path, '/' );
 
 			return $widen_attachment_url;
 		}
