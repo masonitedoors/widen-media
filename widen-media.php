@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Widen Media
  * Description:       Search and add Widen digital assets to your WordPress media library.
- * Version:           2.6.1
+ * Version:           2.6.2
  * Author:            Masonite
  * Author URI:        https://www.masonite.com/
  * License:           GPL-2.0+
