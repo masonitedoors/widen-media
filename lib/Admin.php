@@ -641,6 +641,78 @@ class Admin extends Plugin {
 	}
 
 	/**
+	 * Filters the widen image src result.
+	 * This is needed to fix the doubling of the URLs.
+	 *
+	 * @param array|false  $image         Either array with src, width & height, icon src, or false.
+	 * @param int          $attachment_id Image attachment ID.
+	 * @param string|array $size          Size of image. Image size or array of width and height values
+	 *                                    (in that order). Default 'thumbnail'.
+	 * @param bool         $icon          Whether the image should be treated as an icon. Default false.
+	 */
+	public function fix_widen_attachment_urls( $image, $attachment_id, $size, $icon ) {
+		$widen_media_id = get_post_meta( $attachment_id, 'widen_media_id', true );
+
+		// Check if this is an image from Widen.
+		if ( ! empty( $widen_media_id ) ) {
+			$image[0] = wp_get_attachment_url( $attachment_id );
+		}
+
+		return $image;
+	}
+
+	/**
+	 * Filters the HTML content for the image tag.
+	 *
+	 * @since 2.6.0
+	 *
+	 * @param string       $html  HTML content for the image.
+	 * @param int          $id    Attachment ID.
+	 * @param string       $alt   Alternate text.
+	 * @param string       $title Attachment title.
+	 * @param string       $align Part of the class name for aligning the image.
+	 * @param string|array $size  Size of image. Image size or array of width and height values (in that order).
+	 *                            Default 'medium'.
+	 *
+	 * @link https://developer.wordpress.org/reference/hooks/get_image_tag/
+	 */
+	public function filter_widen_image_tag( $html, $id, $alt, $title, $align, $size ): string {
+		$widen_media_id = get_post_meta( $id, 'widen_media_id', true );
+
+		// Do nothing special if this is not a Widen image.
+		if ( empty( $widen_media_id ) ) {
+			return $html;
+		}
+
+		list( $img_src, $width, $height ) = image_downsize( $id, $size );
+		$hwstring                         = image_hwstring( $width, $height );
+
+		$title = $title ? 'title="' . esc_attr( $title ) . '" ' : '';
+
+		$class = 'align' . esc_attr( $align ) . ' size-' . esc_attr( $size ) . ' wp-image-' . $id;
+
+		/**
+		 * Filters the value of the attachment's image tag class attribute.
+		 *
+		 * @since 2.6.0
+		 *
+		 * @param string       $class CSS class name or space-separated list of classes.
+		 * @param int          $id    Attachment ID.
+		 * @param string       $align Part of the class name for aligning the image.
+		 * @param string|array $size  Size of image. Image size or array of width and height values (in that order).
+		 *                            Default 'medium'.
+		 */
+		$class = apply_filters( 'get_image_tag_class', $class, $id, $align, $size );
+
+		// Get correct image src.
+		$img_src = wp_get_attachment_url( $id );
+
+		$html = '<img src="' . esc_attr( $img_src ) . '" alt="' . esc_attr( $alt ) . '" ' . $title . $hwstring . 'class="' . $class . '" />';
+
+		return $html;
+	}
+
+	/**
 	 * Save a collection to the wp_collection post type.
 	 * This is called via ajax.
 	 *
