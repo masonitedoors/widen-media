@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.2] - 2020-08-13
+
+## Fixed
+
+- Fixes a bug where images that were added to the WP Media Library prior to 2.6.0 were being rendered incorrectly.
+
 ## [2.6.1] - 2020-08-12
 
 ## Fixed
