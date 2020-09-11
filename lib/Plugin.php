@@ -113,7 +113,7 @@ class Plugin {
 		$this->loader->add_filter( 'post_row_actions', $plugin_admin, 'remove_collections_quick_edit', 10, 2 );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'remove_collections_submit_box' );
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'register_collection_meta_boxes' );
-		$this->loader->add_action( 'save_post', $plugin_admin, 'save_post_collection_cb' );
+		$this->loader->add_action( 'save_post_wm_collection', $plugin_admin, 'save_post_collection_cb' );
 
 		// Register custom image sizes with WordPress.
 		$this->loader->add_action( 'after_setup_theme', $plugin_admin, 'register_image_sizes' );
