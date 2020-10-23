@@ -952,20 +952,6 @@ class Admin extends Plugin {
 	 * @param int $post_id The post ID for the collection being saved.
 	 */
 	public function save_post_collection_cb( $post_id ): void {
-		// Make sure the function exists, in case a custom post
-		// type is being updated from another screen or using
-		// WordPress BackboneJS API.
-		if ( ! function_exists( 'get_current_screen' ) ) {
-			return;
-		}
-
-		$screen = get_current_screen();
-
-		// Only hook into save_post for our wm_collection post type.
-		if ( is_object( $screen ) && 'wm_collection' !== $screen->post_type ) {
-			return;
-		}
-
 		$collection_wp_obj = get_post( $post_id );
 		$query             = $collection_wp_obj->post_title;
 		$response          = $this->widen->search_assets( $query, 0, 100, true );
