@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.3] - 2020-10-23
+
+## Fixed
+
+- Fixes a bug where some users were unable to add a new menu page in wp-admin.
+
 ## [2.6.2] - 2020-08-13
 
 ## Fixed
