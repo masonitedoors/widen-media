@@ -612,7 +612,14 @@ class Admin extends Plugin {
 		// Remove the WordPress uploads base path from the URL.
 		if ( is_multisite() ) {
 			$blog_id = get_current_blog_id();
-			$path    = preg_replace( "/^\/wp-content\/uploads\/sites\/$blog_id\//", '', $url_path );
+
+			if ( 1 === $blog_id ) {
+				// Handle primary blog in multisite.
+				$path = preg_replace( "/^\/wp-content\/uploads\//", '', $url_path );
+			} else {
+				// Handle all other multisite blogs.
+				$path = preg_replace( "/^\/wp-content\/uploads\/sites\/$blog_id\//", '', $url_path );
+			}
 		} else {
 			$path = preg_replace( '/^\/wp-content\/uploads\//', '', $url_path );
 		}
