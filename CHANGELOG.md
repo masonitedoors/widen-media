@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.4] - 2020-10-26
+
 ## Fixed
 
 - Fixes multisite bug where image paths were breaking when uploaded to the primary blog (1).
