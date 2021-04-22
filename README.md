@@ -27,18 +27,6 @@ This plugin uses [V2 of the Widen API](https://widenv2.docs.apiary.io/). You wil
 define( 'WIDEN_MEDIA_ACCESS_TOKEN', 'my-widen-api-token' );
 ```
 
-### Widen
-
-This plugin uses the `expand` property when requesting data from the V2 of the Widen API. In order for this plugin to work, you must create "Share Links" within the administration screen of your organization's Widen account that match what this plugin is expecting. This can usually be found by visiting `https://your-organiztion-name.widencollective.com/admin/imageembed`. Keep in mind that for images Widen will always be able to create a PNG, JPEG, & GIF. If another file format is uploaded such as TIFF, this plugin will take the PNG.
-
-| Share Link Name | Description                                                                                                       |
-| --------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Original PNG    | The original image as a PNG.                                                                                      |
-| Original JPEG   | The original image as a JPEG.                                                                                     |
-| Thumbnail PNG   | The original image as a 500x500 PNG. Used in the results page UI.                                                 |
-| Skeleton PNG    | The original image as a 100x100 PNG with reduced quality. Used when loading larger images in the results page UI. |
-| Pager PNG       | The original image as a 64x64 PNG. This should be a full quality image that can be used within a carousel pager.  |
-
 ## Widen Metadata
 
 Some additional Widen metadata is captured and saved to the database on the `Add to Media Library` action. This plugin does not currently support syncing of meta data between Widen & WordPress.
@@ -50,6 +38,35 @@ This plugin saves Widen collections under the post type `wm_collection` in order
 Within the main search page under "Add New", users can toggle "collection" when searching Widen. This will return only results that match that collection name.
 
 When searching for a collection, a _Save Collection_ button will be displayed. This button saves the current result page's collection to the metadata of a new post under the `wp_collection` post type. Note that a collection large than 100 assets will only save the 100 assets on the current results page.
+
+## Defining Custom Image Sizes
+
+This plugin ships with some default image sizes however a filter has been included if you wish to change those defined sizes from within another plugin or theme.
+
+Example function defining 2 image sizes:
+
+```php
+function filter_defined_image_sizes( $default_image_sizes ) {
+  $sizes = [
+    'banner-sm' => [
+      'label'  => __( 'Small Banner', 'textdomain' ),
+      'width'  => 820,
+      'height' => 312,
+    ],
+    'banner-lg' => [
+      'label'  => __( 'Large Banner', 'textdomain' ),
+      'width'  => 1500,
+      'height' => 500,
+    ],
+  ];
+
+  // Uncomment to append sizes to the plugin's already defined sizes.
+  // $sizes = array_merge( $sizes, $default_image_sizes );
+
+  return $sizes;
+}
+add_filter( 'wm_defined_image_sizes', 'filter_defined_image_sizes', 10, 1 );
+```
 
 ## Plugin API
 

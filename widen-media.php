@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Widen Media
  * Description:       Search and add Widen digital assets to your WordPress media library.
- * Version:           2.5.2
+ * Version:           2.6.4
  * Author:            Masonite
  * Author URI:        https://www.masonite.com/
  * License:           GPL-2.0+
@@ -20,18 +20,6 @@ defined( 'WPINC' ) || die();
  * Autoload the plugin's classes.
  */
 require_once __DIR__ . '/inc/autoload.php';
-
-/**
- * The code that runs during plugin activation.
- * This action is documented in lib/Activator.php
- */
-register_activation_hook( __FILE__, __NAMESPACE__ . '\Activator::activate' );
-
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in lib/Deactivator.php
- */
-register_deactivation_hook( __FILE__, __NAMESPACE__ . '\Deactivator::deactivate' );
 
 /**
  * Begins execution of the plugin.

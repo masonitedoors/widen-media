@@ -10,76 +10,91 @@ namespace Masonite\WP\Widen_Media;
 class Util {
 
 	/**
-	 * Wrapper for print_r for quick debugging.
-	 * Debugging should be done with Xdebug.
-	 *
-	 * @param string $label The button label.
-	 * @param array  $var   The var to display.
-	 */
-	public static function print( $label, $var ) : void {
-		// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_print_r
-		?>
-		<br class="clear" />
-		<details>
-			<summary class="button button-secondary button-large" style="user-select: none; opacity: 0.5;"><?php echo esc_html( $label ); ?></summary>
-			<pre style="background-color: #333; color: #fff; padding: 10px; margin-right: 20px; border-radius: 3px;"><?php print_r( $var ); ?></pre>
-		</details>
-		<?php
-		// phpcs:enable WordPress.PHP.DevelopmentFunctions.error_log_print_r
-	}
-
-	/**
-	 * Check if string for substring.
-	 * Improves readability.
-	 *
-	 * @param string $needle   The substring.
-	 * @param string $haystack The string to search.
-	 */
-	public static function contains( $needle, $haystack ) : bool {
-		return strpos( $haystack, $needle ) !== false;
-	}
-
-	/**
 	 * Remove the query string from a url.
 	 *
 	 * @param string $url The url to clean.
 	 */
-	public static function remove_query_string( $url ) : string {
+	public static function remove_query_string( $url ): string {
 		return preg_replace( '/\?.*/', '', $url );
 	}
 
 	/**
-	 * Sanitize a string removing any leading or trailing slashes..
+	 * Sanitize our image URLs:
 	 *
-	 * @param string $str The string to sanitize.
+	 * Update .tif images to be .png.
+	 * Remove query strings.
+	 *
+	 * @param string $image_url The image URL to sanitize.
 	 */
-	public static function unslash_leading_trailing( $str ) : string {
-		$str = untrailingslashit( $str );
-		$str = ltrim( $str, '/' );
+	public static function sanitize_image_url( $image_url ): string {
+		// Update .tif images to be .png.
+		if ( strpos( $image_url, '.tif' ) !== false ) {
+			$image_url = str_replace( '.tif', '.png', $image_url );
+		}
 
-		return $str;
+		// Remove query string.
+		$image_url = self::remove_query_string( $image_url );
+
+		return $image_url;
 	}
 
 	/**
-	 * Encode data.
+	 * Wrapper for error_log that handles both arrays and strings.
 	 *
-	 * @param array $data The data to be encoded.
+	 * @param string|array $log What we want logged.
+	 * @return void
 	 */
-	public static function encode_data( $data ) : string {
-		$encoded_data = base64_encode( wp_json_encode( $data ) ) ?? ''; // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
-
-		return $encoded_data;
+	public static function write_log( $log ): void {
+		// phpcs:disable
+		if ( is_array( $log ) || is_object( $log ) ) {
+			error_log( print_r( $log, true ) );
+		} elseif ( null === $log ) {
+			error_log( 'null' );
+		} else {
+			error_log( (string) $log );
+		}
+		// phpcs:enable
 	}
 
 	/**
-	 * Decode data.
+	 * Retrieves the attachment ID from the file URL.
 	 *
-	 * @param string $data The data to be decoded.
+	 * @param string $image_url The image URL.
+	 *
+	 * @link https://pippinsplugins.com/retrieve-attachment-id-from-image-url/
 	 */
-	public static function decode_data( $data ) : ?object {
-		$decoded_data = json_decode( base64_decode( $data ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+	public static function get_attachment_id( $image_url ): ?string {
+		global $wpdb;
 
-		return $decoded_data;
+		$attachment = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prepare(
+				"SELECT ID FROM $wpdb->posts WHERE guid='%s';", // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
+				esc_url( $image_url )
+			)
+		);
+
+		if ( isset( $attachment[0] ) ) {
+			$attachment_id = $attachment[0];
+
+			return $attachment_id;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Check if attachment exists within the database.
+	 *
+	 * @param string $image_url The image URL.
+	 */
+	public static function attachment_exists( $image_url ): bool {
+		$attachment_id = self::get_attachment_id( $image_url );
+
+		if ( $attachment_id ) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

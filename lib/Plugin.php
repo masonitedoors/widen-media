@@ -69,7 +69,7 @@ class Plugin {
 	 * Uses the I18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 */
-	private function set_locale() : void {
+	private function set_locale(): void {
 		$plugin_i18n = new I18n();
 		$plugin_i18n->set_domain( $this->get_plugin_name() );
 		$plugin_i18n->load_plugin_textdomain();
@@ -78,14 +78,14 @@ class Plugin {
 	/**
 	 * Define the path to the plugin's root directory.
 	 */
-	private function define_plugin_dir_path() : void {
+	private function define_plugin_dir_path(): void {
 		$this->plugin_dir_path = plugin_dir_path( dirname( __FILE__ ) );
 	}
 
 	/**
 	 * Define the url to the plugin's root directory.
 	 */
-	private function define_plugin_dir_url() : void {
+	private function define_plugin_dir_url(): void {
 		$this->plugin_dir_url = plugin_dir_url( dirname( __FILE__ ) );
 	}
 
@@ -93,7 +93,7 @@ class Plugin {
 	 * Register all of the hooks related to the dashboard functionality
 	 * of the plugin.
 	 */
-	private function define_admin_hooks() : void {
+	private function define_admin_hooks(): void {
 		$plugin_admin    = new Admin();
 		$plugin_basename = plugin_basename( dirname( __FILE__, 2 ) ) . '/widen-media.php';
 
@@ -113,9 +113,20 @@ class Plugin {
 		$this->loader->add_filter( 'post_row_actions', $plugin_admin, 'remove_collections_quick_edit', 10, 2 );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'remove_collections_submit_box' );
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'register_collection_meta_boxes' );
-		$this->loader->add_action( 'save_post', $plugin_admin, 'save_post_collection_cb' );
+		$this->loader->add_action( 'save_post_wm_collection', $plugin_admin, 'save_post_collection_cb' );
+
+		// Register custom image sizes with WordPress.
+		$this->loader->add_action( 'after_setup_theme', $plugin_admin, 'register_image_sizes' );
+		$this->loader->add_filter( 'image_size_names_choose', $plugin_admin, 'add_selectable_image_sizes' );
+
+		// Handle WordPress core's `image_downsize` for the images added through this plugin.
+		$this->loader->add_filter( 'image_downsize', $plugin_admin, 'handle_image_downsize', 10, 3 );
+
+		// Disable WP responsive images (srcset).
+		$this->loader->add_filter( 'max_srcset_image_width', $plugin_admin, 'disable_srcset' );
 
 		// Fix URL issues stemming from there being no actual file gets uploaded to WordPress.
+		$this->loader->add_filter( 'wp_get_attachment_url', $plugin_admin, 'fix_widen_attachment_url', 999, 2 );
 		$this->loader->add_filter( 'wp_get_attachment_image_src', $plugin_admin, 'fix_widen_attachment_urls', 10, 4 );
 		$this->loader->add_filter( 'get_image_tag', $plugin_admin, 'filter_widen_image_tag', 10, 6 );
 
@@ -138,7 +149,7 @@ class Plugin {
 	 * Load the dependencies, define the locale, and set the hooks for the Dashboard and
 	 * the public-facing side of the site.
 	 */
-	public function run() : void {
+	public function run(): void {
 		$this->set_locale();
 		$this->define_plugin_dir_path();
 		$this->define_plugin_dir_url();
@@ -149,21 +160,21 @@ class Plugin {
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 */
-	public function get_loader() : Widen_Media_Loader {
+	public function get_loader(): Widen_Media_Loader {
 		return $this->loader;
 	}
 
 	/**
 	 * Retrieve the path to the plugin's root directory.
 	 */
-	public function get_plugin_dir_path() : string {
+	public function get_plugin_dir_path(): string {
 		return $this->plugin_dir_path;
 	}
 
 	/**
 	 * Retrieve the url to the plugin's root directory.
 	 */
-	public function get_plugin_dir_url() : string {
+	public function get_plugin_dir_url(): string {
 		return $this->plugin_dir_url;
 	}
 
@@ -171,7 +182,7 @@ class Plugin {
 	 * The name of the plugin used to uniquely identify it within the context of
 	 * WordPress and to define internationalization functionality.
 	 */
-	public static function get_plugin_name() : string {
+	public static function get_plugin_name(): string {
 		$plugin_basename = plugin_basename( dirname( __DIR__ ) );
 
 		return $plugin_basename;
@@ -180,7 +191,7 @@ class Plugin {
 	/**
 	 * Get the plugin's current version.
 	 */
-	public static function get_plugin_version() : string {
+	public static function get_plugin_version(): string {
 		$plugin_version = '';
 		$path           = plugin_dir_path( dirname( __FILE__ ) ) . 'widen-media.php';
 		$plugin_data    = get_file_data( $path, [ 'Version' => 'Version' ] );

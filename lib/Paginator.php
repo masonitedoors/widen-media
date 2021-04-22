@@ -134,42 +134,42 @@ class Paginator extends Admin {
 	/**
 	 * Check if we are on the first page.
 	 */
-	public function is_first_page() : bool {
+	public function is_first_page(): bool {
 		return ( 1 === $this->current_page );
 	}
 
 	/**
 	 * Check if we are on the second page.
 	 */
-	public function is_second_page() : bool {
+	public function is_second_page(): bool {
 		return ( 2 === $this->current_page );
 	}
 
 	/**
 	 * Check if we are on the second last page.
 	 */
-	public function is_second_last_page() : bool {
+	public function is_second_last_page(): bool {
 		return ( ( $this->total_page_count - 1 ) === $this->current_page );
 	}
 
 	/**
 	 * Check if we are on the last available page.
 	 */
-	public function is_last_page() : bool {
+	public function is_last_page(): bool {
 		return ( $this->total_page_count === $this->current_page );
 	}
 
 	/**
 	 * If the query has results.
 	 */
-	public function has_results() : bool {
+	public function has_results(): bool {
 		return ( 0 !== $this->total_items_count );
 	}
 
 	/**
 	 * Get the first page url.
 	 */
-	public function get_first_page_url() : string {
+	public function get_first_page_url(): string {
 		if ( $this->is_collection ) {
 			$first_page_url = add_query_arg(
 				[
@@ -195,7 +195,7 @@ class Paginator extends Admin {
 	/**
 	 * Get the previous page url.
 	 */
-	public function get_prev_page_url() : string {
+	public function get_prev_page_url(): string {
 		if ( $this->is_collection ) {
 			$prev_page_url = add_query_arg(
 				[
@@ -221,7 +221,7 @@ class Paginator extends Admin {
 	/**
 	 * Get the next page url.
 	 */
-	public function get_next_page_url() : string {
+	public function get_next_page_url(): string {
 		if ( $this->is_collection ) {
 			$next_page_url = add_query_arg(
 				[
@@ -247,7 +247,7 @@ class Paginator extends Admin {
 	/**
 	 * Get the last page url.
 	 */
-	public function get_last_page_url() : string {
+	public function get_last_page_url(): string {
 		if ( $this->is_collection ) {
 			$last_page_url = add_query_arg(
 				[
@@ -273,7 +273,7 @@ class Paginator extends Admin {
 	/**
 	 * Display the pagination.
 	 */
-	public function display() : void {
+	public function display(): void {
 
 		// Pagination links.
 		$first_page_url = $this->get_first_page_url();

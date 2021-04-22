@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.4] - 2020-10-26
+
+## Fixed
+
+- Fixes multisite bug where image paths were breaking when uploaded to the primary blog (1).
+
+## [2.6.3] - 2020-10-23
+
+## Fixed
+
+- Fixes a bug where some users were unable to add a new menu page in wp-admin.
+
+## [2.6.2] - 2020-08-13
+
+## Fixed
+
+- Fixes a bug where images that were added to the WP Media Library prior to 2.6.0 were being rendered incorrectly.
+
+## [2.6.1] - 2020-08-12
+
+## Fixed
+
+- Fixes a bug where certain images are being rendered incorrectly within a multisite setup.
+
+## [2.6.0] - 2020-08-05
+
+### Added
+
+- New default image sizes.
+- New filter, `wm_defined_image_sizes`, that allows users to define custom image sizes from within another plugin or theme.
+- Disabled WordPress responsive images (srcset).
+
+### Fixed
+
+- Prevent GET/POST from throwing error when dealing with custom post types.
+
 ## [2.5.2] - 2020-02-27
 
 ### Fixed

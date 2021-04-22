@@ -31,6 +31,7 @@
     <exclude name="NeutronStandard.StrictTypes.RequireStrictTypes.StrictTypes" />
     <exclude name="Squiz.Commenting.FileComment.Missing" />
     <exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
+    <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
   </rule>
 
   <rule ref="WordPress-Docs" />
