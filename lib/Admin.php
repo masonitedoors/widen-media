@@ -711,9 +711,6 @@ class Admin extends Plugin {
 		 */
 		$class = apply_filters( 'get_image_tag_class', $class, $id, $align, $size );
 
-		// Get correct image src.
-		$img_src = wp_get_attachment_url( $id );
-
 		$html = '<img src="' . esc_attr( $img_src ) . '" alt="' . esc_attr( $alt ) . '" ' . $title . $hwstring . 'class="' . $class . '" />';
 
 		return $html;
