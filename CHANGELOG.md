@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.5] - 2021-04-22
+
+## Fixed
+
+- Fixes incorrect URL being added when specific image size is initially added to the WordPress WYSIWYG editor.
+
 ## [2.6.4] - 2020-10-26
 
 ## Fixed
