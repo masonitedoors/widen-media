@@ -23,7 +23,7 @@ $breakpoint-xs: 500px;
 .toolbar {
   min-height: 28px;
   padding: 1em 0;
-  display: flex;
+  display: block; // test
   justify-content: flex-end;
 
   .tablenav-pages {
