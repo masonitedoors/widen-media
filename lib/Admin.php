@@ -512,6 +512,7 @@ class Admin extends Plugin {
 			'width'         => '',
 			'height'        => '',
 			'templated_url' => '',
+			'thumbnail_url' => '',
 			'fields'        => [],
 		];
 
@@ -533,6 +534,9 @@ class Admin extends Plugin {
 		if ( isset( $_POST['templatedUrl'] ) ) {
 			$asset_data['templated_url'] = sanitize_text_field( wp_unslash( $_POST['templatedUrl'] ) );
 		}
+		if ( isset( $_POST['thumbnailUrl'] ) ) {
+			$asset_data['thumbnail_url'] = sanitize_text_field( wp_unslash( $_POST['thumbnailUrl'] ) );
+		}
 		if ( isset( $_POST['fields'] ) ) {
 			$asset_data['fields'] = sanitize_text_field( wp_unslash( $_POST['fields'] ) );
 		}
@@ -544,6 +548,14 @@ class Admin extends Plugin {
 			$asset_data['width']     = $image_size[0];
 			$asset_data['height']    = $image_size[1];
 			$asset_data['mime_type'] = $image_size['mime'];
+		}
+
+		if ( 'pdf' === $asset_data['type'] ) {
+			// Original image sizes.
+			$image_size              = @getimagesize( $asset_data['thumbnail_url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			$asset_data['width']     = $image_size[0];
+			$asset_data['height']    = $image_size[1];
+			$asset_data['mime_type'] = 'application/pdf';
 		}
 
 		/**
@@ -566,13 +578,15 @@ class Admin extends Plugin {
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/wp_update_attachment_metadata/
 		 */
-		$attachment_metadata = [
-			'width'  => $asset_data['width'],
-			'height' => $asset_data['height'],
-			'file'   => self::get_widen_url_path( $asset_data['url'] ),
-			'sizes'  => self::get_attachment_sizes( $asset_data['templated_url'] ),
-		];
-		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+		if ( 'image' === $asset_data['type'] ) {
+			$attachment_metadata = [
+				'width'  => $asset_data['width'],
+				'height' => $asset_data['height'],
+				'file'   => self::get_widen_url_path( $asset_data['url'] ),
+				'sizes'  => self::get_attachment_sizes( $asset_data['templated_url'] ),
+			];
+			wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+		}
 
 		/**
 		 * Update the attachment's file.
@@ -615,10 +629,10 @@ class Admin extends Plugin {
 
 			if ( 1 === $blog_id ) {
 				// Handle primary blog in multisite.
-				$path = preg_replace( "/^\/wp-content\/uploads\//", '', $url_path );
+				$path = preg_replace( '/^\/wp-content\/uploads\//', '', $url_path );
 			} else {
 				// Handle all other multisite blogs.
-				$path = preg_replace( "/^\/wp-content\/uploads\/sites\/$blog_id\//", '', $url_path );
+				$path = preg_replace( '/^\/wp-content\/uploads\/sites\/$blog_id\//', '', $url_path );
 			}
 		} else {
 			$path = preg_replace( '/^\/wp-content\/uploads\//', '', $url_path );

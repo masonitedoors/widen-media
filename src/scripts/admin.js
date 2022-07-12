@@ -29,6 +29,7 @@ import '../styles/admin.scss';
     const description = $(this).attr('data-description')
     const url = $(this).attr('data-url')
     const templatedUrl = $(this).attr('data-templated-url')
+    const thumbnailUrl = $(this).attr('data-thumbnail-url')
     const fields = $(this).attr('data-fields')
 
     // Create our data based on the asset type.
@@ -48,13 +49,16 @@ import '../styles/admin.scss';
         break
       case 'pdf':
         data = {
-          action: 'widen_media_add_pdf_to_library',
+          action: 'widen_media_add_image_to_library',
           nonce: widen_media.ajax_nonce,
           type,
           id,
           filename,
           description,
           url,
+          templatedUrl,
+          thumbnailUrl,
+          fields,
         }
         break
       case 'audio':
@@ -82,6 +86,7 @@ import '../styles/admin.scss';
       data,
     }).done(response => {
       window.location.reload()
+      // console.log(response,data)
     })
   })
 
