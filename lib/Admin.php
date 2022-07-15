@@ -512,7 +512,6 @@ class Admin extends Plugin {
 			'width'         => '',
 			'height'        => '',
 			'templated_url' => '',
-			'thumbnail_url' => '',
 			'fields'        => [],
 		];
 
@@ -533,9 +532,6 @@ class Admin extends Plugin {
 		}
 		if ( isset( $_POST['templatedUrl'] ) ) {
 			$asset_data['templated_url'] = sanitize_text_field( wp_unslash( $_POST['templatedUrl'] ) );
-		}
-		if ( isset( $_POST['thumbnailUrl'] ) ) {
-			$asset_data['thumbnail_url'] = sanitize_text_field( wp_unslash( $_POST['thumbnailUrl'] ) );
 		}
 		if ( isset( $_POST['fields'] ) ) {
 			$asset_data['fields'] = sanitize_text_field( wp_unslash( $_POST['fields'] ) );
