@@ -551,10 +551,6 @@ class Admin extends Plugin {
 		}
 
 		if ( 'pdf' === $asset_data['type'] ) {
-			// Original image sizes.
-			$image_size              = @getimagesize( $asset_data['thumbnail_url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			$asset_data['width']     = $image_size[0];
-			$asset_data['height']    = $image_size[1];
 			$asset_data['mime_type'] = 'application/pdf';
 		}
 
