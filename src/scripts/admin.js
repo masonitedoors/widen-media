@@ -86,7 +86,6 @@ import '../styles/admin.scss';
       data,
     }).done(response => {
       window.location.reload()
-      // console.log(response,data)
     })
   })
 
