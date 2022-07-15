@@ -546,6 +546,10 @@ class Admin extends Plugin {
 			$asset_data['mime_type'] = $image_size['mime'];
 		}
 
+		if ( 'pdf' === $asset_data['type'] ) {
+			$asset_data['mime_type'] = 'application/pdf';
+		}
+
 		/**
 		 * Prepare attachment & insert into WordPress Media Library.
 		 *
@@ -566,13 +570,15 @@ class Admin extends Plugin {
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/wp_update_attachment_metadata/
 		 */
-		$attachment_metadata = [
-			'width'  => $asset_data['width'],
-			'height' => $asset_data['height'],
-			'file'   => self::get_widen_url_path( $asset_data['url'] ),
-			'sizes'  => self::get_attachment_sizes( $asset_data['templated_url'] ),
-		];
-		wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+		if ( 'image' === $asset_data['type'] ) {
+			$attachment_metadata = [
+				'width'  => $asset_data['width'],
+				'height' => $asset_data['height'],
+				'file'   => self::get_widen_url_path( $asset_data['url'] ),
+				'sizes'  => self::get_attachment_sizes( $asset_data['templated_url'] ),
+			];
+			wp_update_attachment_metadata( $attachment_id, $attachment_metadata );
+		}
 
 		/**
 		 * Update the attachment's file.
@@ -615,10 +621,10 @@ class Admin extends Plugin {
 
 			if ( 1 === $blog_id ) {
 				// Handle primary blog in multisite.
-				$path = preg_replace( "/^\/wp-content\/uploads\//", '', $url_path );
+				$path = preg_replace( '/^\/wp-content\/uploads\//', '', $url_path );
 			} else {
 				// Handle all other multisite blogs.
-				$path = preg_replace( "/^\/wp-content\/uploads\/sites\/$blog_id\//", '', $url_path );
+				$path = preg_replace( '/^\/wp-content\/uploads\/sites\/$blog_id\//', '', $url_path );
 			}
 		} else {
 			$path = preg_replace( '/^\/wp-content\/uploads\//', '', $url_path );
