@@ -25,6 +25,7 @@ import '../styles/admin.scss';
 
     const type = $(this).attr('data-type')
     const format = $(this).attr('data-format')
+    const ext = $(this).attr('data-ext')
     const id = $(this).attr('data-id')
     const filename = $(this).attr('data-filename')
     const description = $(this).attr('data-description')
@@ -53,6 +54,21 @@ import '../styles/admin.scss';
           action: 'widen_media_add_image_to_library',
           nonce: widen_media.ajax_nonce,
           type,
+          id,
+          filename,
+          description,
+          url,
+          templatedUrl,
+          thumbnailUrl,
+          fields,
+        }
+        break
+      case 'office':
+        data = {
+          action: 'widen_media_add_office_file_to_library',
+          nonce: widen_media.ajax_nonce,
+          type,
+          ext,
           id,
           filename,
           description,
