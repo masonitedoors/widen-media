@@ -36,9 +36,13 @@ $skeleton_url  = Util::remove_query_string( $skeleton_url );
 $already_added = Util::attachment_exists( $original_url );
 $attachment_id = $already_added ? Util::get_attachment_id( $original_url ) : '';
 
+// Get extension of file.
+$file_ext = pathinfo( $original_url );
+$file_ext = $file_ext['extension'];
 ?>
 <div class="tile pdf <?php echo $already_added ? 'added' : ''; ?>">
 	<div class="tile__wrapper">
+		<div class="extension"><?php echo esc_attr( $file_ext ); ?></div>
 		<div class="tile__header" aria-hidden="true">
 			<img
 				class="tile__image blur-up lazyload"

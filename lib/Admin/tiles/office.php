@@ -36,6 +36,7 @@ $office_file_ext = $office_file_ext['extension'];
 ?>
 <div class="tile office_file <?php echo $already_added ? 'added' : ''; ?>">
 	<div class="tile__wrapper">
+		<div class="extension"><?php echo esc_attr( $office_file_ext ); ?></div>
 		<div class="tile__header" aria-hidden="true">
 			<img
 				class="tile__image blur-up lazyload"
