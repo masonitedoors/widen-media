@@ -497,7 +497,7 @@ class Admin extends Plugin {
 	 * $_POST['description']
 	 * $_POST['url']
 	 */
-	public function add_image_to_library(): void {
+	public function add_asset_to_library(): void {
 		// Kill this process if this method wasn't called from our form.
 		check_ajax_referer( 'widen_media_ajax_request', 'nonce' );
 
