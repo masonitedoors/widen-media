@@ -504,6 +504,7 @@ class Admin extends Plugin {
 		// Set our default/fallback values.
 		$asset_data = [
 			'type'          => '',
+			'format'        => '',
 			'id'            => '',
 			'filename'      => '',
 			'description'   => '',
@@ -517,6 +518,9 @@ class Admin extends Plugin {
 
 		if ( isset( $_POST['type'] ) ) {
 			$asset_data['type'] = sanitize_text_field( wp_unslash( $_POST['type'] ) );
+		}
+		if ( isset( $_POST['format'] ) ) {
+			$asset_data['format'] = sanitize_text_field( wp_unslash( $_POST['format'] ) );
 		}
 		if ( isset( $_POST['id'] ) ) {
 			$asset_data['id'] = sanitize_text_field( wp_unslash( $_POST['id'] ) );
@@ -537,6 +541,8 @@ class Admin extends Plugin {
 			$asset_data['fields'] = sanitize_text_field( wp_unslash( $_POST['fields'] ) );
 		}
 
+		$mime_type = mime_content_type( $asset_data['url'] );
+
 		// Get asset size & mime type.
 		if ( 'image' === $asset_data['type'] ) {
 			// Original image sizes.
@@ -548,6 +554,12 @@ class Admin extends Plugin {
 
 		if ( 'pdf' === $asset_data['type'] ) {
 			$asset_data['mime_type'] = 'application/pdf';
+		}
+
+		if ( 'video' === $asset_data['type'] ) {
+			if ( 'MPEG4' === $asset_data['format'] ) {
+				$asset_data['mime_type'] = 'video/mp4';
+			}
 		}
 
 		/**

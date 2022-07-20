@@ -24,6 +24,7 @@ import '../styles/admin.scss';
     let data = {}
 
     const type = $(this).attr('data-type')
+    const format = $(this).attr('data-format')
     const id = $(this).attr('data-id')
     const filename = $(this).attr('data-filename')
     const description = $(this).attr('data-description')
@@ -52,6 +53,21 @@ import '../styles/admin.scss';
           action: 'widen_media_add_image_to_library',
           nonce: widen_media.ajax_nonce,
           type,
+          id,
+          filename,
+          description,
+          url,
+          templatedUrl,
+          thumbnailUrl,
+          fields,
+        }
+        break
+      case 'video':
+        data = {
+          action: 'widen_media_add_video_to_library',
+          nonce: widen_media.ajax_nonce,
+          type,
+          format,
           id,
           filename,
           description,
