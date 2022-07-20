@@ -110,6 +110,7 @@ class Plugin {
 		$this->loader->add_action( 'wp_ajax_widen_media_add_audio_to_library', $plugin_admin, 'add_audio_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_add_pdf_to_library', $plugin_admin, 'add_pdf_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_add_office_file_to_library', $plugin_admin, 'add_image_to_library' );
+		$this->loader->add_action( 'wp_ajax_widen_media_add_generic_file_to_library', $plugin_admin, 'add_image_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_add_video_to_library', $plugin_admin, 'add_image_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_save_collection', $plugin_admin, 'save_collection' );
 		$this->loader->add_filter( 'post_row_actions', $plugin_admin, 'remove_collections_quick_edit', 10, 2 );

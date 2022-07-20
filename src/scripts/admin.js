@@ -78,6 +78,21 @@ import '../styles/admin.scss';
           fields,
         }
         break
+      case 'generic':
+        data = {
+          action: 'widen_media_add_generic_file_to_library',
+          nonce: widen_media.ajax_nonce,
+          type,
+          ext,
+          id,
+          filename,
+          description,
+          url,
+          templatedUrl,
+          thumbnailUrl,
+          fields,
+        }
+        break
       case 'video':
         data = {
           action: 'widen_media_add_video_to_library',

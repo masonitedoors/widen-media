@@ -582,6 +582,16 @@ class Admin extends Plugin {
 			}
 		}
 
+		if ( 'generic' === $asset_data['type'] ) {
+			// check generic file extension and apply correct mimetype.
+			if ( 'csv' === $asset_data['ext'] ) {
+				$asset_data['mime_type'] = 'text/csv';
+			}
+			if ( 'xml' === $asset_data['ext'] ) {
+				$asset_data['mime_type'] = 'application/xml';
+			}
+		}
+
 		if ( 'video' === $asset_data['type'] ) {
 			if ( 'MPEG4' === $asset_data['format'] ) {
 				$asset_data['mime_type'] = 'video/mp4';

@@ -60,10 +60,10 @@ $file_ext = $file_ext['extension'];
 				<div class="tile__button-wrapper">
 					<button
 						class="button add-to-library"
-						data-type="office"
+						data-type="generic"
 						data-ext="<?php echo esc_attr( $file_ext ); ?>"
-						data-id="<?php echo esc_attr( $pdf_id ); ?>"
-						data-filename="<?php echo esc_attr( $pdf_filename ); ?>"
+						data-id="<?php echo esc_attr( $file_id ); ?>"
+						data-filename="<?php echo esc_attr( $file_filename ); ?>"
 						data-description="<?php echo esc_attr( $description ); ?>"
 						data-url="<?php echo esc_attr( $original_url ); ?>"
 						data-templated-url="<?php echo esc_attr( Util::sanitize_image_url( $templated_url ) ); ?>"
