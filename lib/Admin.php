@@ -505,6 +505,7 @@ class Admin extends Plugin {
 		$asset_data = [
 			'type'          => '',
 			'format'        => '',
+			'ext'           => '',
 			'id'            => '',
 			'filename'      => '',
 			'description'   => '',
@@ -521,6 +522,9 @@ class Admin extends Plugin {
 		}
 		if ( isset( $_POST['format'] ) ) {
 			$asset_data['format'] = sanitize_text_field( wp_unslash( $_POST['format'] ) );
+		}
+		if ( isset( $_POST['ext'] ) ) {
+			$asset_data['ext'] = sanitize_text_field( wp_unslash( $_POST['ext'] ) );
 		}
 		if ( isset( $_POST['id'] ) ) {
 			$asset_data['id'] = sanitize_text_field( wp_unslash( $_POST['id'] ) );
@@ -554,6 +558,28 @@ class Admin extends Plugin {
 
 		if ( 'pdf' === $asset_data['type'] ) {
 			$asset_data['mime_type'] = 'application/pdf';
+		}
+
+		if ( 'office' === $asset_data['type'] ) {
+			// check office file extension and apply correct mimetype.
+			if ( 'xls' === $asset_data['ext'] ) {
+				$asset_data['mime_type'] = 'application/vnd.ms-excel';
+			}
+			if ( 'xlsx' === $asset_data['ext'] ) {
+				$asset_data['mime_type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+			}
+			if ( 'doc' === $asset_data['ext'] ) {
+				$asset_data['mime_type'] = 'application/msword';
+			}
+			if ( 'docx' === $asset_data['ext'] ) {
+				$asset_data['mime_type'] = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+			}
+			if ( 'ppt' === $asset_data['ext'] ) {
+				$asset_data['mime_type'] = 'application/mspowerpoint';
+			}
+			if ( 'pptx' === $asset_data['ext'] ) {
+				$asset_data['mime_type'] = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+			}
 		}
 
 		if ( 'video' === $asset_data['type'] ) {
