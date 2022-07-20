@@ -545,9 +545,7 @@ class Admin extends Plugin {
 			$asset_data['fields'] = sanitize_text_field( wp_unslash( $_POST['fields'] ) );
 		}
 
-		$mime_type = mime_content_type( $asset_data['url'] );
-
-		// Get asset size & mime type.
+		// Get image size & mime type.
 		if ( 'image' === $asset_data['type'] ) {
 			// Original image sizes.
 			$image_size              = @getimagesize( $asset_data['url'] ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
@@ -556,12 +554,13 @@ class Admin extends Plugin {
 			$asset_data['mime_type'] = $image_size['mime'];
 		}
 
+		// Check if pdf file extension and add mime type.
 		if ( 'pdf' === $asset_data['type'] ) {
 			$asset_data['mime_type'] = 'application/pdf';
 		}
 
+		// Check if Office file extension and add mime type.
 		if ( 'office' === $asset_data['type'] ) {
-			// check office file extension and apply correct mimetype.
 			if ( 'xls' === $asset_data['ext'] ) {
 				$asset_data['mime_type'] = 'application/vnd.ms-excel';
 			}
@@ -582,8 +581,8 @@ class Admin extends Plugin {
 			}
 		}
 
+		// Check if generic file type (.xml, .csv) and add mime type.
 		if ( 'generic' === $asset_data['type'] ) {
-			// check generic file extension and apply correct mimetype.
 			if ( 'csv' === $asset_data['ext'] ) {
 				$asset_data['mime_type'] = 'text/csv';
 			}
@@ -592,6 +591,7 @@ class Admin extends Plugin {
 			}
 		}
 
+		// Check if video file and add mime type.
 		if ( 'video' === $asset_data['type'] ) {
 			if ( 'MPEG4' === $asset_data['format'] ) {
 				$asset_data['mime_type'] = 'video/mp4';
