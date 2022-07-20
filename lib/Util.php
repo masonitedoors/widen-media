@@ -97,4 +97,12 @@ class Util {
 		return false;
 	}
 
+	/**
+	 * Returns placeholder image url saying "Preview not available".
+	 */
+	public static function placeholder_image_url() {
+		$placeholder_img_url = plugin_dir_url( __DIR__ ) . 'dist/img/placeholder.jpg';
+		return $placeholder_img_url;
+	}
+
 }
