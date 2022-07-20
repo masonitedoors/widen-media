@@ -131,8 +131,9 @@
   .tile__image {
     display: block;
     max-width: 100%;
-    height: auto;
-    margin: 0 auto; }
+    height: 210px;
+    margin: 0 auto;
+    object-fit: contain; }
   .tile__header {
     max-width: 100%;
     padding: 0 18px;
