@@ -106,12 +106,7 @@ class Plugin {
 		$this->loader->add_action( 'admin_post_handle_search_submit', $plugin_admin, 'handle_search_submit' );
 
 		// Register ajax actions for this plugin.
-		$this->loader->add_action( 'wp_ajax_widen_media_add_image_to_library', $plugin_admin, 'add_image_to_library' );
-		$this->loader->add_action( 'wp_ajax_widen_media_add_audio_to_library', $plugin_admin, 'add_audio_to_library' );
-		$this->loader->add_action( 'wp_ajax_widen_media_add_pdf_to_library', $plugin_admin, 'add_pdf_to_library' );
-		$this->loader->add_action( 'wp_ajax_widen_media_add_office_file_to_library', $plugin_admin, 'add_image_to_library' );
-		$this->loader->add_action( 'wp_ajax_widen_media_add_generic_file_to_library', $plugin_admin, 'add_image_to_library' );
-		$this->loader->add_action( 'wp_ajax_widen_media_add_video_to_library', $plugin_admin, 'add_image_to_library' );
+		$this->loader->add_action( 'wp_ajax_widen_media_add_asset_to_library', $plugin_admin, 'add_asset_to_library' );
 		$this->loader->add_action( 'wp_ajax_widen_media_save_collection', $plugin_admin, 'save_collection' );
 		$this->loader->add_filter( 'post_row_actions', $plugin_admin, 'remove_collections_quick_edit', 10, 2 );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'remove_collections_submit_box' );

@@ -38,7 +38,7 @@ import '../styles/admin.scss';
     switch (type) {
       case 'image':
         data = {
-          action: 'widen_media_add_image_to_library',
+          action: 'widen_media_add_asset_to_library',
           nonce: widen_media.ajax_nonce,
           type,
           id,
@@ -51,7 +51,7 @@ import '../styles/admin.scss';
         break
       case 'pdf':
         data = {
-          action: 'widen_media_add_image_to_library',
+          action: 'widen_media_add_asset_to_library',
           nonce: widen_media.ajax_nonce,
           type,
           id,
@@ -65,7 +65,7 @@ import '../styles/admin.scss';
         break
       case 'office':
         data = {
-          action: 'widen_media_add_office_file_to_library',
+          action: 'widen_media_add_asset_to_library',
           nonce: widen_media.ajax_nonce,
           type,
           ext,
@@ -80,7 +80,7 @@ import '../styles/admin.scss';
         break
       case 'generic':
         data = {
-          action: 'widen_media_add_generic_file_to_library',
+          action: 'widen_media_add_asset_to_library',
           nonce: widen_media.ajax_nonce,
           type,
           ext,
@@ -95,7 +95,7 @@ import '../styles/admin.scss';
         break
       case 'video':
         data = {
-          action: 'widen_media_add_video_to_library',
+          action: 'widen_media_add_asset_to_library',
           nonce: widen_media.ajax_nonce,
           type,
           format,
@@ -110,7 +110,7 @@ import '../styles/admin.scss';
         break
       case 'audio':
         data = {
-          action: 'widen_media_add_audio_to_library',
+          action: 'widen_media_add_asset_to_library',
           nonce: widen_media.ajax_nonce,
           type,
           id,

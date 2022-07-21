@@ -146,13 +146,28 @@ $breakpoint-xs: 500px;
       letter-spacing: 0.02em;
       backface-visibility: hidden;
     }
+
+    .extension {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 0.3em 1em;
+      background-color: #343639;
+      color: #fff;
+      font-weight: 700;
+      border-bottom-left-radius: 3px;
+      text-transform: uppercase;
+      font-size: 0.85em;
+      z-index: 1;
+    }
   }
 
   &__image {
     display: block;
     max-width: 100%;
-    height: auto;
+    height: 200px;
     margin: 0 auto;
+    object-fit: contain;
   }
 
   &__header {
@@ -226,8 +241,15 @@ $breakpoint-xs: 500px;
 
     .tile__image,
     .tile__title,
-    .button-link {
+    .button-link,
+    .extension {
       opacity: 0.4;
+    }
+  }
+
+  &.video {
+    .tile__image {
+      object-fit: cover;
     }
   }
 }

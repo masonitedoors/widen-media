@@ -1,6 +1,6 @@
 <?php
 /**
- * Results tile for a pdf
+ * Results tile for a video file.
  */
 
 declare( strict_types = 1 );
@@ -34,9 +34,14 @@ $attachment_id = $already_added ? Util::get_attachment_id( $original_url ) : '';
 
 // Get tile thumbnail video preview url.
 $video_thumbnail = $item['embeds']['video_poster']['url'];
+
+// Get extension of file.
+$file_ext = pathinfo( $original_url );
+$file_ext = $file_ext['extension'];
 ?>
-<div class="tile mp4 <?php echo $already_added ? 'added' : ''; ?>">
+<div class="tile video <?php echo $already_added ? 'added' : ''; ?>">
 	<div class="tile__wrapper">
+		<div class="extension"><?php echo esc_attr( $file_ext ); ?></div>
 		<div class="tile__header" aria-hidden="true">
 			<img
 				class="tile__image blur-up lazyload"
