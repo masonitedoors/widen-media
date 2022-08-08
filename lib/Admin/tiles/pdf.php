@@ -30,7 +30,6 @@ $thumbnail_url = Util::remove_query_string( $thumbnail_url );
 $skeleton_url  = Util::remove_query_string( $skeleton_url );
 
 // Escape url.
-// https://developer.wordpress.org/reference/functions/esc_url/ .
 $view_url = esc_url( $view_url );
 
 // Check if the pdf has already been added.
