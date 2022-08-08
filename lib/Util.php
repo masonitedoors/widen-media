@@ -19,6 +19,15 @@ class Util {
 	}
 
 	/**
+	 * Remove space characters from from a url.
+	 *
+	 * @param string $url The url to clean.
+	 */
+	public static function remove_spaces( $url ): string {
+		return preg_replace( '/%20/', '_', $url );
+	}
+
+	/**
 	 * Sanitize our image URLs:
 	 *
 	 * Update .tif images to be .png.
