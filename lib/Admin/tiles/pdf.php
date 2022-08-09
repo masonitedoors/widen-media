@@ -19,22 +19,23 @@ $fields          = wp_json_encode( $fields_arr );
 $templated_url   = $item['embeds']['templated']['url'] ?? '';
 
 $original_url  = $item['embeds']['original']['url'] ?? '';
+$view_url      = $item['embeds']['document_viewer_with_download']['url'] ?? '';
 $thumbnail_url = $item['embeds']['document_thumbnail']['url'] ?? '';
 $skeleton_url  = $item['embeds']['document_thumbnail']['url'] ?? '';
 
-// Change possible TIF url to PNG url.
-if ( strpos( $original_url, '.tif' ) !== false ) {
-	$original_url = $item['embeds']['OriginalPNG']['url'];
-}
-
 // Remove query string from url.
 $original_url  = Util::remove_query_string( $original_url );
+$view_url      = Util::remove_query_string( $view_url );
 $thumbnail_url = Util::remove_query_string( $thumbnail_url );
 $skeleton_url  = Util::remove_query_string( $skeleton_url );
 
+// Remove spaces and escape url.
+$view_url = Util::remove_spaces( $view_url );
+$view_url = esc_url( $view_url );
+
 // Check if the pdf has already been added.
-$already_added = Util::attachment_exists( $original_url );
-$attachment_id = $already_added ? Util::get_attachment_id( $original_url ) : '';
+$already_added = Util::attachment_exists( $view_url );
+$attachment_id = $already_added ? Util::get_attachment_id( $view_url ) : '';
 
 // Get extension of file.
 $file_ext = pathinfo( $original_url );
@@ -69,7 +70,7 @@ $file_ext = $file_ext['extension'];
 						data-id="<?php echo esc_attr( $pdf_id ); ?>"
 						data-filename="<?php echo esc_attr( $pdf_filename ); ?>"
 						data-description="<?php echo esc_attr( $description ); ?>"
-						data-url="<?php echo esc_attr( $original_url ); ?>"
+						data-url="<?php echo esc_attr( $view_url ); ?>"
 						data-templated-url="<?php echo esc_attr( Util::sanitize_image_url( $templated_url ) ); ?>"
 						data-thumbnail-url="<?php echo esc_attr( Util::sanitize_image_url( $thumbnail_url ) ); ?>"
 						data-fields="<?php echo esc_attr( $fields ); ?>"
